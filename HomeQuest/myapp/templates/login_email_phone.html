@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <h1>Login</h1>
+
+    <!-- Login with Email -->
+    <h2>Login with Email</h2>
+    <form method="get" action="{% url 'login_email' %}">
+        <button type="submit">Go to Email Login</button>
+    </form>
+
+    <!-- Login with Phone -->
+    <h2>Login with Phone</h2>
+    <form method="get" action="{% url 'login_phone' %}">
+        <button type="submit">Go to Phone Login</button>
+    </form>
+</body>
+</html>
