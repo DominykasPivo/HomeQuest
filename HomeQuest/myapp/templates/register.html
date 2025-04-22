@@ -1,29 +1,64 @@
-{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
     <h1>Register</h1>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        <!-- Mandatory Fields -->
+        <h3>Mandatory Details</h3>
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+        {{ form.username }}
+        <br>
+
+        <label for="account_type">Account Type:</label>
+        {{ form.account_type }}
+        <br>
+
+        <label for="consent_to_share_location">Consent to Share Location:</label>
+        {{ form.consent_to_share_location }}
+        <br>
+
+        <label for="full_name">Full Name:</label>
+        {{ form.full_name }}
+        <br>
+
+        <label for="date_of_birth">Date of Birth:</label>
+        {{ form.date_of_birth }}
+        <br>
 
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
+        {{ form.email }}
+        <br>
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+        {{ form.password }}
+        <br>
 
         <label for="confirm_password">Confirm Password:</label>
-        <input type="password" id="confirm_password" name="confirm_password" required>
+        {{ form.confirm_password }}
+        <br>
+
+        <!-- Optional Fields -->
+        <h3>Optional Details</h3>
+        <label for="phone_number">Phone Number (Optional):</label>
+        {{ form.phone_number }}
+        <br>
+
+        <label for="profile_photo">Profile Photo (Optional):</label>
+        {{ form.profile_photo }}
+        <br>
 
         <button type="submit">Register</button>
+        {% if form.errors %}
+            <ul>
+                {% for field, errors in form.errors.items %}
+                    <li>{{ field }}: {{ errors|join:", " }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </form>
 </body>
 </html>
