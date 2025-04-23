@@ -42,6 +42,45 @@
             font-size: 1.5rem;
             font-weight: bold;
         }
+
+        .profile-menu {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            color: black;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .dropdown a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+        }
+
+        .dropdown a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .profile-menu:hover .dropdown {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -52,6 +91,26 @@
             <li><a href="{% url 'register' %}">Register</a></li>
             <li><a href="{% url 'login' %}">Login</a></li>
         </ul>
+        <div class="profile-menu">
+            {% if user.is_authenticated %}
+            <!-- Check if the user has a profile photo -->
+            {% if user.profile_photo and user.profile_photo.url %}
+            <img src="{{ user.profile_photo.url }}" alt="Profile" class="profile-icon">
+            {% else %}
+            <img src="{% static 'images/default-profile.png' %}" alt="Profile" class="profile-icon">
+            {% endif %}
+            <div class="dropdown">
+                <a href="{% url 'profile' %}">View Profile</a>
+                <a href="{% url 'logout' %}">Logout</a>
+            </div>
+            {% else %}
+            <!-- Default profile picture for guests -->
+            <img src="{% static 'images/default-profile.png' %}" alt="Profile" class="profile-icon">
+            <div class="dropdown">
+                <a href="{% url 'login' %}">Sign In</a>
+            </div>
+            {% endif %}
+        </div>
     </nav>
     <div class="content">
         {% block content %}

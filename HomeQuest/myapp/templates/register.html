@@ -1,64 +1,62 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Register</title>
-</head>
-<body>
-    <h1>Register</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <!-- Mandatory Fields -->
-        <h3>Mandatory Details</h3>
-        <label for="username">Username:</label>
-        {{ form.username }}
-        <br>
+{% extends 'base.html' %}
 
-        <label for="account_type">Account Type:</label>
-        {{ form.account_type }}
-        <br>
+{% block title %}Register{% endblock %}
 
-        <label for="consent_to_share_location">Consent to Share Location:</label>
-        {{ form.consent_to_share_location }}
-        <br>
+{% block content %}
+<h1>Register</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <!-- Mandatory Fields -->
+    <h3>Mandatory Details</h3>
+    <label for="username">Username:</label>
+    {{ form.username }}
+    <br>
 
-        <label for="full_name">Full Name:</label>
-        {{ form.full_name }}
-        <br>
+    <label for="account_type">Account Type:</label>
+    {{ form.account_type }}
+    <br>
 
-        <label for="date_of_birth">Date of Birth:</label>
-        {{ form.date_of_birth }}
-        <br>
+    <label for="consent_to_share_location">Consent to Share Location:</label>
+    {{ form.consent_to_share_location }}
+    <br>
 
-        <label for="email">Email:</label>
-        {{ form.email }}
-        <br>
+    <label for="full_name">Full Name:</label>
+    {{ form.full_name }}
+    <br>
 
-        <label for="password">Password:</label>
-        {{ form.password }}
-        <br>
+    <label for="date_of_birth">Date of Birth:</label>
+    {{ form.date_of_birth }}
+    <br>
 
-        <label for="confirm_password">Confirm Password:</label>
-        {{ form.confirm_password }}
-        <br>
+    <label for="email">Email:</label>
+    {{ form.email }}
+    <br>
 
-        <!-- Optional Fields -->
-        <h3>Optional Details</h3>
-        <label for="phone_number">Phone Number (Optional):</label>
-        {{ form.phone_number }}
-        <br>
+    <label for="password">Password:</label>
+    {{ form.password }}
+    <br>
 
-        <label for="profile_photo">Profile Photo (Optional):</label>
-        {{ form.profile_photo }}
-        <br>
+    <label for="confirm_password">Confirm Password:</label>
+    {{ form.confirm_password }}
+    <br>
 
-        <button type="submit">Register</button>
-        {% if form.errors %}
-            <ul>
-                {% for field, errors in form.errors.items %}
-                    <li>{{ field }}: {{ errors|join:", " }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    </form>
-</body>
-</html>
+    <!-- Optional Fields -->
+    <h3>Optional Details</h3>
+    <label for="phone_number">Phone Number (Optional):</label>
+    {{ form.phone_number }}
+    <br>
+
+    <label for="profile_photo">Profile Photo (Optional):</label>
+    {{ form.profile_photo }}
+    <br>
+
+    <button type="submit">Register</button>
+    {% if form.errors %}
+        <ul>
+            {% for field, errors in form.errors.items %}
+                <li>{{ field }}: {{ errors|join:", " }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</form>
+{% endblock %}

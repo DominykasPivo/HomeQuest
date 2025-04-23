@@ -17,7 +17,12 @@ class User(AbstractUser):
     date_of_birth = models.DateField()
     email = models.EmailField(unique=True)  # Ensure email is unique
     phone_number = models.CharField(max_length=15, blank=True, null=True, unique=True)  # Ensure phone number is unique
-    profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
+    profile_photo = models.ImageField(
+        upload_to='profile_photos/',
+        blank=True,
+        null=True,
+        default='profile_photos/default-profile.png'  # Default profile picture
+    )
 
     def __str__(self):
         return self.username

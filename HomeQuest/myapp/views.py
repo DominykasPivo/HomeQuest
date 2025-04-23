@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, HttpResponse
 from .models import User, UserInput #have to make user models
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .services import save_user_input, get_all_user_inputs
 from .forms import UserRegistrationForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def home(request):
@@ -73,5 +74,11 @@ def login_phone(request):
     return render(request, 'login_phone.html')
 
 
+@login_required
+def profile(request):
+    return render(request, 'profile.html', {'user': request.user})
 
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
