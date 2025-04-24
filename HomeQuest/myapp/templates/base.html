@@ -93,16 +93,13 @@
         </ul>
         <div class="profile-menu">
             {% if user.is_authenticated %}
-            <!-- Check if the user has a profile photo -->
-            {% if user.profile_photo and user.profile_photo.url %}
-            <img src="{{ user.profile_photo.url }}" alt="Profile" class="profile-icon">
-            {% else %}
-            <img src="{% static 'images/default-profile.png' %}" alt="Profile" class="profile-icon">
-            {% endif %}
-            <div class="dropdown">
-                <a href="{% url 'profile' %}">View Profile</a>
-                <a href="{% url 'logout' %}">Logout</a>
-            </div>
+                <!-- Check if the user has a profile photo -->
+                <img src="{{ user.profile_photo.url }}" alt="Profile" class="profile-icon">
+                <div class="dropdown">
+                    <a href="{% url 'profile' %}">View Profile</a>
+                    <a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a>
+                    <a href="{% url 'logout' %}">Logout</a>
+                </div>
             {% else %}
             <!-- Default profile picture for guests -->
             <img src="{% static 'images/default-profile.png' %}" alt="Profile" class="profile-icon">

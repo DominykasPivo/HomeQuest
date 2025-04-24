@@ -1,11 +1,18 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Profile{% endblock %}
 
 {% block content %}
+<p>
+    Profile Photo:
+    {% if user.profile_photo and user.profile_photo.url %}
+        <img src="{{ user.profile_photo.url }}" alt="Profile Photo" style="width: 150px; height: 150px; border-radius: 50%;">
+    {% else %}
+        <img src="{% static 'images/default-profile.png' %}" alt="Default Profile Photo" style="width: 150px; height: 150px; border-radius: 50%;">
+    {% endif %}
+</p>
 <h1>Welcome, {{ user.username }}</h1>
 <p>Email: {{ user.email }}</p>
-<p>Account Type: {{ user.account_type }}</p>
 <p>Full Name: {{ user.full_name }}</p>
 <p>Date of Birth: {{ user.date_of_birth }}</p>
 <p>Phone Number: {{ user.phone_number }}</p>
