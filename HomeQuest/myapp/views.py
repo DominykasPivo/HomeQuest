@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect, HttpResponse
-from .models import User #have to make user models
+from .models import User, GoldSeller #have to make user models
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import UserRegistrationForm, UserEditForm
 from django.contrib.auth.decorators import login_required
 from .factories import UserFactory
-from .services import clear_messages, update_user_profile
+from .services import clear_messages, update_user_profile, get_or_create_gold_seller, update_subscription
 from django.core.exceptions import ValidationError
+
+# from datetime import timedelta
+# from django.utils.timezone import now
 
 # Create your views here.
 def home(request):
@@ -121,3 +124,18 @@ def edit_profile(request):
         form = UserEditForm()
 
     return render(request, 'edit_profile.html', {'form': form})
+
+
+
+@login_required
+def manage_subscription(request):
+    # Use the service to get or create a GoldSeller instance
+    gold_seller = get_or_create_gold_seller(request.user)
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        # Use the service to update the subscription
+        update_subscription(gold_seller, action)
+        return redirect('manage_subscription')
+
+    return render(request, 'manage_subscription.html', {'gold_seller': gold_seller})

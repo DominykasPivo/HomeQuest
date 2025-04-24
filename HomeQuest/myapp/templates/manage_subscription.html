@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Subscription{% endblock %}
+
+{% block content %}
+<h1>Manage Subscription</h1>
+
+{% if user.seller_profile %}
+    <p>Current Plan: {{ gold_seller.subscription_plan|title }}</p>
+    {% if gold_seller.subscription_plan == 'gold' %}
+        <p>Subscription End Date: {{ gold_seller.subscription_end_date }}</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="action" value="cancel_gold">Cancel Gold Subscription</button>
+        </form>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="action" value="buy_gold">Upgrade to Gold</button>
+        </form>
+    {% endif %}
+{% else %}
+    <p>You must be a seller to manage subscriptions.</p>
+{% endif %}
+{% endblock %}

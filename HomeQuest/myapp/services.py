@@ -1,6 +1,8 @@
-from .models import User, Buyer, Seller
+from .models import User, Buyer, Seller, GoldSeller
 from django.contrib.messages import get_messages
 from django.core.exceptions import ValidationError
+from datetime import timedelta
+from django.utils.timezone import now
 
 def clear_messages(request):
     """
@@ -68,3 +70,29 @@ def update_user_profile(user, **kwargs):
 
     user.save()
     return user
+
+
+def get_or_create_gold_seller(user):
+    """
+    Get or create a GoldSeller instance for the given user.
+    """
+    gold_seller, created = GoldSeller.objects.get_or_create(
+        user=user,
+        defaults={
+            'subscription_plan': 'basic',
+            'subscription_end_date': None,  # Default to None for "Basic" plan
+        }
+    )
+    return gold_seller
+
+def update_subscription(gold_seller, action):
+    """
+    Update the subscription plan and end date for a GoldSeller.
+    """
+    if action == 'buy_gold':
+        gold_seller.subscription_plan = 'gold'
+        gold_seller.subscription_end_date = now().date() + timedelta(days=30)  # 30-day subscription
+    elif action == 'cancel_gold':
+        gold_seller.subscription_plan = 'basic'
+        gold_seller.subscription_end_date = None  # Clear the subscription end date
+    gold_seller.save()
