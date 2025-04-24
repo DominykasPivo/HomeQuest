@@ -19,16 +19,6 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
-    def save(self, *args, **kwargs):
-        # Check if the profile photo is being updated
-        if self.pk:
-            old_user = User.objects.get(pk=self.pk)
-            if old_user.profile_photo and old_user.profile_photo != self.profile_photo:
-                old_photo_path = os.path.join(settings.MEDIA_ROOT, old_user.profile_photo.name)
-                if os.path.exists(old_photo_path) and old_user.profile_photo.name != 'profile_photos/default-profile.png':
-                    os.remove(old_photo_path)
-        super().save(*args, **kwargs)
-
 
 class Buyer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='buyer_profile')

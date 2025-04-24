@@ -2,8 +2,22 @@ from django import forms
 from .models import User
 
 class UserRegistrationForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'required': 'required'}))
-    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'required': 'required'}))
+    username = forms.CharField(
+        max_length=150,
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': ''}),
+        label="Username",
+        help_text=""  # Remove the default help text
+    )
+
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'required': 'required'}),
+        label="Password"
+    )
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'required': 'required'}),
+        label="Confirm Password"
+    )
 
     user_type = forms.ChoiceField(
         choices=[('buyer', 'Buyer'), ('seller', 'Seller')],
@@ -18,18 +32,6 @@ class UserRegistrationForm(forms.ModelForm):
             'date_of_birth', 'email', 'password', 'confirm_password', 
             'phone_number', 'profile_photo'
         ]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Add 'required' attribute to mandatory fields
-        self.fields['username'].widget.attrs.update({'required': 'required'})
-        self.fields['consent_to_share_location'].widget.attrs.update({'required': 'required'})
-        self.fields['full_name'].widget.attrs.update({'required': 'required'})
-        self.fields['date_of_birth'].widget.attrs.update({'required': 'required'})
-        self.fields['email'].widget.attrs.update({'required': 'required'})
-        # Non-mandatory fields do not need 'required' attributes
-        self.fields['phone_number'].widget.attrs.update({'placeholder': 'Optional'})
-        self.fields['profile_photo'].widget.attrs.update({'placeholder': 'Optional'})
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -50,13 +52,20 @@ class UserRegistrationForm(forms.ModelForm):
 
         if password != confirm_password:
             raise forms.ValidationError("Passwords do not match.")
+        return cleaned_data
         
 class UserEditForm(forms.ModelForm):
+    username = forms.CharField(
+        max_length=150,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
+        label="Username",
+        help_text=""  
+    )
     class Meta:
         model = User
         fields = ['username', 'full_name', 'email', 'phone_number', 'profile_photo', 'password']
         widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),

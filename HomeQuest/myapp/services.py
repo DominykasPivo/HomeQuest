@@ -3,6 +3,8 @@ from django.contrib.messages import get_messages
 from django.core.exceptions import ValidationError
 from datetime import timedelta
 from django.utils.timezone import now
+import os
+from django.conf import settings
 
 def clear_messages(request):
     """
@@ -53,6 +55,13 @@ def update_user_profile(user, **kwargs):
     if new_phone_number and new_phone_number != user.phone_number:
         if User.objects.filter(phone_number=new_phone_number).exclude(id=user.id).exists():
             raise ValidationError(f"The phone number '{new_phone_number}' is already in use by another account.")
+        
+    # Delete the old profile photo if a new one is provided
+    new_profile_photo = kwargs.get('profile_photo')
+    if new_profile_photo and new_profile_photo != user.profile_photo:
+        old_photo_path = os.path.join(settings.MEDIA_ROOT, user.profile_photo.name)
+        if os.path.exists(old_photo_path) and user.profile_photo.name != 'profile_photos/default-profile.png':
+            os.remove(old_photo_path)
 
     # Update fields only if new values are provided and not empty
     if kwargs.get('username'):
@@ -63,8 +72,8 @@ def update_user_profile(user, **kwargs):
         user.email = new_email
     if new_phone_number:
         user.phone_number = new_phone_number
-    if kwargs.get('profile_photo'):
-        user.profile_photo = kwargs['profile_photo']
+    if new_profile_photo:
+        user.profile_photo = new_profile_photo
     if kwargs.get('password'): 
         user.password = user.set_password(kwargs['password'])  # Hash the new password
 
