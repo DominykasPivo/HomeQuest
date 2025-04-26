@@ -5,6 +5,9 @@ from datetime import timedelta
 from django.utils.timezone import now
 import os
 from django.conf import settings
+import logging
+
+logger = logging.getLogger(__name__)
 
 def clear_messages(request):
     """
@@ -20,25 +23,65 @@ def create_user(user_type, **kwargs):
     """
     Create a user and assign a role (Buyer or Seller).
     """
-    user = User.objects.create(
-        username=kwargs.get('username'),
-        email=kwargs.get('email'),
-        full_name=kwargs.get('full_name'),
-        date_of_birth=kwargs.get('date_of_birth'),
-        consent_to_share_location=kwargs.get('consent_to_share_location'),
-        phone_number=kwargs.get('phone_number'),
-        profile_photo=kwargs.get('profile_photo'),
-    )
-    user.set_password(kwargs.get('password'))  # Set the hashed password
-    user.save()
-
-    # Assign role-specific profiles
-    if user_type == 'buyer':
-        Buyer.objects.create(user=user)
-    elif user_type == 'seller':
-        Seller.objects.create(user=user)
-
-    return user
+    try:
+        # Create the correct subclass directly!
+        if user_type == 'buyer':
+            user = Buyer.objects.create(
+                email=kwargs.get('email'),
+                full_name=kwargs.get('full_name'),
+                date_of_birth=kwargs.get('date_of_birth'),
+                consent_to_share_location=kwargs.get('consent_to_share_location'),
+                phone_number=kwargs.get('phone_number'),
+                profile_photo=kwargs.get('profile_photo'),
+            )
+        elif user_type == 'seller':
+            # Create a GoldSeller directly
+            gold_seller = GoldSeller.objects.create(
+                email=kwargs.get('email'),
+                full_name=kwargs.get('full_name'),
+                date_of_birth=kwargs.get('date_of_birth'),
+                consent_to_share_location=kwargs.get('consent_to_share_location'),
+                phone_number=kwargs.get('phone_number'),
+                profile_photo=kwargs.get('profile_photo'),
+                subscription_plan='basic',  # Default to basic
+                subscription_end_date=None  # No subscription end date for basic
+            )
+            user = gold_seller  # The GoldSeller is also a User
+        else:
+            raise ValidationError("Invalid user type. Must be 'buyer' or 'seller'.")
+        
+        # elif user_type == 'seller':
+        #     seller = Seller.objects.create(
+        #         email=kwargs.get('email'),
+        #         full_name=kwargs.get('full_name'),
+        #         date_of_birth=kwargs.get('date_of_birth'),
+        #         consent_to_share_location=kwargs.get('consent_to_share_location'),
+        #         phone_number=kwargs.get('phone_number'),
+        #         profile_photo=kwargs.get('profile_photo'),
+        #     )
+        #     # Automatically create a GoldSeller with default subscription plan
+        #     gold_seller = GoldSeller.objects.create(
+        #         seller_ptr=seller,  # Link to the existing Seller
+        #         subscription_plan='basic',  # Default to basic
+        #         subscription_end_date=None  # No subscription end date for basic
+        #     )
+        #     gold_seller.save(force_insert=False)  # Avoid creating a new parent row
+        #     user = seller
+        # else:
+        #     user = User.objects.create(
+        #         email=kwargs.get('email'),
+        #         full_name=kwargs.get('full_name'),
+        #         date_of_birth=kwargs.get('date_of_birth'),
+        #         consent_to_share_location=kwargs.get('consent_to_share_location'),
+        #         phone_number=kwargs.get('phone_number'),
+        #         profile_photo=kwargs.get('profile_photo'),
+        #     )
+        user.set_password(kwargs.get('password'))
+        user.save()
+        return user
+    except Exception as e:
+        logger.error(f"Error creating user: {str(e)}")
+        raise
 
 def update_user_profile(user, **kwargs):
     """
@@ -64,8 +107,6 @@ def update_user_profile(user, **kwargs):
             os.remove(old_photo_path)
 
     # Update fields only if new values are provided and not empty
-    if kwargs.get('username'):
-        user.username = kwargs['username']
     if kwargs.get('full_name'):
         user.full_name = kwargs['full_name']
     if new_email:
@@ -81,17 +122,25 @@ def update_user_profile(user, **kwargs):
     return user
 
 
-def get_or_create_gold_seller(user):
+def get_or_create_gold_seller(user, upgrade_to_gold=False):
     """
-    Get or create a GoldSeller instance for the given user.
+    Get the GoldSeller instance for the given user, or update it if upgrading.
     """
-    gold_seller, created = GoldSeller.objects.get_or_create(
-        user=user,
-        defaults={
-            'subscription_plan': 'basic',
-            'subscription_end_date': None,  # Default to None for "Basic" plan
-        }
-    )
+    # Ensure the user is a Seller
+    try:
+        seller = Seller.objects.get(pk=user.pk)
+    except Seller.DoesNotExist:
+        raise ValidationError("You must be a Seller to upgrade to Gold.")
+
+    # Get the existing GoldSeller instance
+    gold_seller = GoldSeller.objects.get(pk=seller.pk)
+
+    # Upgrade to gold if requested
+    if upgrade_to_gold:
+        gold_seller.subscription_plan = 'gold'
+        gold_seller.subscription_end_date = now().date() + timedelta(days=30)
+        gold_seller.save()
+
     return gold_seller
 
 def update_subscription(gold_seller, action):

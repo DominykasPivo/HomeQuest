@@ -2,14 +2,18 @@ from django import forms
 from .models import User
 
 class UserRegistrationForm(forms.ModelForm):
-    username = forms.CharField(
+    full_name = forms.CharField(
         max_length=150,
         required=True,
         widget=forms.TextInput(attrs={'placeholder': ''}),
-        label="Username",
+        label="Full Name",
         help_text=""  # Remove the default help text
     )
-
+    date_of_birth = forms.DateField(
+        required=True,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        label="Date of Birth"
+    )
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'required': 'required'}),
         label="Password"
@@ -28,8 +32,8 @@ class UserRegistrationForm(forms.ModelForm):
     class Meta:
         model = User
         fields = [
-            'username', 'consent_to_share_location', 'full_name',
-            'date_of_birth', 'email', 'password', 'confirm_password', 
+            'full_name', 'consent_to_share_location',
+            'date_of_birth', 'email', 'password', 'confirm_password',
             'phone_number', 'profile_photo'
         ]
 
@@ -55,16 +59,16 @@ class UserRegistrationForm(forms.ModelForm):
         return cleaned_data
         
 class UserEditForm(forms.ModelForm):
-    username = forms.CharField(
+    full_name = forms.CharField(
         max_length=150,
         required=False,
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
-        label="Username",
+        label="Full Name",
         help_text=""  
     )
     class Meta:
         model = User
-        fields = ['username', 'full_name', 'email', 'phone_number', 'profile_photo', 'password']
+        fields = ['full_name', 'email', 'phone_number', 'profile_photo', 'password']
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),

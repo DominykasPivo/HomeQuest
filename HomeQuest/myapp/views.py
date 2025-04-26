@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse
-from .models import User, GoldSeller #have to make user models
+from .models import User, GoldSeller, Seller #have to make user models
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import UserRegistrationForm, UserEditForm
@@ -7,7 +7,9 @@ from django.contrib.auth.decorators import login_required
 from .factories import UserFactory
 from .services import clear_messages, update_user_profile, get_or_create_gold_seller, update_subscription
 from django.core.exceptions import ValidationError
+from django.http import Http404
 
+import logging
 # from datetime import timedelta
 # from django.utils.timezone import now
 
@@ -18,27 +20,34 @@ def home(request):
 def login_email_phone(request):
     return render(request, 'login_email_phone.html')
 
+logger = logging.getLogger(__name__)
 def register(request):
-    # Clear any existing messages
     clear_messages(request)
 
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             user_type = form.cleaned_data['user_type']
-            UserFactory.create_user(
-                user_type=user_type,
-                username=form.cleaned_data['username'],
-                email=form.cleaned_data['email'],
-                full_name=form.cleaned_data['full_name'],
-                date_of_birth=form.cleaned_data['date_of_birth'],
-                consent_to_share_location=form.cleaned_data['consent_to_share_location'],
-                phone_number=form.cleaned_data['phone_number'],
-                profile_photo=form.cleaned_data.get('profile_photo', None),
-                password=form.cleaned_data['password'],
-            )
-            messages.success(request, 'Registration successful! Please log in.')
-            return redirect('login')  # Redirect to the login page
+            try:
+                # Create the user and assign the role
+                user = UserFactory.create_user(
+                    user_type=user_type,
+                    email=form.cleaned_data['email'],
+                    full_name=form.cleaned_data['full_name'],
+                    consent_to_share_location=form.cleaned_data['consent_to_share_location'],
+                    date_of_birth=form.cleaned_data['date_of_birth'],
+                    phone_number=form.cleaned_data['phone_number'],
+                    profile_photo=form.cleaned_data.get('profile_photo', None),
+                    password=form.cleaned_data['password'],
+                )
+                messages.success(request, 'Registration successful! Please log in.')
+                return redirect('login')  # Redirect to the login page
+            except ValidationError as e:
+                logger.error(f"Validation error during registration: {e}")
+                messages.error(request, e.message)
+            except Exception as e:
+                logger.error(f"Unexpected error during registration: {e}")
+                messages.error(request, f"An unexpected error occurred: {str(e)}")
         else:
             messages.error(request, 'There was an error with your registration.')
     else:
@@ -54,10 +63,10 @@ def login_email(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         try:
-            # Get the user by email
-            user = User.objects.get(email=email)
+            # # Get the user by email
+            # user = User.objects.get(email=email)
             # Authenticate using the username (since Django uses username internally)
-            user = authenticate(request, username=user.username, password=password)
+            user = authenticate(request, email=email, password=password)
             if user is not None:
                 login(request, user)
                 return redirect('home')  # Redirect to the home page after login
@@ -76,7 +85,7 @@ def login_phone(request):
         password = request.POST.get('password')
         try:
             user = User.objects.get(phone_number=phone_number)
-            user = authenticate(request, username=user.username, password=password)
+            user = authenticate(request, phone_number = user.phone_number, password=password)
             if user is not None:
                 login(request, user)
                 return redirect('home')  # Redirect to the home page after login
@@ -106,7 +115,6 @@ def edit_profile(request):
                 # Use the service function to update the user's profile
                 update_user_profile(
                     user,
-                    username=form.cleaned_data.get('username'),
                     full_name=form.cleaned_data.get('full_name'),
                     email=form.cleaned_data.get('email'),
                     phone_number=form.cleaned_data.get('phone_number'),
@@ -127,15 +135,30 @@ def edit_profile(request):
 
 
 
+
+
 @login_required
 def manage_subscription(request):
-    # Use the service to get or create a GoldSeller instance
-    gold_seller = get_or_create_gold_seller(request.user)
+    try:
+        # Ensure the user is a Seller
+        seller = Seller.objects.get(pk=request.user.pk)
+    except Seller.DoesNotExist:
+        messages.error(request, "You must be a Seller to access this page.")
+        return redirect('home')
+
+    # Get the GoldSeller instance if it exists
+    gold_seller = GoldSeller.objects.filter(pk=seller.pk).first()
 
     if request.method == 'POST':
         action = request.POST.get('action')
-        # Use the service to update the subscription
-        update_subscription(gold_seller, action)
+        if action == 'buy_gold':
+            # Upgrade to GoldSeller
+            gold_seller = get_or_create_gold_seller(request.user, upgrade_to_gold=True)
+        elif action == 'cancel_gold' and gold_seller:
+            # Downgrade to basic
+            gold_seller.subscription_plan = 'basic'
+            gold_seller.subscription_end_date = None
+            gold_seller.save()
         return redirect('manage_subscription')
 
     return render(request, 'manage_subscription.html', {'gold_seller': gold_seller})

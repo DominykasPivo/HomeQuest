@@ -1,4 +1,5 @@
 {% load static %}
+{% load user_extras %} <!-- This is to reveal Manage Subscriptions for Sellers-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -98,7 +99,8 @@
                 <div class="dropdown">
                     <a href="{% url 'profile' %}">View Profile</a>
                     <a class="dropdown-item" href="{% url 'edit_profile' %}">Edit Profile</a>
-                    {% if user.seller_profile %}
+                    
+                    {% if user.is_seller %}
                         <a href="{% url 'manage_subscription' %}">Manage Subscription</a>
                     {% endif %}
                     <a href="{% url 'logout' %}">Logout</a>
