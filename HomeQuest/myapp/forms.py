@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import User, Property
 
 class UserRegistrationForm(forms.ModelForm):
     full_name = forms.CharField(
@@ -81,3 +81,18 @@ class UserEditForm(forms.ModelForm):
         # Make all fields optional
         for field in self.fields.values():
             field.required = False
+
+
+class PropertyForm(forms.ModelForm):
+    image = forms.ImageField(
+        required=False,
+        label="Property Image",
+        widget=forms.FileInput(attrs={'accept': 'image/*'})
+    )
+
+    class Meta:
+        model = Property
+        fields = [
+            'location', 'map_location', 'price', 'size', 'room_num',
+            'property_type', 'is_verified'
+        ]

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Edit Property{% endblock %}
+{% block content %}
+
+<h1>Edit Property</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <h2>Current Images</h2>
+    <ul>
+        {% for image_path in property.image_paths %}
+            <li><img src="{{ image.url }}" alt="Property Image" style="max-width: 200px;"></li>
+        {% empty %}
+            <li>No images available.</li>
+        {% endfor %}
+    </ul>
+    <h2>Upload New Images</h2>
+    <input type="file" name="images" multiple>
+    <button type="submit">Save Changes</button>
+    <a href="{% url 'property_list' %}">Cancel</a>
+</form>
+{% endblock %}

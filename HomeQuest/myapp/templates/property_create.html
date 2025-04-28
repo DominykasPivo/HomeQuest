@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Create Property{% endblock %}
+{% block content %}
+
+<h1>Create Property</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create Property</button>
+</form>
+<a href="{% url 'property_list' %}">Cancel</a>
+{% endblock %}

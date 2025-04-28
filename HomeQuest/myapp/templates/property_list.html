@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}My Properties{% endblock %}
+{% block content %}
+
+<h1>My Properties</h1>
+<a href="{% url 'property_create' %}">Add New Property</a>
+<ul>
+    {% for property in properties %}
+        <li>
+            <a href="{% url 'property_detail' property.property_id %}">{{ property.location }}</a>
+            (<a href="{% url 'property_edit' property.property_id %}">Edit</a> |
+             <a href="{% url 'property_delete' property.property_id %}">Delete</a>)
+        </li>
+    {% empty %}
+        <li>No properties found.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

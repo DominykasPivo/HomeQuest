@@ -91,6 +91,9 @@
             <li><a href="{% url 'home' %}">Home</a></li>
             <li><a href="{% url 'register' %}">Register</a></li>
             <li><a href="{% url 'login' %}">Login</a></li>
+            {% if user.is_authenticated and user.is_seller %}
+                <li><a href="{% url 'property_list' %}">Manage Properties</a></li>
+            {% endif %}
         </ul>
         <div class="profile-menu">
             {% if user.is_authenticated %}

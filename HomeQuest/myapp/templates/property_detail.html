@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Property Details{% endblock %}
+{% block content %}
+
+<h1>Property Details</h1>
+<p>Location: {{ property.location }}</p>
+<p>Price: {{ property.price }}</p>
+<p>Size: {{ property.size }}</p>
+<p>Rooms: {{ property.room_num }}</p>
+<p>Type: {{ property.property_type }}</p>
+<p>Verified: {{ property.is_verified }}</p>
+
+<h2>Image</h2>
+<p>DEBUG: image_paths = {{ property.image_paths }}</p>
+<ul>
+    {% if property.image_paths and property.image_paths.0 %}
+        <img src="{{ MEDIA_URL }}{{ property.image_paths.0 }}" alt="Property Image" style="max-width: 200px;">
+    {% else %}
+        <p>No image available.</p>
+    {% endif %}
+</ul>
+
+<a href="{% url 'property_edit' property.property_id %}">Edit</a>
+<a href="{% url 'property_delete' property.property_id %}">Delete</a>
+<a href="{% url 'property_list' %}">Back to List</a>
+{% endblock %}

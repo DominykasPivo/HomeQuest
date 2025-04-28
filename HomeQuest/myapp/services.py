@@ -1,11 +1,11 @@
-from .models import User, Buyer, Seller, GoldSeller
-from django.contrib.messages import get_messages
+from .models import User, Buyer, Seller, GoldSeller, Property
 from django.core.exceptions import ValidationError
 from datetime import timedelta
 from django.utils.timezone import now
 import os
 from django.conf import settings
 import logging
+from django.contrib.messages import get_messages
 
 logger = logging.getLogger(__name__)
 
@@ -154,3 +154,85 @@ def update_subscription(gold_seller, action):
         gold_seller.subscription_plan = 'basic'
         gold_seller.subscription_end_date = None  # Clear the subscription end date
     gold_seller.save()
+
+
+def save_property_image(property_instance, image):
+    if not image:
+        return []
+    folder = f'property_images/property_{property_instance.property_id}'
+    abs_folder = os.path.join(settings.MEDIA_ROOT, folder)
+    os.makedirs(abs_folder, exist_ok=True)
+    filename = image.name
+    rel_path = os.path.join(folder, filename)
+    abs_path = os.path.join(settings.MEDIA_ROOT, rel_path)
+    with open(abs_path, 'wb+') as destination:
+        for chunk in image.chunks():
+            destination.write(chunk)
+    return [rel_path]
+
+
+def create_property_for_seller(seller, property_data, image=None):
+    """
+    Create a property for a seller with the given data and an optional image.
+    """
+    if not isinstance(seller, Seller):
+        raise ValidationError("Only sellers can create properties.")
+
+    # Create and save the property instance
+    property_instance = Property(
+        seller=seller,
+        location=property_data.get('location'),
+        map_location=property_data.get('map_location'),
+        price=property_data.get('price'),
+        size=property_data.get('size'),
+        room_num=property_data.get('room_num'),
+        property_type=property_data.get('property_type'),
+        is_verified=property_data.get('is_verified', False),
+    )
+    property_instance.save()  # Save the property to generate an ID
+    print("DEBUG: Property instance saved")
+
+    if image:
+        print("DEBUG: Image is present, calling save_property_image")
+        image_paths = save_property_image(property_instance, image)
+        print(f"DEBUG: Image paths: {image_paths}")
+        # Convert backslashes to forward slashes for JSON compatibility
+        image_paths = [p.replace('\\', '/') for p in image_paths]
+        print(f"DEBUG: About to assign images: {image_paths} (type: {type(image_paths)})")
+        try:
+            property_instance.image_paths = image_paths
+            property_instance.save()
+            print("DEBUG: Image saved and property_instance updated")
+        except Exception as e:
+            print(f"DEBUG: Exception on property_instance.save(): {e}")
+            raise
+        print("asd")
+
+
+    return property_instance
+
+def update_property(property_instance, property_data, image=None):
+    """
+    Update an existing property with new data and an optional image.
+    """
+    property_instance.location = property_data.get('location')
+    property_instance.map_location = property_data.get('map_location')
+    property_instance.price = property_data.get('price')
+    property_instance.size = property_data.get('size')
+    property_instance.room_num = property_data.get('room_num')
+    property_instance.property_type = property_data.get('property_type')
+    property_instance.is_verified = property_data.get('is_verified', False)
+    property_instance.save()
+
+    # Handle the uploaded image
+    if image:
+        print("DEBUG: Creating Image object")  # Debug statement
+        #Image.objects.create(property=property_instance, image=image)
+
+    return property_instance
+
+def delete_property(property_instance):
+    """
+    Delete a property instance.
+    """
+    property_instance.delete()
