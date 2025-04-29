@@ -47,6 +47,18 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .nav-wrapper {
+            background-color: white;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
         }
 
         nav ul {
@@ -56,6 +68,20 @@
             display: flex;
             align-items: center;
             gap: 2rem;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-left {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .nav-right {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            min-width: 200px;
         }
 
         nav ul li a {
@@ -152,6 +178,33 @@
             padding-left: 1.5rem;
         }
 
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 0.5rem 0;
+        }
+
+        .dropdown-cta {
+            padding: 0.75rem 1rem;
+            background-color: var(--bg-light);
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .dropdown-cta a {
+            display: inline;
+            padding: 0;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .dropdown-cta a:hover {
+            background-color: transparent;
+            padding-left: 0;
+            text-decoration: underline;
+        }
+
         .content {
             margin: 0 auto;
             padding: 2rem;
@@ -174,38 +227,43 @@
     </style>
 </head>
 <body>
-    <nav>
-        <a href="{% url 'home' %}" class="brand">HomeQuest</a>
-        <ul>
-            <li><a href="{% url 'home' %}">Home</a></li>
-            {% if not user.is_authenticated %}
-                <li><a href="{% url 'register' %}">Register</a></li>
-                <li><a href="{% url 'login' %}">Login</a></li>
-            {% endif %}
-        </ul>
-        <div class="profile-menu">
-            {% if user.is_authenticated %}
-                {% if user.profile_photo %}
-                    <img src="{{ user.profile_photo.url }}" alt="Profile" class="profile-icon" onclick="toggleDropdown(event)">
-                {% else %}
-                    <img src="{% static 'images/default-profile.png' %}" alt="Profile" class="profile-icon" onclick="toggleDropdown(event)">
-                {% endif %}
-                <div class="dropdown">
-                    <a href="{% url 'profile' %}">View Profile</a>
-                    <a href="{% url 'edit_profile' %}">Edit Profile</a>
-                    {% if user.seller_profile %}
-                        <a href="{% url 'manage_subscription' %}">Manage Subscription</a>
+    <div class="nav-wrapper">
+        <nav>
+            <div class="nav-left">
+                <a href="{% url 'home' %}" class="brand">HomeQuest</a>
+            </div>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+            </ul>
+            <div class="nav-right">
+                <div class="profile-menu">
+                    {% if user.is_authenticated %}
+                        {% if user.profile_photo %}
+                            <img src="{{ user.profile_photo.url }}" alt="Profile" class="profile-icon" onclick="toggleDropdown(event)">
+                        {% else %}
+                            <img src="{% static 'images/default-profile.png' %}" alt="Profile" class="profile-icon" onclick="toggleDropdown(event)">
+                        {% endif %}
+                        <div class="dropdown">
+                            <a href="{% url 'profile' %}">View Profile</a>
+                            <a href="{% url 'edit_profile' %}">Edit Profile</a>
+                            {% if user.seller_profile %}
+                                <a href="{% url 'manage_subscription' %}">Manage Subscription</a>
+                            {% endif %}
+                            <a href="{% url 'logout' %}">Logout</a>
+                        </div>
+                    {% else %}
+                        <img src="{% static 'images/default-profile.png' %}" alt="Profile" class="profile-icon" onclick="toggleDropdown(event)">
+                        <div class="dropdown">
+                            <a href="{% url 'login' %}">Sign In</a>
+                            <div class="dropdown-cta">
+                                Don't have an account? <a href="{% url 'register' %}">Register now</a>
+                            </div>
+                        </div>
                     {% endif %}
-                    <a href="{% url 'logout' %}">Logout</a>
                 </div>
-            {% else %}
-                <img src="{% static 'images/default-profile.png' %}" alt="Profile" class="profile-icon" onclick="toggleDropdown(event)">
-                <div class="dropdown">
-                    <a href="{% url 'login' %}">Sign In</a>
-                </div>
-            {% endif %}
-        </div>
-    </nav>
+            </div>
+        </nav>
+    </div>
     <div class="content">
         {% block content %}
         {% endblock %}
