@@ -6,8 +6,7 @@ import os
 from django.conf import settings
 import logging
 from django.contrib.messages import get_messages
-
-logger = logging.getLogger(__name__)
+import shutil # for deleting directories
 
 def clear_messages(request):
     """
@@ -80,7 +79,6 @@ def create_user(user_type, **kwargs):
         user.save()
         return user
     except Exception as e:
-        logger.error(f"Error creating user: {str(e)}")
         raise
 
 def update_user_profile(user, **kwargs):
@@ -225,14 +223,67 @@ def update_property(property_instance, property_data, image=None):
     property_instance.save()
 
     # Handle the uploaded image
+    property_instance.location = property_data.get('location')
+    property_instance.map_location = property_data.get('map_location')
+    property_instance.price = property_data.get('price')
+    property_instance.size = property_data.get('size')
+    property_instance.room_num = property_data.get('room_num')
+    property_instance.property_type = property_data.get('property_type')
+    property_instance.is_verified = property_data.get('is_verified', False)
+    property_instance.save()
+
+    # Handle the uploaded images
     if image:
-        print("DEBUG: Creating Image object")  # Debug statement
-        #Image.objects.create(property=property_instance, image=image)
+        image_paths = property_instance.image_paths or []
+        for img in image:
+            new_paths = save_property_image(property_instance, img)
+            image_paths.extend([p.replace('\\', '/') for p in new_paths])
+        property_instance.image_paths = image_paths
+        property_instance.save()
 
     return property_instance
-
 def delete_property(property_instance):
     """
-    Delete a property instance.
+    Delete a property instance and its image folder.
     """
+    # Delete the property images folder
+    folder = f'property_images/property_{property_instance.property_id}'
+    abs_folder = os.path.join(settings.MEDIA_ROOT, folder)
+    if os.path.exists(abs_folder):
+        shutil.rmtree(abs_folder)
+    # Delete the property itself
     property_instance.delete()
+
+
+def delete_property_image(property_instance, image_to_delete):
+    image_paths = property_instance.image_paths or []
+    if image_to_delete in image_paths:
+        image_full_path = os.path.join(settings.MEDIA_ROOT, image_to_delete)
+        if os.path.exists(image_full_path):
+            os.remove(image_full_path)
+        image_paths.remove(image_to_delete)
+        property_instance.image_paths = image_paths
+        property_instance.save()
+    return property_instance
+
+def replace_property_image(property_instance, image_to_replace, new_image, save_property_image_func):
+    image_paths = property_instance.image_paths or []
+    if image_to_replace in image_paths and new_image:
+        idx = image_paths.index(image_to_replace)
+        old_image_full_path = os.path.join(settings.MEDIA_ROOT, image_to_replace)
+        if os.path.exists(old_image_full_path):
+            os.remove(old_image_full_path)
+        new_path = save_property_image_func(property_instance, new_image)[0].replace('\\', '/')
+        image_paths[idx] = new_path
+        property_instance.image_paths = image_paths
+        property_instance.save()
+    return property_instance
+
+def add_property_image(property_instance, new_image, save_property_image_func):
+    if new_image:
+        image_paths = property_instance.image_paths or []
+        new_path = save_property_image_func(property_instance, new_image)[0].replace('\\', '/')
+        image_paths.append(new_path)
+        property_instance.image_paths = image_paths
+        property_instance.save()
+    return property_instance

@@ -3,6 +3,7 @@
 {% block content %}
 {% load static %}
 
+
 <h1>Property Details</h1>
 <p>Location: {{ property.location }}</p>
 <p>Price: {{ property.price }}</p>
@@ -12,15 +13,24 @@
 <p>Verified: {{ property.is_verified }}</p>
 
 <h2>Image</h2>
-<p>DEBUG: image_paths = {{ property.image_paths }}</p>
-<p>Image URL: {{ MEDIA_URL }}{{ property.image_paths.0 }}</p>
 <ul>
+    {% if property.image_paths %}
+        {% for image_path in property.image_paths %}
+            <li>
+                <img src="{{ MEDIA_URL }}{{ image_path }}" alt="Property Image" style="max-width: 200px;">
+            </li>
+        {% endfor %}
+    {% else %}
+        <li>No image available.</li>
+    {% endif %}
+</ul>
+<!-- <ul>
     {% if property.image_paths and property.image_paths.0 %}
         <img src="{{ MEDIA_URL }}{{ property.image_paths.0 }}" alt="Property Image" style="max-width: 200px;">
     {% else %}
         <p>No image available.</p>
     {% endif %}
-</ul>
+</ul> -->
 
 <a href="{% url 'property_edit' property.property_id %}">Edit</a>
 <a href="{% url 'property_delete' property.property_id %}">Delete</a>

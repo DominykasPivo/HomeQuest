@@ -5,14 +5,17 @@ from django.contrib import messages
 from .forms import UserRegistrationForm, UserEditForm, PropertyForm
 from django.contrib.auth.decorators import login_required
 from .factories import UserFactory
-from .services import clear_messages, update_user_profile, get_or_create_gold_seller, update_subscription, create_property_for_seller, delete_property, update_property
+from .services import (
+        clear_messages, update_user_profile, get_or_create_gold_seller, save_property_image,
+        create_property_for_seller, delete_property, delete_property_image, replace_property_image, add_property_image
+        )
 from django.core.exceptions import ValidationError
 from django.http import Http404
 
 import os
 from django.conf import settings
 
-import logging
+
 # from datetime import timedelta
 # from django.utils.timezone import now
 
@@ -23,7 +26,6 @@ def home(request):
 def login_email_phone(request):
     return render(request, 'login_email_phone.html')
 
-logger = logging.getLogger(__name__)
 def register(request):
     clear_messages(request)
 
@@ -46,10 +48,8 @@ def register(request):
                 messages.success(request, 'Registration successful! Please log in.')
                 return redirect('login')  # Redirect to the login page
             except ValidationError as e:
-                logger.error(f"Validation error during registration: {e}")
                 messages.error(request, e.message)
             except Exception as e:
-                logger.error(f"Unexpected error during registration: {e}")
                 messages.error(request, f"An unexpected error occurred: {str(e)}")
         else:
             messages.error(request, 'There was an error with your registration.')
@@ -197,6 +197,7 @@ def create_property(request):
 
 @login_required
 def property_list(request):
+    
     print("DEBUG: property_list view called")  # Add this line
     seller = get_object_or_404(Seller, pk=request.user.pk)
     properties = Property.objects.filter(seller=seller)
@@ -213,46 +214,51 @@ def property_detail(request, property_id):
 @login_required
 def property_edit(request, property_id):
     property_instance = get_object_or_404(Property, pk=property_id, seller__pk=request.user.pk)
+    form = PropertyForm(request.POST or None, request.FILES or None, instance=property_instance)
 
     if request.method == 'POST':
-        form = PropertyForm(request.POST, request.FILES, instance=property_instance)
-        if form.is_valid():
-            try:
-                # Use the service function to update the property
-                image = form.cleaned_data.get('image')
-                print(f"DEBUG: Image parameter in create_property_for_seller: {type(image)}")
-                # Only pass the image if it's an uploaded file
-                if hasattr(image, 'read'):
-                    image_to_pass = image
-                    
-                else:
-                    
-                    image_to_pass = None
-                update_property(
-                    property_instance=property_instance,
-                    property_data=form.cleaned_data,
-                    image=image_to_pass
-                )
-                
+        # Delete image
+        if 'delete_image' in request.POST:
+            image_to_delete = request.POST['delete_image']
+            delete_property_image(property_instance, image_to_delete)
+            return redirect('property_edit', property_id=property_id)
+
+        # Replace image
+        if 'replace_image_btn' in request.POST:
+            image_to_replace = request.POST['replace_image_btn']
+            idx = property_instance.image_paths.index(image_to_replace)
+            file_field = f'replace_image_{idx}'
+            new_image = request.FILES.get(file_field)
+            replace_property_image(property_instance, image_to_replace, new_image, save_property_image)
+            return redirect('property_edit', property_id=property_id)
+
+        # Add new image
+        if 'add_image_btn' in request.POST:
+            new_image = request.FILES.get('new_image')
+            add_property_image(property_instance, new_image, save_property_image)
+            return redirect('property_edit', property_id=property_id)
+
+        # Save other changes
+        if 'save_changes' in request.POST:
+            if form.is_valid():
+                form.save()
                 messages.success(request, "Property updated successfully!")
                 return redirect('property_detail', property_id=property_instance.pk)
-            except ValidationError as e:
-                messages.error(request, str(e))
-            except Exception as e:
-                messages.error(request, f"An unexpected error occurred: {str(e)}")
-        else:
-            messages.error(request, "There was an error updating the property.")
-    else:
-        form = PropertyForm(instance=property_instance)
+            else:
+                messages.error(request, "There was an error updating the property.")
 
-    return render(request, 'property_edit.html', {'form': form, 'property': property_instance})
+    return render(request, 'property_edit.html', {
+        'form': form,
+        'property': property_instance,
+        'MEDIA_URL': settings.MEDIA_URL,
+    })
+
 
 @login_required
 def property_delete(request, property_id):
     property_instance = get_object_or_404(Property, pk=property_id, seller__pk=request.user.pk)
     if request.method == 'POST':
         try:
-            # Use the service function to delete the property
             delete_property(property_instance)
             messages.success(request, "Property deleted successfully!")
             return redirect('property_list')

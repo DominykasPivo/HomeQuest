@@ -1,22 +1,41 @@
 {% extends 'base.html' %}
 {% block title %}Edit Property{% endblock %}
 {% block content %}
+{% load static %}
 
 <h1>Edit Property</h1>
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
+    {# Render all fields except the image field #}
+    {% for field in form %}
+        {% if field.name != "image" %}
+            <p>
+                {{ field.label_tag }} {{ field }}
+                {% if field.errors %}
+                    <span style="color:red">{{ field.errors }}</span>
+                {% endif %}
+            </p>
+        {% endif %}
+    {% endfor %}
     <h2>Current Images</h2>
     <ul>
         {% for image_path in property.image_paths %}
-            <li><img src="{{ image.url }}" alt="Property Image" style="max-width: 200px;"></li>
-        {% empty %}
-            <li>No images available.</li>
+            <li>
+                <img src="{{ MEDIA_URL }}{{ image_path }}" alt="Property Image" style="max-width: 200px;" accept ="image/*">
+                <button type="submit" name="delete_image" value="{{ image_path }}">Delete</button>
+                <input type="file" name="replace_image_{{ forloop.counter0 }}" accept="image/*">
+                <button type="submit" name="replace_image_btn" value="{{ image_path }}">Replace</button>
+            </li>
         {% endfor %}
+        {% if not property.image_paths %}
+            <li>No image available.</li>
+        {% endif %}
     </ul>
-    <h2>Upload New Images</h2>
-    <input type="file" name="images" multiple>
-    <button type="submit">Save Changes</button>
+    <h2>Add New Image</h2>
+    <input type="file" name="new_image" accept="image/*">
+    <button type="submit" name="add_image_btn">Add Image</button>
+    <br><br>
+    <button type="submit" name="save_changes">Save Changes</button>
     <a href="{% url 'property_list' %}">Cancel</a>
 </form>
 {% endblock %}
