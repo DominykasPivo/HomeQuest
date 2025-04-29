@@ -9,7 +9,12 @@ class UserRegistrationForm(forms.ModelForm):
         label="Username",
         help_text=""  # Remove the default help text
     )
-
+    
+    date_of_birth = forms.DateField(
+        required=True,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        label="Date of Birth"
+    )
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'required': 'required'}),
         label="Password"

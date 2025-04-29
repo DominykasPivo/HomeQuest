@@ -5,11 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}HomeQuest{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <style>
         /* Basic Navbar Styling */
+        body {
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
         nav {
-            background-color: #333;
+            background-color: #007bff;
             color: white;
             padding: 0.5rem 1rem;
             display: flex;
@@ -41,6 +48,7 @@
         .brand {
             font-size: 1.5rem;
             font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
         }
 
         .profile-menu {
