@@ -205,7 +205,10 @@ def property_list(request):
 @login_required
 def property_detail(request, property_id):
     property_obj = get_object_or_404(Property, pk=property_id, seller__pk=request.user.pk)
-    return render(request, 'property_detail.html', {'property': property_obj})
+    return render(request, 'property_detail.html', {
+        'property': property_obj,
+        'MEDIA_URL': settings.MEDIA_URL,  # <-- Add this line
+    })
 
 @login_required
 def property_edit(request, property_id):
