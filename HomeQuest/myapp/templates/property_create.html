@@ -5,8 +5,36 @@
 <h1>Create Property</h1>
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
+    {% for field in form %}
+        <div id="field_{{ field.name }}">
+            {{ field.label_tag }} {{ field }}
+            {% if field.errors %}
+                <span style="color:red">{{ field.errors }}</span>
+            {% endif %}
+        </div>
+    {% endfor %}
     <button type="submit">Create Property</button>
 </form>
 <a href="{% url 'property_list' %}">Cancel</a>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function toggleDuration() {
+        var listingType = document.getElementById('id_listing_type');
+        var durationDiv = document.getElementById('field_duration');
+        if (listingType && durationDiv) {
+            if (listingType.value === 'for_rent') {
+                durationDiv.style.display = '';
+            } else {
+                durationDiv.style.display = 'none';
+            }
+        }
+    }
+    var listingType = document.getElementById('id_listing_type');
+    if (listingType) {
+        listingType.addEventListener('change', toggleDuration);
+        toggleDuration(); // Initial call
+    }
+});
+</script>
 {% endblock %}

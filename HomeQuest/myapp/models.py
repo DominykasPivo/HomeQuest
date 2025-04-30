@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import JSONField
 from django.contrib.auth.models import BaseUserManager, PermissionsMixin, AbstractBaseUser
-#from .services import property_image_upload_path
+
 
 class CustomUserManager(BaseUserManager):
     """
@@ -85,6 +85,10 @@ class Property(models.Model):
         ('residential', 'Residential'),
         ('commercial', 'Commercial'),
     ]
+    LISTING_TYPES = [
+        ('for_sale', 'For Sale'),
+        ('for_rent', 'For Rent'),
+    ]
 
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name='properties')
     property_id = models.AutoField(primary_key=True)
@@ -94,11 +98,14 @@ class Property(models.Model):
     size = models.DecimalField(max_digits=10, decimal_places=2)
     room_num = models.PositiveIntegerField()
     property_type = models.CharField(max_length=50, choices=PROPERTY_TYPES)
+    listing_type = models.CharField(max_length=50, choices=LISTING_TYPES)
+    duration = models.PositiveIntegerField(default=0)  # Duration in days
     view_count = models.PositiveIntegerField(default=0)
     like_count = models.PositiveIntegerField(default=0)
     comment_count = models.PositiveIntegerField(default=0)
     is_verified = models.BooleanField(default=False)
     image_paths = models.JSONField(default=list, blank=True)
+    verification_files = models.JSONField(default=list, blank=True)
 
     def __str__(self):
         return f"Property {self.property_id} - {self.location}"

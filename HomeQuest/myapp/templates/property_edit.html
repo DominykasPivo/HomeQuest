@@ -6,22 +6,19 @@
 <h1>Edit Property</h1>
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {# Render all fields except the image field #}
     {% for field in form %}
-        {% if field.name != "image" %}
-            <p>
-                {{ field.label_tag }} {{ field }}
-                {% if field.errors %}
-                    <span style="color:red">{{ field.errors }}</span>
-                {% endif %}
-            </p>
-        {% endif %}
+        <div id="field_{{ field.name }}">
+            {{ field.label_tag }} {{ field }}
+            {% if field.errors %}
+                <span style="color:red">{{ field.errors }}</span>
+            {% endif %}
+        </div>
     {% endfor %}
     <h2>Current Images</h2>
     <ul>
         {% for image_path in property.image_paths %}
             <li>
-                <img src="{{ MEDIA_URL }}{{ image_path }}" alt="Property Image" style="max-width: 200px;" accept ="image/*">
+                <img src="{{ MEDIA_URL }}{{ image_path }}" alt="Property Image" style="max-width: 200px;">
                 <button type="submit" name="delete_image" value="{{ image_path }}">Delete</button>
                 <input type="file" name="replace_image_{{ forloop.counter0 }}" accept="image/*">
                 <button type="submit" name="replace_image_btn" value="{{ image_path }}">Replace</button>
@@ -38,4 +35,25 @@
     <button type="submit" name="save_changes">Save Changes</button>
     <a href="{% url 'property_list' %}">Cancel</a>
 </form>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function toggleDuration() {
+            var listingType = document.getElementById('id_listing_type');
+            var durationDiv = document.getElementById('field_duration');
+            if (listingType && durationDiv) {
+                if (listingType.value === 'for_rent') {
+                    durationDiv.style.display = '';
+                } else {
+                    durationDiv.style.display = 'none';
+                }
+            }
+        }
+        var listingType = document.getElementById('id_listing_type');
+        if (listingType) {
+            listingType.addEventListener('change', toggleDuration);
+            toggleDuration(); // Initial call
+        }
+    });
+</script>
+
 {% endblock %}

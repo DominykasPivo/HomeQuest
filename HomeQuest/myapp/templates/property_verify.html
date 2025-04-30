@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Verify Property{% endblock %}
+{% block content %}
+{% load filename %}
+
+
+<h1>Upload Verification File for {{ property.location }}</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="verification_file" required>
+    <button type="submit">Upload</button>
+</form>
+<ul>
+    {% for file_path in property.verification_files %}
+        <li>
+            <span>{{ file_path|filename }}</span>
+            <form method="post" action="{% url 'property_verify' property.property_id %}" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="delete_verification_file" value="{{ file_path }}">
+                <button type="submit" onclick="return confirm('Delete this verification file?');">Delete</button>
+            </form>
+        </li>
+    {% empty %}
+        <li>No verification files uploaded.</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'property_list' %}">Back to List</a>
+{% endblock %}

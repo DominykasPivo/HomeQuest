@@ -6,12 +6,19 @@
 
 <h1>Property Details</h1>
 <p>Location: {{ property.location }}</p>
+<p>Map Location: {{ property.map_location }}</p>
 <p>Price: {{ property.price }}</p>
 <p>Size: {{ property.size }}</p>
 <p>Rooms: {{ property.room_num }}</p>
 <p>Type: {{ property.property_type }}</p>
+<p>Listing Type: {{ property.listing_type }}</p>
 <p>Verified: {{ property.is_verified }}</p>
-
+<p>Views: {{ property.view_count }}</p>
+<p>Likes: {{ property.like_count }}</p>
+<p>Comments: {{ property.comment_count }}</p>
+{% if property.listing_type == "for_rent" %}
+    <p>Duration: {{ property.duration }}</p>
+{% endif %}
 <h2>Image</h2>
 <ul>
     {% if property.image_paths %}
@@ -24,13 +31,6 @@
         <li>No image available.</li>
     {% endif %}
 </ul>
-<!-- <ul>
-    {% if property.image_paths and property.image_paths.0 %}
-        <img src="{{ MEDIA_URL }}{{ property.image_paths.0 }}" alt="Property Image" style="max-width: 200px;">
-    {% else %}
-        <p>No image available.</p>
-    {% endif %}
-</ul> -->
 
 <a href="{% url 'property_edit' property.property_id %}">Edit</a>
 <a href="{% url 'property_delete' property.property_id %}">Delete</a>

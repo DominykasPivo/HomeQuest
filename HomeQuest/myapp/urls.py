@@ -17,4 +17,8 @@ urlpatterns = [
     path('properties/<int:property_id>/', views.property_detail, name='property_detail'),
     path('properties/<int:property_id>/edit/', views.property_edit, name='property_edit'),
     path('properties/<int:property_id>/delete/', views.property_delete, name='property_delete'),
+    path('properties/<int:property_id>/verify/', views.property_verify, name='property_verify'),
+    #User property interaction
+    path('properties/search/', views.property_search, name='property_search'),
+
 ]

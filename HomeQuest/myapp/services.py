@@ -7,6 +7,7 @@ from django.conf import settings
 import logging
 from django.contrib.messages import get_messages
 import shutil # for deleting directories
+from django.db.models import Q
 
 def clear_messages(request):
     """
@@ -49,32 +50,6 @@ def create_user(user_type, **kwargs):
         else:
             raise ValidationError("Invalid user type. Must be 'buyer' or 'seller'.")
         
-        # elif user_type == 'seller':
-        #     seller = Seller.objects.create(
-        #         email=kwargs.get('email'),
-        #         full_name=kwargs.get('full_name'),
-        #         date_of_birth=kwargs.get('date_of_birth'),
-        #         consent_to_share_location=kwargs.get('consent_to_share_location'),
-        #         phone_number=kwargs.get('phone_number'),
-        #         profile_photo=kwargs.get('profile_photo'),
-        #     )
-        #     # Automatically create a GoldSeller with default subscription plan
-        #     gold_seller = GoldSeller.objects.create(
-        #         seller_ptr=seller,  # Link to the existing Seller
-        #         subscription_plan='basic',  # Default to basic
-        #         subscription_end_date=None  # No subscription end date for basic
-        #     )
-        #     gold_seller.save(force_insert=False)  # Avoid creating a new parent row
-        #     user = seller
-        # else:
-        #     user = User.objects.create(
-        #         email=kwargs.get('email'),
-        #         full_name=kwargs.get('full_name'),
-        #         date_of_birth=kwargs.get('date_of_birth'),
-        #         consent_to_share_location=kwargs.get('consent_to_share_location'),
-        #         phone_number=kwargs.get('phone_number'),
-        #         profile_photo=kwargs.get('profile_photo'),
-        #     )
         user.set_password(kwargs.get('password'))
         user.save()
         return user
@@ -252,6 +227,12 @@ def delete_property(property_instance):
     if os.path.exists(abs_folder):
         shutil.rmtree(abs_folder)
     # Delete the property itself
+    if property_instance.verification_files:
+        verification_folder = f'property_verifications/property_{property_instance.property_id}'
+        abs_verification_folder = os.path.join(settings.MEDIA_ROOT, verification_folder)
+        if os.path.exists(abs_verification_folder):
+            shutil.rmtree(abs_verification_folder)
+
     property_instance.delete()
 
 
@@ -287,3 +268,66 @@ def add_property_image(property_instance, new_image, save_property_image_func):
         property_instance.image_paths = image_paths
         property_instance.save()
     return property_instance
+
+def filter_properties(search_type=None, query=None, min_price=None, max_price=None):
+    properties = Property.objects.all()
+
+    if search_type == 'for_rent':
+        properties = properties.filter(listing_type='for_rent')
+    elif search_type == 'for_sale':
+        properties = properties.filter(listing_type='for_sale')
+    elif search_type == 'recommended':
+        properties = properties.order_by('-like_count', '-view_count')
+
+    if query:
+        properties = properties.filter(
+            Q(location__icontains=query) |
+            Q(map_location__icontains=query)
+        )
+    if min_price:
+        properties = properties.filter(price__gte=min_price)
+    if max_price:
+        properties = properties.filter(price__lte=max_price)
+
+    return properties
+
+def save_verification_file(property_instance, file):
+    folder = f'property_verifications/property_{property_instance.property_id}'
+    abs_folder = os.path.join(settings.MEDIA_ROOT, folder)
+    os.makedirs(abs_folder, exist_ok=True)
+    filename = file.name
+    rel_path = os.path.join(folder, filename)
+    abs_path = os.path.join(settings.MEDIA_ROOT, rel_path)
+    with open(abs_path, 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)
+    return rel_path.replace('\\', '/')
+
+def add_verification_file(property_instance, file):
+    if file:
+        verification_files = property_instance.verification_files or []
+        new_path = save_verification_file(property_instance, file)
+        verification_files.append(new_path)
+        property_instance.verification_files = verification_files
+        property_instance.is_verified = True
+        property_instance.save()
+    return property_instance
+
+def delete_verification_file(property_instance, file_to_delete):
+    verification_files = property_instance.verification_files or []
+    if file_to_delete in verification_files:
+        abs_path = os.path.join(settings.MEDIA_ROOT, file_to_delete)
+        if os.path.exists(abs_path):
+            os.remove(abs_path)
+        verification_files.remove(file_to_delete)
+        property_instance.verification_files = verification_files
+        # If no files left, unverify and remove the folder
+        if not verification_files:
+            property_instance.is_verified = False
+            # Remove the property verification folder
+            folder = os.path.dirname(abs_path)
+            if os.path.exists(folder):
+                shutil.rmtree(folder)
+        property_instance.save()
+        return True
+    return False

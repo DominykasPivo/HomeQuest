@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Search Properties{% endblock %}
+{% block content %}
+<h1>Search Properties</h1>
+<form method="get" action="{% url 'property_search' %}">
+    <label>
+        <input type="radio" name="search_type" value="for_rent" {% if request.GET.search_type == "for_rent" %}checked{% endif %}> For Rent
+    </label>
+    <label>
+        <input type="radio" name="search_type" value="for_sale" {% if request.GET.search_type == "for_sale" %}checked{% endif %}> For Sale
+    </label>
+    <label>
+        <input type="radio" name="search_type" value="recommended" {% if request.GET.search_type == "recommended" %}checked{% endif %}> Recommended
+    </label>
+    <br>
+    <input type="text" name="q" placeholder="Location, city, postal code..." value="{{ request.GET.q }}">
+    <input type="number" name="min_price" placeholder="Min Price" value="{{ request.GET.min_price }}">
+    <input type="number" name="max_price" placeholder="Max Price" value="{{ request.GET.max_price }}">
+    <button type="submit">Search</button>
+</form>
+
+<ul>
+    {% for property in properties %}
+        <li>
+            <a href="{% url 'property_detail' property.property_id %}">
+                {{ property.location }} - {{ property.property_type }} - {{ property.price }}
+            </a>
+        </li>
+    {% empty %}
+        <li>No properties found.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

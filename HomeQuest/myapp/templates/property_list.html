@@ -9,7 +9,8 @@
         <li>
             <a href="{% url 'property_detail' property.property_id %}">{{ property.location }}</a>
             (<a href="{% url 'property_edit' property.property_id %}">Edit</a> |
-             <a href="{% url 'property_delete' property.property_id %}">Delete</a>)
+             <a href="{% url 'property_delete' property.property_id %}">Delete</a> |
+             <a href="{% url 'property_verify' property.property_id %}">Verify</a>)
         </li>
     {% empty %}
         <li>No properties found.</li>

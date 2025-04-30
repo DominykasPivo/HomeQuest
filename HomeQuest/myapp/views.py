@@ -7,7 +7,8 @@ from django.contrib.auth.decorators import login_required
 from .factories import UserFactory
 from .services import (
         clear_messages, update_user_profile, get_or_create_gold_seller, save_property_image,
-        create_property_for_seller, delete_property, delete_property_image, replace_property_image, add_property_image
+        create_property_for_seller, delete_property, delete_property_image, replace_property_image, add_property_image,
+        filter_properties, add_verification_file, delete_verification_file
         )
 from django.core.exceptions import ValidationError
 from django.http import Http404
@@ -265,3 +266,44 @@ def property_delete(request, property_id):
         except Exception as e:
             messages.error(request, f"An unexpected error occurred: {str(e)}")
     return render(request, 'property_delete.html', {'property': property_instance})
+
+
+def property_search(request):
+    search_type = request.GET.get('search_type')
+    query = request.GET.get('q', '')
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    
+    properties = filter_properties(
+        search_type=search_type,
+        query=query,
+        min_price=min_price,
+        max_price=max_price
+    )
+
+    return render(request, 'property_search.html', {
+        'properties': properties,
+    })
+
+
+@login_required
+def property_verify(request, property_id):
+    property_instance = get_object_or_404(Property, pk=property_id, seller__pk=request.user.pk)
+    if request.method == 'POST':
+        if request.FILES.get('verification_file'):
+            verification_file = request.FILES['verification_file']
+            add_verification_file(property_instance, verification_file)
+            messages.success(request, "Verification file uploaded successfully!")
+            return redirect('property_verify', property_id=property_id)
+        elif request.POST.get('delete_verification_file'):
+            file_to_delete = request.POST['delete_verification_file']
+            if delete_verification_file(property_instance, file_to_delete):
+                messages.success(request, "Verification file deleted successfully!")
+            else:
+                messages.error(request, "File could not be deleted.")
+            return redirect('property_verify', property_id=property_id)
+    return render(request, 'property_verify.html', {'property': property_instance})
+
+
+
+
