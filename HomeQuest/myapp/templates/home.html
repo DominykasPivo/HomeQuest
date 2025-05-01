@@ -1,5 +1,131 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Home{% endblock %}
 {% block content %}
-<h1>Welcome to HomeQuest!</h1>
+<div class="hero-section">
+    <div class="hero-content">
+        <h1>Welcome to HomeQuest</h1>
+        <p class="hero-subtitle">Your Journey to Finding the Perfect Home Starts Here</p>
+        <p class="hero-description">Discover a world of properties, connect with trusted sellers, and make your dream home a reality with HomeQuest's innovative platform.</p>
+        <div class="hero-buttons">
+            <a href="{% url 'property_search' %}" class="btn btn-primary">Explore Properties</a>
+            <a href="{% url 'register' %}" class="btn btn-secondary">Join HomeQuest</a>
+        </div>
+    </div>
+    <div class="hero-image">
+        <img src="{% static 'images/welcomehome.jpg' %}" alt="Beautiful Home">
+    </div>
+</div>
+
+<style>
+    .hero-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4rem 2rem;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 80vh;
+    }
+
+    .hero-content {
+        flex: 1;
+        max-width: 600px;
+        padding-right: 2rem;
+    }
+
+    .hero-image {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .hero-image img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        font-size: 3.5rem;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    .hero-subtitle {
+        font-size: 1.5rem;
+        color: #34495e;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+    }
+
+    .hero-description {
+        font-size: 1.1rem;
+        color: #7f8c8d;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn {
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #4070f4;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #3060e0;
+        transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+        background-color: white;
+        color: #4070f4;
+        border: 2px solid #4070f4;
+    }
+
+    .btn-secondary:hover {
+        background-color: #3060e0;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .hero-section {
+            flex-direction: column;
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .hero-content {
+            padding-right: 0;
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+        }
+    }
+</style>
 {% endblock %}
