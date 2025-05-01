@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Property
+from .models import User, Property, Comment
 
 class UserRegistrationForm(forms.ModelForm):
     full_name = forms.CharField(
@@ -115,3 +115,17 @@ class PropertyForm(forms.ModelForm):
         if listing_type == 'for_rent' and not duration:
             self.add_error('duration', 'Duration is required for rental properties.')
         return cleaned_data
+
+class CommentForm(forms.ModelForm):
+    text = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'rows': 3,
+            'placeholder': 'Write your comment here...',
+            'class': 'form-control'
+        }),
+        required=True
+    )
+
+    class Meta:
+        model = Comment
+        fields = ['text']

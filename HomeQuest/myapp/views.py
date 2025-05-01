@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .models import User, GoldSeller, Seller, Property  #have to make user models
+from .models import User, GoldSeller, Seller, Property, Comment, Like  #have to make user models
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import UserRegistrationForm, UserEditForm, PropertyForm
+from .forms import UserRegistrationForm, UserEditForm, PropertyForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from .factories import UserFactory
 from .services import (
@@ -213,9 +213,12 @@ def property_list(request):
 @login_required
 def property_detail(request, property_id):
     property_obj = get_object_or_404(Property, pk=property_id, seller__pk=request.user.pk)
+    # Get comments with related user data
+    comments = property_obj.comments.select_related('user').all()
     return render(request, 'property_detail.html', {
         'property': property_obj,
-        'MEDIA_URL': settings.MEDIA_URL, 
+        'MEDIA_URL': settings.MEDIA_URL,
+        'comments': comments,
     })
 
 @login_required
@@ -330,9 +333,49 @@ def property_verify(request, property_id):
 
 def property_detail_all(request, property_id):
     property_obj = get_object_or_404(Property, pk=property_id)
+    user_has_liked = False
+    comment_form = None
+
+    if request.user.is_authenticated:
+        user_has_liked = Like.objects.filter(property=property_obj, user=request.user).exists()
+        if request.method == 'POST':
+            if 'like' in request.POST:
+                if user_has_liked:
+                    # Unlike
+                    Like.objects.filter(property=property_obj, user=request.user).delete()
+                    property_obj.like_count = property_obj.likes.count()
+                    property_obj.save()
+                    user_has_liked = False
+                else:
+                    # Like
+                    Like.objects.create(property=property_obj, user=request.user)
+                    property_obj.like_count = property_obj.likes.count()
+                    property_obj.save()
+                    user_has_liked = True
+                return redirect('property_detail_all', property_id=property_id)
+            
+            # Handle comment submission
+            comment_form = CommentForm(request.POST)
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.property = property_obj
+                comment.user = request.user
+                comment.save()
+                property_obj.comment_count = property_obj.comments.count()
+                property_obj.save()
+                return redirect('property_detail_all', property_id=property_id)
+        else:
+            comment_form = CommentForm()
+
+    # Get all comments for this property
+    comments = property_obj.comments.select_related('user').all()
+
     return render(request, 'property_detail_all.html', {
         'property': property_obj,
         'MEDIA_URL': settings.MEDIA_URL,
+        'user_has_liked': user_has_liked,
+        'comments': comments,
+        'comment_form': comment_form,
     })
 
 

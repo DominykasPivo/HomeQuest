@@ -109,3 +109,28 @@ class Property(models.Model):
     def __str__(self):
         return f"Property {self.property_id} - {self.location}"
 
+
+class Comment(models.Model):
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Comment by {self.user.full_name} on {self.property.location}"
+
+
+class Like(models.Model):
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['property', 'user']  # Makes sure that a user can like a property only once lmao
+
+    def __str__(self):
+        return f"Like by {self.user.full_name} on {self.property.location}"
+

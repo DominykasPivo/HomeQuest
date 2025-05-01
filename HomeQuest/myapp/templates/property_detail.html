@@ -41,13 +41,25 @@
             {% else %}
                 <div class="no-image">
                     <div class="empty-image-placeholder">
-                        <span>No images available</span>
+                        <i class="fas fa-home fa-4x"></i>
+                        <p>No images available</p>
                     </div>
                 </div>
             {% endif %}
         </div>
 
         <div class="property-info-section">
+            <div class="engagement-summary">
+                <span class="engagement-stat">
+                    <i class="fas fa-heart"></i>
+                    <span>{{ property.like_count }} likes</span>
+                </span>
+                <span class="engagement-stat">
+                    <i class="fas fa-comment"></i>
+                    <span>{{ property.comment_count }} comments</span>
+                </span>
+            </div>
+            
             <h2>About this property</h2>
             
             <div class="quick-info">
@@ -76,6 +88,41 @@
                 </div>
                 {% endif %}
             </div>
+
+            <div class="engagement-section">
+                <h3>Property Engagement</h3>
+                <div class="engagement-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-heart"></i>
+                        <span class="stat-value">{{ property.like_count }}</span>
+                        <span class="stat-label">Likes</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-comment"></i>
+                        <span class="stat-value">{{ property.comment_count }}</span>
+                        <span class="stat-label">Comments</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comments-section">
+                <h3>Comments</h3>
+                <div class="comments-list">
+                    {% for comment in property.comments.all %}
+                    <div class="comment">
+                        <div class="comment-header">
+                            <strong>{{ comment.user.full_name }}</strong>
+                            <span class="comment-date">{{ comment.created_at|date:"F j, Y, g:i a" }}</span>
+                        </div>
+                        <div class="comment-body">
+                            {{ comment.text|linebreaks }}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="no-comments">No comments yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
 
         <div class="action-buttons">
@@ -92,6 +139,9 @@
         max-width: 1200px;
         margin: 0 auto;
         padding: 2rem;
+        background: linear-gradient(135deg, #f5f7fa 5%, #c3cfe2 100%);
+        border-radius: 0;
+        box-shadow: 0 4px 20px rgba(64, 112, 244, 0.1);
     }
 
     .detail-header {
@@ -100,7 +150,7 @@
 
     .detail-header h1 {
         font-size: 2.5rem;
-        color: #333;
+        color: #2c3e50;
         margin-bottom: 1rem;
     }
 
@@ -366,6 +416,101 @@
         opacity: 0.5;
     }
 
+    .engagement-section {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #eee;
+    }
+
+    .engagement-section h3 {
+        font-size: 1.2rem;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .engagement-stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .stat-item {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        transition: transform 0.2s ease;
+    }
+
+    .stat-item:hover {
+        transform: translateY(-3px);
+    }
+
+    .stat-item i {
+        font-size: 1.2rem;
+        color: #4070f4;
+        margin-bottom: 0.3rem;
+    }
+
+    .stat-value {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+        margin: 0.3rem 0;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 0.8rem;
+    }
+
+    .comments-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #eee;
+    }
+
+    .comments-section h3 {
+        font-size: 1.4rem;
+        color: #333;
+        margin-bottom: 1.5rem;
+    }
+
+    .comments-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .comment {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+
+    .comment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .comment-date {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .comment-body {
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .no-comments {
+        color: #666;
+        font-style: italic;
+    }
+
     @media (max-width: 768px) {
         .property-detail-page {
             padding: 1rem;
@@ -391,6 +536,15 @@
             width: 100%;
             text-align: center;
         }
+
+        .thumbnail {
+            width: 80px;
+            height: 60px;
+        }
+
+        .engagement-stats {
+            grid-template-columns: 1fr;
+        }
     }
 
     /* Remove feature section styles */
@@ -400,6 +554,46 @@
     .features-list,
     .features-list li {
         display: none;
+    }
+
+    .engagement-section, .engagement-stats, .stat-item, .stat-value, .stat-label {
+        display: none;
+    }
+
+    .engagement-summary {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .engagement-stat {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #666;
+        font-size: 0.95rem;
+        background: #f8f9fa;
+        padding: 0.6rem 1.2rem;
+        border-radius: 20px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .engagement-stat:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        background: #fff;
+    }
+
+    .engagement-stat i.fa-heart {
+        color: #ff4b6e;
+        font-size: 0.9rem;
+    }
+
+    .engagement-stat i.fa-comment {
+        color: #4070f4;
+        font-size: 0.9rem;
     }
 </style>
 
