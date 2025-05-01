@@ -2,13 +2,13 @@ from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from .models import User, GoldSeller, Seller, Property  #have to make user models
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import UserRegistrationForm, UserEditForm, PropertyForm
+from .forms import UserRegistrationForm, UserEditForm, PropertyForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from .factories import UserFactory
 from .services import (
         clear_messages, update_user_profile, get_or_create_gold_seller, save_property_image,
         create_property_for_seller, delete_property, delete_property_image, replace_property_image, add_property_image,
-        filter_properties, add_verification_file, delete_verification_file
+        filter_properties, add_verification_file, delete_verification_file, toggle_like, add_comment
         )
 from django.core.exceptions import ValidationError
 from django.http import Http404
@@ -328,9 +328,32 @@ def property_verify(request, property_id):
 
 def property_detail_all(request, property_id):
     property_obj = get_object_or_404(Property, pk=property_id)
+    property_obj.view_count += 1
+    property_obj.save(update_fields=['view_count'])
+
+    comments = property_obj.comments.select_related('user').order_by('created_at')
+    comment_form = CommentForm()
+
+    user_has_liked = False
+    if request.user.is_authenticated:
+        user_has_liked = property_obj.likes.filter(user=request.user).exists()
+
+    if request.method == 'POST' and request.user.is_authenticated:
+        if 'like' in request.POST:
+            toggle_like(property_obj, request.user)
+            return redirect('property_detail_all', property_id=property_id)
+        else:
+            comment_form = CommentForm(request.POST)
+            if comment_form.is_valid():
+                add_comment(property_obj, request.user, comment_form.cleaned_data['text'])
+                return redirect('property_detail_all', property_id=property_id)
+
     return render(request, 'property_detail_all.html', {
         'property': property_obj,
+        'comments': comments,
+        'comment_form': comment_form,
         'MEDIA_URL': settings.MEDIA_URL,
+        'user_has_liked': user_has_liked,
     })
 
 

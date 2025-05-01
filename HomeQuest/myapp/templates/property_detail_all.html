@@ -3,7 +3,6 @@
 {% block content %}
 {% load static %}
 
-
 <h1>Property Details</h1>
 <p>Location: {{ property.location }}</p>
 <p>Map Location: {{ property.map_location }}</p>
@@ -14,23 +13,78 @@
 <p>Listing Type: {{ property.listing_type }}</p>
 <p>Verified: {{ property.is_verified }}</p>
 <p>Views: {{ property.view_count }}</p>
-<p>Likes: {{ property.like_count }}</p>
 <p>Comments: {{ property.comment_count }}</p>
 {% if property.listing_type == "for_rent" %}
-    <p>Duration: {{ property.duration }}</p>
+<p>Duration: {{ property.duration }}</p>
 {% endif %}
+
 <h2>Image</h2>
 <ul>
     {% if property.image_paths %}
-        {% for image_path in property.image_paths %}
-            <li>
-                <img src="{{ MEDIA_URL }}{{ image_path }}" alt="Property Image" style="max-width: 200px;">
-            </li>
-        {% endfor %}
+    {% for image_path in property.image_paths %}
+    <li>
+        <img src="{{ MEDIA_URL }}{{ image_path }}" alt="Property Image" style="max-width: 200px;">
+    </li>
+    {% endfor %}
     {% else %}
-        <li>No image available.</li>
+    <li>No image available.</li>
     {% endif %}
 </ul>
+<h2>Likes</h2>
+<p>
+    <!-- Like button with heart image -->
+    <span style="display: flex; align-items: center;">
+        {% if user.is_authenticated %}
+            <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" name="like" style="background: none; border: none; padding: 0; cursor: pointer;">
+                    {% if user_has_liked %}
+                        <img src="{% static 'images/red_heart.png' %}" alt="Unlike" width="32" height="32">
+                    {% else %}
+                        <img src="{% static 'images/grey_heart.png' %}" alt="Like" width="32" height="32">
+                    {% endif %}
+                </button>
+                <span style="margin-left: 8px;"> Property likes: {{ property.like_count }}</span>
+            </form>
+        {% else %}
+            <img src="{% static 'images/grey_heart.png' %}" alt="Like" width="32" height="32">
+            <span style="margin-left: 8px;"> Property likes: {{ property.like_count }}</span>
+            <a href="{% url 'login' %}">Log in to like</a>
+        {% endif %}
+    </span>
+</p>
+
+<h2>Comments</h2>
+<ul>
+    {% for comment in comments %}
+    <li>
+        <strong>{{ comment.user.full_name }}</strong>
+        <span style="color: #888;">({{ comment.created_at|date:"Y-m-d H:i" }})</span><br>
+        {{ comment.text|linebreaks }}
+    </li>
+    {% empty %}
+    <li>No comments yet.</li>
+    {% endfor %}
+</ul>
+
+
+{% if user.is_authenticated %}
+<h3>Add a Comment</h3>
+<form method="post">
+    {% csrf_token %}
+    <label for="id_text">Your Comment:</label><br>
+    <textarea name="text" id="id_text" rows="3" placeholder="Add your comment..." style="width:100%;">{{ comment_form.text.value }}</textarea>
+    {% if comment_form.text.errors %}
+    <div style="color:red;">
+        {{ comment_form.text.errors }}
+    </div>
+    {% endif %}
+    <br>
+    <button type="submit">Add Comment</button>
+</form>
+{% else %}
+<p><a href="{% url 'login' %}">Log in</a> to comment.</p>
+{% endif %}
 
 <a href="{% url 'property_search' %}">Go back</a>
 {% endblock %}

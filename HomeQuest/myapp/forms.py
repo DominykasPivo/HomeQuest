@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Property
+from .models import User, Property, Comment
 
 class UserRegistrationForm(forms.ModelForm):
     full_name = forms.CharField(
@@ -86,11 +86,11 @@ class UserEditForm(forms.ModelForm):
 
 
 class PropertyForm(forms.ModelForm):
-    image = forms.ImageField(
-        required=False,
-        label="Property Image",
-        widget=forms.FileInput(attrs={'accept': 'image/*'})
-    )
+    # image = forms.ImageField(
+    #     required=False,
+    #     label="Property Image",
+    #     widget=forms.FileInput(attrs={'accept': 'image/*'})
+    # )
 
     class Meta:
         model = Property
@@ -103,7 +103,7 @@ class PropertyForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # Make all fields required except duration
         for name, field in self.fields.items():
-            if name not in ['duration', 'image']:
+            if name not in ['duration']:
                 field.required = True
             else:
                 field.required = False
@@ -115,3 +115,11 @@ class PropertyForm(forms.ModelForm):
         if listing_type == 'for_rent' and not duration:
             self.add_error('duration', 'Duration is required for rental properties.')
         return cleaned_data
+    
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']
+        widgets = {
+            'text': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Add your comment...'}),
+        }

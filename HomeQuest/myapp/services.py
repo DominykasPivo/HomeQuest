@@ -1,4 +1,4 @@
-from .models import User, Buyer, Seller, GoldSeller, Property
+from .models import User, Buyer, Seller, GoldSeller, Property, PropertyLike, Comment
 from django.core.exceptions import ValidationError
 from datetime import timedelta
 from django.utils.timezone import now
@@ -387,3 +387,23 @@ def delete_verification_file(property_instance, file_to_delete):
         property_instance.save()
         return True
     return False
+
+def toggle_like(property_obj, user):
+    """Like or unlike a property for a user. Returns True if liked, False if unliked."""
+    like, created = PropertyLike.objects.get_or_create(property=property_obj, user=user)
+    if not created:
+        like.delete()
+        liked = False
+    else:
+        liked = True
+    # Update like_count
+    property_obj.like_count = property_obj.likes.count()
+    property_obj.save(update_fields=['like_count'])
+    return liked
+
+def add_comment(property_obj, user, text):
+    """Add a comment to a property and update comment_count."""
+    comment = Comment.objects.create(property=property_obj, user=user, text=text)
+    property_obj.comment_count = property_obj.comments.count()
+    property_obj.save(update_fields=['comment_count'])
+    return comment

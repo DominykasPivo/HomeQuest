@@ -108,4 +108,22 @@ class Property(models.Model):
 
     def __str__(self):
         return f"Property {self.property_id} - {self.location}"
+    
+class Comment(models.Model):
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='comments') # on_delete=models.CASCADE = it deletes the comment if the property is deleted
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class PropertyLike(models.Model):
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('property', 'user')  # Prevent duplicate likes
+
+    def __str__(self):
+        return f"{self.user} likes {self.property}"
+
 
