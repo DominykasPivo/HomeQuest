@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Property Details{% endblock %}
+{% block content %}
+{% load static %}
+
+
+<h1>Property Details</h1>
+<p>Location: {{ property.location }}</p>
+<p>Map Location: {{ property.map_location }}</p>
+<p>Price: {{ property.price }}</p>
+<p>Size: {{ property.size }}</p>
+<p>Rooms: {{ property.room_num }}</p>
+<p>Type: {{ property.property_type }}</p>
+<p>Listing Type: {{ property.listing_type }}</p>
+<p>Verified: {{ property.is_verified }}</p>
+<p>Views: {{ property.view_count }}</p>
+<p>Likes: {{ property.like_count }}</p>
+<p>Comments: {{ property.comment_count }}</p>
+{% if property.listing_type == "for_rent" %}
+    <p>Duration: {{ property.duration }}</p>
+{% endif %}
+<h2>Image</h2>
+<ul>
+    {% if property.image_paths %}
+        {% for image_path in property.image_paths %}
+            <li>
+                <img src="{{ MEDIA_URL }}{{ image_path }}" alt="Property Image" style="max-width: 200px;">
+            </li>
+        {% endfor %}
+    {% else %}
+        <li>No image available.</li>
+    {% endif %}
+</ul>
+
+<a href="{% url 'property_search' %}">Go back</a>
+{% endblock %}

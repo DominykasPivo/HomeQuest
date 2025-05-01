@@ -12,8 +12,6 @@ from .services import (
         )
 from django.core.exceptions import ValidationError
 from django.http import Http404
-
-import os
 from django.conf import settings
 
 
@@ -113,27 +111,33 @@ def edit_profile(request):
     clear_messages(request)
     user = request.user  # Get the currently logged-in user
     if request.method == 'POST':
-        form = UserEditForm(request.POST, request.FILES)
+        form = UserEditForm(request.POST, request.FILES) 
         if form.is_valid():
             try:
-                # Use the service function to update the user's profile
                 update_user_profile(
                     user,
                     full_name=form.cleaned_data.get('full_name'),
                     email=form.cleaned_data.get('email'),
+                    date_of_birth=form.cleaned_data.get('date_of_birth'),
                     phone_number=form.cleaned_data.get('phone_number'),
                     profile_photo=form.cleaned_data.get('profile_photo'),
                     password=form.cleaned_data.get('password'),
                 )
                 messages.success(request, 'Your profile has been updated successfully.')
-                return redirect('profile')  # Redirect to the profile page
+
+                if form.cleaned_data.get('password'): # Check if password was changed
+                    # If the password was changed, log the user out
+                    logout(request)
+                    messages.info(request, 'You have been logged out due to a password change. Please log in again.')
+                    return redirect('login')
+
+                return redirect('profile')
             except ValidationError as e:
                 messages.error(request, e.message)
         else:
             messages.error(request, 'There was an error updating your profile.')
     else:
-        # Initialize the form with blank fields
-        form = UserEditForm()
+        form = UserEditForm() 
 
     return render(request, 'edit_profile.html', {'form': form})
 
@@ -273,17 +277,34 @@ def property_search(request):
     query = request.GET.get('q', '')
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
-    
+    property_type = request.GET.get('property_type')
+    min_rooms = request.GET.get('min_rooms')
+    max_rooms = request.GET.get('max_rooms')
+    min_size = request.GET.get('min_size')
+    max_size = request.GET.get('max_size')
+    is_verified = request.GET.get('is_verified')
+    # Convert values to correct types
+    min_price = float(min_price) if min_price else None
+    max_price = float(max_price) if max_price else None
+    min_rooms = int(min_rooms) if min_rooms else None
+    max_rooms = int(max_rooms) if max_rooms else None
+    min_size = float(min_size) if min_size else None
+    max_size = float(max_size) if max_size else None
+    is_verified = True if is_verified else None
+
     properties = filter_properties(
         search_type=search_type,
         query=query,
         min_price=min_price,
-        max_price=max_price
+        max_price=max_price,
+        property_type=property_type,
+        min_rooms=min_rooms,
+        max_rooms=max_rooms,
+        min_size=min_size,
+        max_size=max_size,
+        is_verified=is_verified,
     )
-
-    return render(request, 'property_search.html', {
-        'properties': properties,
-    })
+    return render(request, 'property_search.html', {'properties': properties})
 
 
 @login_required
@@ -303,6 +324,15 @@ def property_verify(request, property_id):
                 messages.error(request, "File could not be deleted.")
             return redirect('property_verify', property_id=property_id)
     return render(request, 'property_verify.html', {'property': property_instance})
+
+
+def property_detail_all(request, property_id):
+    property_obj = get_object_or_404(Property, pk=property_id)
+    return render(request, 'property_detail_all.html', {
+        'property': property_obj,
+        'MEDIA_URL': settings.MEDIA_URL,
+    })
+
 
 
 

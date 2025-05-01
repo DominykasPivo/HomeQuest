@@ -46,7 +46,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['full_name', 'date_of_birth', 'consent_to_share_location']
 
     def is_seller(self):
-        from .models import Seller
         return Seller.objects.filter(pk=self.pk).exists()
 
     def __str__(self):

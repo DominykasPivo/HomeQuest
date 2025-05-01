@@ -68,10 +68,11 @@ class UserEditForm(forms.ModelForm):
     )
     class Meta:
         model = User
-        fields = ['full_name', 'email', 'phone_number', 'profile_photo', 'password']
+        fields = ['full_name', 'email', 'date_of_birth',  'phone_number', 'profile_photo', 'password']
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
+            'date_of_birth': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'placeholder': 'Optional'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
             'profile_photo': forms.FileInput(attrs={'class': 'form-control'}),
             'password': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
@@ -81,6 +82,7 @@ class UserEditForm(forms.ModelForm):
         # Make all fields optional
         for field in self.fields.values():
             field.required = False
+        
 
 
 class PropertyForm(forms.ModelForm):
