@@ -36,6 +36,7 @@ def create_user(user_type, **kwargs):
                 consent_to_share_location=kwargs.get('consent_to_share_location'),
                 phone_number=kwargs.get('phone_number'),
                 profile_photo=kwargs.get('profile_photo'),
+                blur_profile_photo=kwargs.get('blur_profile_photo'),  
             )
         elif user_type == 'seller':
             # Create a GoldSeller directly
@@ -46,6 +47,7 @@ def create_user(user_type, **kwargs):
                 consent_to_share_location=kwargs.get('consent_to_share_location'),
                 phone_number=kwargs.get('phone_number'),
                 profile_photo=kwargs.get('profile_photo'),
+                blur_profile_photo=kwargs.get('blur_profile_photo'),
                 subscription_plan='basic',  # Default to basic
                 subscription_end_date=None  # No subscription end date for basic
             )
@@ -98,10 +100,11 @@ def update_user_profile(user, **kwargs):
     if 'date_of_birth' in kwargs and kwargs['date_of_birth']:
         user.date_of_birth = kwargs['date_of_birth']
 
+    if 'blur_profile_photo' in kwargs:
+        user.blur_profile_photo = kwargs['blur_profile_photo']
+
     if kwargs.get('password'): 
         user.set_password(kwargs['password']) # Hash the new password
-
-
 
     user.save()
     return user

@@ -42,6 +42,7 @@ def register(request):
                     date_of_birth=form.cleaned_data['date_of_birth'],
                     phone_number=form.cleaned_data['phone_number'],
                     profile_photo=form.cleaned_data.get('profile_photo', None),
+                    blur_profile_photo=form.cleaned_data['blur_profile_photo'],
                     password=form.cleaned_data['password'],
                 )
                 messages.success(request, 'Registration successful! Please log in.')
@@ -121,6 +122,7 @@ def edit_profile(request):
                     date_of_birth=form.cleaned_data.get('date_of_birth'),
                     phone_number=form.cleaned_data.get('phone_number'),
                     profile_photo=form.cleaned_data.get('profile_photo'),
+                    blur_profile_photo=form.cleaned_data.get('blur_profile_photo'),
                     password=form.cleaned_data.get('password'),
                 )
                 messages.success(request, 'Your profile has been updated successfully.')
@@ -137,7 +139,7 @@ def edit_profile(request):
         else:
             messages.error(request, 'There was an error updating your profile.')
     else:
-        form = UserEditForm() 
+        form = UserEditForm(initial={'blur_profile_photo': user.blur_profile_photo}) ## Pre-fill the form with the user's current data
 
     return render(request, 'edit_profile.html', {'form': form})
 

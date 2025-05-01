@@ -32,7 +32,8 @@
                 <div class="profile-menu">
                     {% if user.is_authenticated %}
                         {% if user.profile_photo %}
-                            <img src="{{ user.profile_photo.url }}" alt="Profile" class="profile-icon" onclick="toggleDropdown(event)">
+                            <img src="{{ user.profile_photo.url }}" alt="Profile" class="profile-icon" onclick="toggleDropdown(event)"
+                                {% if user.blur_profile_photo %}style="filter: blur(3px);" {% endif %}>
                         {% else %}
                             <img src="{% static 'images/default-profile.png' %}" alt="Profile" class="profile-icon" onclick="toggleDropdown(event)">
                         {% endif %}

@@ -51,6 +51,12 @@
                     <label for="{{ form.profile_photo.id_for_label }}">Profile Photo</label>
                     {{ form.profile_photo }}
                 </div>
+                <div class="form-group" id="blur-photo-group">
+                    <label class="checkbox-label" for="id_blur_profile_photo">
+                        {{ form.blur_profile_photo }}
+                        Blur my profile photo
+                    </label>
+                </div>
             </div>
 
             <div class="form-section">
@@ -93,3 +99,28 @@
     </div>
 </div>
 {% endblock %}
+
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Try both selectors for robustness
+        const photoInput = document.getElementById('id_profile_photo') ||
+                           document.querySelector('input[type="file"][name="profile_photo"]');
+        const blurGroup = document.getElementById('blur-photo-group');
+        function toggleBlurGroup() {
+            if (photoInput && blurGroup) {
+                if (photoInput.files && photoInput.files.length > 0) {
+                    blurGroup.style.display = '';
+                } else {
+                    blurGroup.style.display = 'none';
+                    const blurCheckbox = document.getElementById('id_blur_profile_photo');
+                    if (blurCheckbox) blurCheckbox.checked = false;
+                }
+            }
+        }
+        if (photoInput && blurGroup) {
+            photoInput.addEventListener('change', toggleBlurGroup);
+            // Also check on page load (for autofill or browser restore)
+            toggleBlurGroup();
+        }
+    });
+    </script> -->

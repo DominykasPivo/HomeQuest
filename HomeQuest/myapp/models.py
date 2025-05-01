@@ -32,12 +32,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     consent_to_share_location = models.BooleanField(default=False)
 
     #Optional fields
+
     profile_photo = models.ImageField(
         upload_to='profile_photos/',
         blank=True,
         null=True,
         default='profile_photos/default-profile.png'  # Use MEDIA_URL for the default path
     )
+    blur_profile_photo = models.BooleanField(default=False)
     phone_number = models.CharField(max_length=15, unique=True, blank=True, null=True)  
 
 

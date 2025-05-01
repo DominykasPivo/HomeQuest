@@ -28,13 +28,18 @@ class UserRegistrationForm(forms.ModelForm):
         widget=forms.RadioSelect,
         required=True
     )
+    blur_profile_photo = forms.BooleanField(
+        required=False,
+        label="Blur my profile photo",
+        help_text="If checked, your profile photo will be blurred for privacy."
+    )
 
     class Meta:
         model = User
         fields = [
             'full_name', 'consent_to_share_location',
             'date_of_birth', 'email', 'password', 'confirm_password',
-            'phone_number', 'profile_photo'
+            'phone_number', 'profile_photo', 'blur_profile_photo'
         ]
 
     def clean_email(self):
@@ -68,13 +73,14 @@ class UserEditForm(forms.ModelForm):
     )
     class Meta:
         model = User
-        fields = ['full_name', 'email', 'date_of_birth',  'phone_number', 'profile_photo', 'password']
+        fields = ['full_name', 'email', 'date_of_birth',  'phone_number', 'profile_photo', 'blur_profile_photo' ,'password']
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
             'date_of_birth': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'placeholder': 'Optional'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
             'profile_photo': forms.FileInput(attrs={'class': 'form-control'}),
+            'blur_profile_photo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'password': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
         }
     def __init__(self, *args, **kwargs):
