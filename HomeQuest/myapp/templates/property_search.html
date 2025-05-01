@@ -3,26 +3,34 @@
 {% block content %}
 <h1>Search Properties</h1>
 <form method="get" action="{% url 'property_search' %}">
-    <label>
-        <input type="radio" name="search_type" value="for_rent" {% if request.GET.search_type == "for_rent" %}checked{% endif %}> For Rent
-    </label>
-    <label>
-        <input type="radio" name="search_type" value="for_sale" {% if request.GET.search_type == "for_sale" %}checked{% endif %}> For Sale
-    </label>
-    <label>
-        <input type="radio" name="search_type" value="recommended" {% if request.GET.search_type == "recommended" %}checked{% endif %}> Recommended
-    </label>
+    <select name="search_type">
+        <option value="">Listing Type</option>
+        <option value="for_rent" {% if request.GET.search_type == "for_rent" %}selected{% endif %}>For Rent</option>
+        <option value="for_sale" {% if request.GET.search_type == "for_sale" %}selected{% endif %}>For Sale</option>
+    </select>
     <br>
     <input type="text" name="q" placeholder="Location, city, postal code..." value="{{ request.GET.q }}">
     <input type="number" name="min_price" placeholder="Min Price" value="{{ request.GET.min_price }}">
     <input type="number" name="max_price" placeholder="Max Price" value="{{ request.GET.max_price }}">
+    <select name="property_type">
+        <option value="">Property Type</option>
+        <option value="residential" {% if request.GET.property_type == "residential" %}selected{% endif %}>Residential</option>
+        <option value="commercial" {% if request.GET.property_type == "commercial" %}selected{% endif %}>Commercial</option>
+    </select>
+    <input type="number" name="min_rooms" placeholder="Min Rooms" value="{{ request.GET.min_rooms }}">
+    <input type="number" name="max_rooms" placeholder="Max Rooms" value="{{ request.GET.max_rooms }}">
+    <input type="number" name="min_size" placeholder="Min Size" value="{{ request.GET.min_size }}">
+    <input type="number" name="max_size" placeholder="Max Size" value="{{ request.GET.max_size }}">
+    <label>
+        <input type="checkbox" name="is_verified" value="1" {% if request.GET.is_verified %}checked{% endif %}> Verified Only
+    </label>
     <button type="submit">Search</button>
 </form>
 
 <ul>
     {% for property in properties %}
         <li>
-            <a href="{% url 'property_detail' property.property_id %}">
+            <a href="{% url 'property_detail_all' property.property_id %}">
                 {{ property.location }} - {{ property.property_type }} - {{ property.price }}
             </a>
         </li>

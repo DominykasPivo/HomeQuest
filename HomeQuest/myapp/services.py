@@ -9,6 +9,9 @@ from django.contrib.messages import get_messages
 import shutil # for deleting directories
 from django.db.models import Q
 
+from django.core.files.uploadedfile import UploadedFile
+import difflib # for comparing strings // for search bar finding similar properties
+
 def clear_messages(request):
     """
     Clears all messages from the session.
@@ -73,11 +76,7 @@ def update_user_profile(user, **kwargs):
             raise ValidationError(f"The phone number '{new_phone_number}' is already in use by another account.")
         
     # Delete the old profile photo if a new one is provided
-    new_profile_photo = kwargs.get('profile_photo')
-    if new_profile_photo and new_profile_photo != user.profile_photo:
-        old_photo_path = os.path.join(settings.MEDIA_ROOT, user.profile_photo.name)
-        if os.path.exists(old_photo_path) and user.profile_photo.name != 'profile_photos/default-profile.png':
-            os.remove(old_photo_path)
+    # Only update if a real file was uploaded
 
     # Update fields only if new values are provided and not empty
     if kwargs.get('full_name'):
@@ -86,10 +85,23 @@ def update_user_profile(user, **kwargs):
         user.email = new_email
     if new_phone_number:
         user.phone_number = new_phone_number
-    if new_profile_photo:
-        user.profile_photo = new_profile_photo
+
+    new_profile_photo = kwargs.get('profile_photo')
+    if isinstance(new_profile_photo, UploadedFile): # 
+        if new_profile_photo != user.profile_photo:
+            old_photo_path = os.path.join(settings.MEDIA_ROOT, user.profile_photo.name)
+            if os.path.exists(old_photo_path) and user.profile_photo.name != 'profile_photos/default-profile.png':
+                os.remove(old_photo_path)
+            user.profile_photo = new_profile_photo
+        
+
+    if 'date_of_birth' in kwargs and kwargs['date_of_birth']:
+        user.date_of_birth = kwargs['date_of_birth']
+
     if kwargs.get('password'): 
-        user.password = user.set_password(kwargs['password'])  # Hash the new password
+        user.set_password(kwargs['password']) # Hash the new password
+
+
 
     user.save()
     return user
@@ -160,6 +172,7 @@ def create_property_for_seller(seller, property_data, image=None):
         size=property_data.get('size'),
         room_num=property_data.get('room_num'),
         property_type=property_data.get('property_type'),
+        listing_type=property_data.get('listing_type'),
         is_verified=property_data.get('is_verified', False),
     )
     property_instance.save()  # Save the property to generate an ID
@@ -204,6 +217,7 @@ def update_property(property_instance, property_data, image=None):
     property_instance.size = property_data.get('size')
     property_instance.room_num = property_data.get('room_num')
     property_instance.property_type = property_data.get('property_type')
+    property_instance.listing_type = property_data.get('listing_type')
     property_instance.is_verified = property_data.get('is_verified', False)
     property_instance.save()
 
@@ -269,7 +283,11 @@ def add_property_image(property_instance, new_image, save_property_image_func):
         property_instance.save()
     return property_instance
 
-def filter_properties(search_type=None, query=None, min_price=None, max_price=None):
+def filter_properties(
+    search_type=None, query=None, min_price=None, max_price=None,
+    property_type=None, min_rooms=None, max_rooms=None, min_size=None, max_size=None,
+    is_verified=None, seller_id=None, min_duration=None, max_duration=None
+):
     properties = Property.objects.all()
 
     if search_type == 'for_rent':
@@ -279,16 +297,54 @@ def filter_properties(search_type=None, query=None, min_price=None, max_price=No
     elif search_type == 'recommended':
         properties = properties.order_by('-like_count', '-view_count')
 
-    if query:
-        properties = properties.filter(
-            Q(location__icontains=query) |
-            Q(map_location__icontains=query)
-        )
+    if property_type:
+        properties = properties.filter(property_type=property_type)
+    if min_rooms:
+        properties = properties.filter(room_num__gte=min_rooms)
+    if max_rooms:
+        properties = properties.filter(room_num__lte=max_rooms)
+    if min_size:
+        properties = properties.filter(size__gte=min_size)
+    if max_size:
+        properties = properties.filter(size__lte=max_size)
+    if is_verified is not None:
+        properties = properties.filter(is_verified=is_verified)
+    if seller_id:
+        properties = properties.filter(seller__pk=seller_id)
+    if min_duration:
+        properties = properties.filter(duration__gte=min_duration)
+    if max_duration:
+        properties = properties.filter(duration__lte=max_duration)
     if min_price:
         properties = properties.filter(price__gte=min_price)
     if max_price:
         properties = properties.filter(price__lte=max_price)
 
+    # Fuzzy location search (after all filters)
+    if query:
+        locations = list(properties.values_list('location', flat=True))
+        map_locations = list(properties.values_list('map_location', flat=True))
+        all_locations = list(set(locations + map_locations))
+        closest = difflib.get_close_matches(query, all_locations, n=5, cutoff=0.5)
+        if closest:
+            filtered = properties.filter(
+                Q(location__in=closest) | Q(map_location__in=closest)
+            )
+            # Sort by similarity
+            def similarity_key(obj):
+                best = 0
+                for field in [obj.location, obj.map_location]:
+                    for match in closest:
+                        ratio = difflib.SequenceMatcher(None, query, field or '').ratio()
+                        if ratio > best:
+                            best = ratio
+                return -best
+            # Evaluate queryset and sort
+            properties = sorted(filtered, key=similarity_key)
+        else:
+            properties = properties.filter(
+                Q(location__icontains=query) | Q(map_location__icontains=query)
+            )
     return properties
 
 def save_verification_file(property_instance, file):

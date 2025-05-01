@@ -20,5 +20,6 @@ urlpatterns = [
     path('properties/<int:property_id>/verify/', views.property_verify, name='property_verify'),
     #User property interaction
     path('properties/search/', views.property_search, name='property_search'),
+    path('properties/<int:property_id>/all/', views.property_detail_all, name='property_detail_all'),
 
 ]

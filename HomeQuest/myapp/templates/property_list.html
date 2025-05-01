@@ -1,19 +1,317 @@
 {% extends 'base.html' %}
 {% block title %}My Properties{% endblock %}
-{% block content %}
+{% load static %}
 
-<h1>My Properties</h1>
-<a href="{% url 'property_create' %}">Add New Property</a>
-<ul>
-    {% for property in properties %}
-        <li>
-            <a href="{% url 'property_detail' property.property_id %}">{{ property.location }}</a>
-            (<a href="{% url 'property_edit' property.property_id %}">Edit</a> |
-             <a href="{% url 'property_delete' property.property_id %}">Delete</a> |
-             <a href="{% url 'property_verify' property.property_id %}">Verify</a>)
-        </li>
-    {% empty %}
-        <li>No properties found.</li>
-    {% endfor %}
-</ul>
+{% block content %}
+<div class="properties-page">
+    <div class="properties-header">
+        <h1>My Properties</h1>
+        <a href="{% url 'property_create' %}" class="add-property-btn">
+            <span class="plus-icon">+</span> Add New Property
+        </a>
+    </div>
+
+    {% if properties %}
+    <div class="properties-grid">
+        {% for property in properties %}
+        <div class="property-card">
+            <div class="property-image">
+                {% if property.image_paths %}
+                    <div class="image-navigation">
+                        <button class="nav-btn prev-btn" onclick="changeImage({{ property.property_id }}, -1)">❮</button>
+                        <button class="nav-btn next-btn" onclick="changeImage({{ property.property_id }}, 1)">❯</button>
+                    </div>
+                    {% for image in property.image_paths %}
+                        <img src="{{ MEDIA_URL }}{{ image }}" 
+                             alt="{{ property.location }}"
+                             class="property-img {% if forloop.first %}active{% endif %}"
+                             data-property="{{ property.property_id }}"
+                             data-index="{{ forloop.counter0 }}">
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="property-info">
+                <h3>{{ property.location }}</h3>
+                <div class="property-details">
+                    <span class="property-type">{{ property.property_type|title }}</span>
+                    <span class="property-status">{% if property.listing_type == 'for_sale' %}For Sale{% else %}For Rent{% endif %}</span>
+                </div>
+            </div>
+            <div class="property-actions">
+                <a href="{% url 'property_detail' property.property_id %}" class="action-btn view-btn">View</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-content">
+            <div class="empty-icon">🏠</div>
+            <h2>No Properties Yet</h2>
+            <p>Start building your property portfolio by adding your first property.</p>
+            <a href="{% url 'property_create' %}" class="add-property-btn">
+                <span class="plus-icon">+</span> Add New Property
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .properties-page {
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .properties-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .properties-header h1 {
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+    }
+
+    .add-property-btn {
+        background: #6C63FF;
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .add-property-btn:hover {
+        background: #5952d4;
+        transform: translateY(-2px);
+        color: white;
+        text-decoration: none;
+    }
+
+    .plus-icon {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .properties-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .property-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .property-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .property-image {
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .property-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        top: 0;
+        left: 0;
+    }
+
+    .property-image img.active {
+        opacity: 1;
+    }
+
+    .image-navigation {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 1rem;
+        z-index: 1;
+    }
+
+    .nav-btn {
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1.2rem;
+        padding: 0;
+        opacity: 0;
+    }
+
+    .property-image:hover .nav-btn {
+        opacity: 1;
+    }
+
+    .nav-btn:hover {
+        background: rgba(0, 0, 0, 0.8);
+    }
+
+    .property-info {
+        padding: 1.5rem;
+    }
+
+    .property-info h3 {
+        margin: 0 0 1rem 0;
+        font-size: 1.2rem;
+        color: #333;
+    }
+
+    .property-details {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .property-type, .property-status {
+        font-size: 0.9rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+    }
+
+    .property-type {
+        background: #E8F5E9;
+        color: #2E7D32;
+    }
+
+    .property-status {
+        background: #E3F2FD;
+        color: #1565C0;
+    }
+
+    .property-actions {
+        padding: 1rem 1.5rem;
+        display: flex;
+        border-top: 1px solid #eee;
+    }
+
+    .action-btn {
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        text-align: center;
+        width: 100%;
+    }
+
+    .view-btn {
+        background: #6C63FF;
+        color: white;
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+
+    .view-btn:hover {
+        background: #5952d4;
+        color: white;
+        text-decoration: none;
+        opacity: 0.9;
+    }
+
+    .empty-state {
+        background: white;
+        border-radius: 12px;
+        padding: 4rem 2rem;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .empty-state-content {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h2 {
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+        color: #666;
+        margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+        .properties-page {
+            padding: 1rem;
+        }
+
+        .properties-header {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .properties-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<script>
+function changeImage(propertyId, direction) {
+    const images = document.querySelectorAll(`img[data-property="${propertyId}"]`);
+    if (!images.length) return;
+
+    let currentIndex = -1;
+    images.forEach((img, index) => {
+        if (img.classList.contains('active')) {
+            currentIndex = index;
+        }
+    });
+
+    // Remove active class from current image
+    if (currentIndex !== -1) {
+        images[currentIndex].classList.remove('active');
+    }
+
+    // Calculate new index
+    let newIndex = currentIndex + direction;
+    if (newIndex >= images.length) newIndex = 0;
+    if (newIndex < 0) newIndex = images.length - 1;
+
+    // Add active class to new image
+    images[newIndex].classList.add('active');
+}
+</script>
 {% endblock %}
