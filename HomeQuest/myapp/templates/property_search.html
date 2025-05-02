@@ -3,12 +3,16 @@
 {% block content %}
 <h1>Search Properties</h1>
 <form method="get" action="{% url 'property_search' %}">
-    <select name="search_type">
+    <select name="search_type" id="search_type">
         <option value="">Listing Type</option>
         <option value="for_rent" {% if request.GET.search_type == "for_rent" %}selected{% endif %}>For Rent</option>
         <option value="for_sale" {% if request.GET.search_type == "for_sale" %}selected{% endif %}>For Sale</option>
     </select>
-    <br>
+    <!-- Duration fields - visible only when For Rent is selected -->
+    <div id="duration-fields" style="display: {% if request.GET.search_type == 'for_rent' %}block{% else %}none{% endif %};">
+        <input type="number" name="min_duration" placeholder="Min Duration (days)" value="{{ request.GET.min_duration }}">
+        <input type="number" name="max_duration" placeholder="Max Duration (days)" value="{{ request.GET.max_duration }}">
+    </div>
     <input type="text" name="q" placeholder="Location, city, postal code..." value="{{ request.GET.q }}">
     <input type="number" name="min_price" placeholder="Min Price" value="{{ request.GET.min_price }}">
     <input type="number" name="max_price" placeholder="Max Price" value="{{ request.GET.max_price }}">
@@ -27,15 +31,100 @@
     <button type="submit">Search</button>
 </form>
 
-<ul>
-    {% for property in properties %}
-        <li>
-            <a href="{% url 'property_detail_all' property.property_id %}">
-                {{ property.location }} - {{ property.property_type }} - {{ property.price }}
-            </a>
-        </li>
-    {% empty %}
-        <li>No properties found.</li>
-    {% endfor %}
-</ul>
+<!-- Filtered Results -->
+{% if request.GET.q or request.GET.search_type or request.GET.min_price or request.GET.max_price or request.GET.property_type or request.GET.min_rooms or request.GET.max_rooms or request.GET.min_size or request.GET.max_size or request.GET.is_verified or request.GET.min_duration or request.GET.max_duration %}
+    {% if filtered_properties %}
+        <div class="property-section">
+            <h2>Filtered Results</h2>
+            <ul>
+                {% for property in filtered_properties %}
+                    <li>
+                        <a href="{% url 'property_detail_all' property.property_id %}">
+                            {{ property.location }} - {{ property.property_type }} - ${{ property.price }}
+                            {% if property.listing_type == 'for_rent' and property.duration %} - {{ property.duration }} days{% endif %}
+                        </a>
+                    </li>
+                {% empty %}
+                    <li>No properties found matching your filters.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    
+    {% endif %}
+{% else %}
+    <div class="property-section">
+        <h2>Filtered Results</h2>
+        <h4>No Properties Found</h4>
+        <p>Try adjusting or search with new criteria.</p>
+</div>
+{% endif %}
+
+
+
+<!-- Always show the three sections sorted by popularity -->
+<div class="property-sections">
+    <div class="property-section">
+        <h2>Properties For Sale</h2>
+        <ul>
+            {% for property in for_sale_properties %}
+                <li>
+                    <a href="{% url 'property_detail_all' property.property_id %}">
+                        {{ property.location }} - {{ property.property_type }} - ${{ property.price }}
+                    </a>
+                </li>
+            {% empty %}
+                <li>No properties for sale found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="property-section">
+        <h2>Properties For Rent</h2>
+        <ul>
+            {% for property in for_rent_properties %}
+                <li>
+                    <a href="{% url 'property_detail_all' property.property_id %}">
+                        {{ property.location }} - {{ property.property_type }} - ${{ property.price }}
+                        {% if property.duration %} - {{ property.duration }} days{% endif %}
+                    </a>
+                </li>
+            {% empty %}
+                <li>No properties for rent found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="property-section">
+        <h2>Recommended Properties</h2>
+        <ul>
+            {% for property in recommended_properties %}
+                <li>
+                    <a href="{% url 'property_detail_all' property.property_id %}">
+                        {{ property.location }} - {{ property.property_type }} - ${{ property.price }}
+                        {% if property.listing_type == 'for_rent' and property.duration %} - {{ property.duration }} days{% endif %}
+                    </a>
+                </li>
+            {% empty %}
+                <li>No recommended properties found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchTypeSelect = document.getElementById('search_type');
+        const durationFields = document.getElementById('duration-fields');
+        
+        if (searchTypeSelect && durationFields) {
+            searchTypeSelect.addEventListener('change', function() {
+                if (this.value === 'for_rent') {
+                    durationFields.style.display = 'block';
+                } else {
+                    durationFields.style.display = 'none';
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}

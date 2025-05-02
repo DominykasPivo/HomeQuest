@@ -71,16 +71,20 @@ class UserEditForm(forms.ModelForm):
         label="Full Name",
         help_text=""  
     )
+    blur_profile_photo = forms.BooleanField(
+        required=False,
+        label="Blur my profile photo",
+        help_text="If checked, your profile photo will be blurred for privacy."
+    )
     class Meta:
         model = User
-        fields = ['full_name', 'email', 'date_of_birth',  'phone_number', 'profile_photo', 'blur_profile_photo' ,'password']
+        fields = ['full_name', 'email', 'date_of_birth',  'phone_number', 'profile_photo', 'blur_profile_photo', 'password']
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
             'date_of_birth': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'placeholder': 'Optional'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
             'profile_photo': forms.FileInput(attrs={'class': 'form-control'}),
-            'blur_profile_photo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'password': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Optional'}),
         }
     def __init__(self, *args, **kwargs):
@@ -92,11 +96,11 @@ class UserEditForm(forms.ModelForm):
 
 
 class PropertyForm(forms.ModelForm):
-    # image = forms.ImageField(
-    #     required=False,
-    #     label="Property Image",
-    #     widget=forms.FileInput(attrs={'accept': 'image/*'})
-    # )
+    image = forms.ImageField(
+        required=False,
+        label="Property Image",
+        widget=forms.FileInput(attrs={'accept': 'image/*'})
+    )
 
     class Meta:
         model = Property
@@ -109,7 +113,7 @@ class PropertyForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # Make all fields required except duration
         for name, field in self.fields.items():
-            if name not in ['duration']:
+            if name not in ['duration', 'image']:
                 field.required = True
             else:
                 field.required = False

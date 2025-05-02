@@ -204,8 +204,6 @@ def create_property(request):
 
 @login_required
 def property_list(request):
-    
-    print("DEBUG: property_list view called")  # Add this line
     seller = get_object_or_404(Seller, pk=request.user.pk)
     properties = Property.objects.filter(seller=seller)
     return render(request, 'property_list.html', {'properties': properties})
@@ -284,7 +282,10 @@ def property_search(request):
     max_rooms = request.GET.get('max_rooms')
     min_size = request.GET.get('min_size')
     max_size = request.GET.get('max_size')
+    min_duration = request.GET.get('min_duration')  
+    max_duration = request.GET.get('max_duration') 
     is_verified = request.GET.get('is_verified')
+
     # Convert values to correct types
     min_price = float(min_price) if min_price else None
     max_price = float(max_price) if max_price else None
@@ -292,21 +293,64 @@ def property_search(request):
     max_rooms = int(max_rooms) if max_rooms else None
     min_size = float(min_size) if min_size else None
     max_size = float(max_size) if max_size else None
+    min_duration = int(min_duration) if min_duration else None  
+    max_duration = int(max_duration) if max_duration else None  
     is_verified = True if is_verified else None
 
-    properties = filter_properties(
+    filter_params = {
+        'query': query,
+        'min_price': min_price,
+        'max_price': max_price,
+        'property_type': property_type,
+        'min_rooms': min_rooms,
+        'max_rooms': max_rooms,
+        'min_size': min_size,
+        'max_size': max_size,
+        'is_verified': is_verified,
+    }
+
+    filter_params = {
+        'query': query,
+        'min_price': min_price,
+        'max_price': max_price,
+        'property_type': property_type,
+        'min_rooms': min_rooms,
+        'max_rooms': max_rooms,
+        'min_size': min_size,
+        'max_size': max_size,
+        'is_verified': is_verified,
+        'min_duration': min_duration,
+        'max_duration': max_duration,
+    }
+
+    # Filtered properties (matching the user's filters)
+    filtered_properties = filter_properties(
         search_type=search_type,
-        query=query,
-        min_price=min_price,
-        max_price=max_price,
-        property_type=property_type,
-        min_rooms=min_rooms,
-        max_rooms=max_rooms,
-        min_size=min_size,
-        max_size=max_size,
-        is_verified=is_verified,
+        **filter_params
     )
-    return render(request, 'property_search.html', {'properties': properties})
+
+    # Three blocks sorted by popularity
+    for_sale_properties = filter_properties(
+        search_type='for_sale',
+        limit=10,
+    )
+
+    for_rent_properties = filter_properties(
+        search_type='for_rent',
+        limit=10,
+    )
+
+    recommended_properties = filter_properties(
+        search_type='recommended',
+        limit=10,
+    )  # Already sorted by popularity in your service
+
+    return render(request, 'property_search.html', {
+        'filtered_properties': filtered_properties,
+        'for_sale_properties': for_sale_properties,
+        'for_rent_properties': for_rent_properties,
+        'recommended_properties': recommended_properties,
+    })
 
 
 @login_required

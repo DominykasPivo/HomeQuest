@@ -7,12 +7,14 @@
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {% for field in form %}
-        <div id="field_{{ field.name }}">
-            {{ field.label_tag }} {{ field }}
-            {% if field.errors %}
-                <span style="color:red">{{ field.errors }}</span>
-            {% endif %}
-        </div>
+        {% if field.name != "image" %}
+            <div id="field_{{ field.name }}">
+                {{ field.label_tag }} {{ field }}
+                {% if field.errors %}
+                    <span style="color:red">{{ field.errors }}</span>
+                {% endif %}
+            </div>
+        {% endif %}
     {% endfor %}
     <h2>Current Images</h2>
     <ul>

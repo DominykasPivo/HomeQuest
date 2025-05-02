@@ -176,26 +176,20 @@ def create_property_for_seller(seller, property_data, image=None):
         room_num=property_data.get('room_num'),
         property_type=property_data.get('property_type'),
         listing_type=property_data.get('listing_type'),
+        duration=property_data.get('duration'),
         is_verified=property_data.get('is_verified', False),
     )
     property_instance.save()  # Save the property to generate an ID
-    print("DEBUG: Property instance saved")
 
     if image:
-        print("DEBUG: Image is present, calling save_property_image")
         image_paths = save_property_image(property_instance, image)
-        print(f"DEBUG: Image paths: {image_paths}")
         # Convert backslashes to forward slashes for JSON compatibility
         image_paths = [p.replace('\\', '/') for p in image_paths]
-        print(f"DEBUG: About to assign images: {image_paths} (type: {type(image_paths)})")
         try:
             property_instance.image_paths = image_paths
             property_instance.save()
-            print("DEBUG: Image saved and property_instance updated")
         except Exception as e:
-            print(f"DEBUG: Exception on property_instance.save(): {e}")
             raise
-        print("asd")
 
 
     return property_instance
@@ -289,7 +283,7 @@ def add_property_image(property_instance, new_image, save_property_image_func):
 def filter_properties(
     search_type=None, query=None, min_price=None, max_price=None,
     property_type=None, min_rooms=None, max_rooms=None, min_size=None, max_size=None,
-    is_verified=None, seller_id=None, min_duration=None, max_duration=None
+    is_verified=None, seller_id=None, min_duration=None, max_duration=None, limit=None
 ):
     properties = Property.objects.all()
 
@@ -333,7 +327,6 @@ def filter_properties(
             filtered = properties.filter(
                 Q(location__in=closest) | Q(map_location__in=closest)
             )
-            # Sort by similarity
             def similarity_key(obj):
                 best = 0
                 for field in [obj.location, obj.map_location]:
@@ -342,12 +335,20 @@ def filter_properties(
                         if ratio > best:
                             best = ratio
                 return -best
-            # Evaluate queryset and sort
             properties = sorted(filtered, key=similarity_key)
         else:
             properties = properties.filter(
                 Q(location__icontains=query) | Q(map_location__icontains=query)
             )
+
+    # Always order before slicing!
+    if search_type in ('for_sale', 'for_rent'):
+        properties = properties.order_by('-like_count', '-view_count')
+
+    if limit is not None:
+        if isinstance(properties, list):
+            return properties[:limit]
+        return properties[:limit]
     return properties
 
 def save_verification_file(property_instance, file):
