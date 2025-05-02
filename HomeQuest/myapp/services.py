@@ -8,7 +8,7 @@ import logging
 from django.contrib.messages import get_messages
 import shutil # for deleting directories
 from django.db.models import Q
-
+from django.db.models.query import QuerySet # for filtering properties
 from django.core.files.uploadedfile import UploadedFile
 import difflib # for comparing strings // for search bar finding similar properties
 
@@ -283,7 +283,7 @@ def add_property_image(property_instance, new_image, save_property_image_func):
 def filter_properties(
     search_type=None, query=None, min_price=None, max_price=None,
     property_type=None, min_rooms=None, max_rooms=None, min_size=None, max_size=None,
-    is_verified=None, seller_id=None, min_duration=None, max_duration=None, limit=None
+    is_verified=None, seller_id=None, min_duration=None, max_duration=None, limit=None, sort_by=None
 ):
     properties = Property.objects.all()
 
@@ -292,7 +292,7 @@ def filter_properties(
     elif search_type == 'for_sale':
         properties = properties.filter(listing_type='for_sale')
     elif search_type == 'recommended':
-        properties = properties.order_by('-like_count', '-view_count')
+        properties = properties.order_by('-like_count', '-view_count', '-comment_count')
 
     if property_type:
         properties = properties.filter(property_type=property_type)
@@ -322,7 +322,7 @@ def filter_properties(
         locations = list(properties.values_list('location', flat=True))
         map_locations = list(properties.values_list('map_location', flat=True))
         all_locations = list(set(locations + map_locations))
-        closest = difflib.get_close_matches(query, all_locations, n=5, cutoff=0.5)
+        closest = difflib.get_close_matches(query, all_locations, n=10, cutoff=0.5)
         if closest:
             filtered = properties.filter(
                 Q(location__in=closest) | Q(map_location__in=closest)
@@ -341,9 +341,25 @@ def filter_properties(
                 Q(location__icontains=query) | Q(map_location__icontains=query)
             )
 
-    # Always order before slicing!
-    if search_type in ('for_sale', 'for_rent'):
-        properties = properties.order_by('-like_count', '-view_count')
+    
+    # Sorting logic for filtered results
+    if isinstance(properties, QuerySet):
+        if sort_by == 'most_viewed':
+            properties = properties.order_by('-view_count')
+        elif sort_by == 'most_commented':
+            properties = properties.order_by('-comment_count')
+        elif sort_by == 'most_liked':
+            properties = properties.order_by('-like_count')
+        elif search_type in ('for_sale', 'for_rent'):
+            properties = properties.order_by('-like_count', '-view_count', '-comment_count')
+    elif isinstance(properties, list) and sort_by:
+        if sort_by == 'most_viewed':
+            properties.sort(key=lambda x: x.view_count, reverse=True)
+        elif sort_by == 'most_commented':
+            properties.sort(key=lambda x: x.comment_count, reverse=True)
+        elif sort_by == 'most_liked':
+            properties.sort(key=lambda x: x.like_count, reverse=True)
+
 
     if limit is not None:
         if isinstance(properties, list):

@@ -285,6 +285,7 @@ def property_search(request):
     min_duration = request.GET.get('min_duration')  
     max_duration = request.GET.get('max_duration') 
     is_verified = request.GET.get('is_verified')
+    sort_by = request.GET.get('sort_by')
 
     # Convert values to correct types
     min_price = float(min_price) if min_price else None
@@ -307,20 +308,7 @@ def property_search(request):
         'min_size': min_size,
         'max_size': max_size,
         'is_verified': is_verified,
-    }
-
-    filter_params = {
-        'query': query,
-        'min_price': min_price,
-        'max_price': max_price,
-        'property_type': property_type,
-        'min_rooms': min_rooms,
-        'max_rooms': max_rooms,
-        'min_size': min_size,
-        'max_size': max_size,
-        'is_verified': is_verified,
-        'min_duration': min_duration,
-        'max_duration': max_duration,
+        'sort_by': sort_by,
     }
 
     # Filtered properties (matching the user's filters)

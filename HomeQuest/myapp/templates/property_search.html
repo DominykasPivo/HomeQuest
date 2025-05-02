@@ -25,6 +25,12 @@
     <input type="number" name="max_rooms" placeholder="Max Rooms" value="{{ request.GET.max_rooms }}">
     <input type="number" name="min_size" placeholder="Min Size" value="{{ request.GET.min_size }}">
     <input type="number" name="max_size" placeholder="Max Size" value="{{ request.GET.max_size }}">
+    <select name="sort_by" id="sort_by">
+        <option value="">Sort By</option>
+        <option value="most_viewed" {% if request.GET.sort_by == "most_viewed" %}selected{% endif %}>Most Viewed</option>
+        <option value="most_commented" {% if request.GET.sort_by == "most_commented" %}selected{% endif %}>Most Commented</option>
+        <option value="most_liked" {% if request.GET.sort_by == "most_liked" %}selected{% endif %}>Most Liked</option>
+    </select>
     <label>
         <input type="checkbox" name="is_verified" value="1" {% if request.GET.is_verified %}checked{% endif %}> Verified Only
     </label>
