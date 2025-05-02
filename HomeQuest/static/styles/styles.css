@@ -42,6 +42,7 @@ nav {
     width: 100%;
 }
 
+
 .nav-wrapper {
     background-color: white;
     box-shadow: var(--shadow-sm);
@@ -109,6 +110,65 @@ nav ul li a:hover::after {
     color: var(--primary-color);
     text-decoration: none;
     letter-spacing: -0.5px;
+}
+
+/* Notification Styles */
+.notification-menu {
+    position: relative;
+    display: inline-block;
+    margin-right: 20px; /* Move bell to the left */
+}
+
+.notification-icon {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+}
+
+.notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+}
+
+.notification-dropdown {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    position: absolute;
+    left: 50%;                /* Center horizontally below the bell */
+    top: 100%;                /* Directly below the bell */
+    transform: translateX(-50%);
+    background: #fff;
+    border: 1px solid #ccc;
+    width: 320px;             /* Fixed width */
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+    border-radius: 8px;
+}
+
+.notification-dropdown ul {
+    display: block;      /* Ensure vertical stacking */
+    padding: 0;
+    margin: 0;
+}
+
+.notification-dropdown li {
+    display: block;      /* Each notification on its own line */
+    width: 100%;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    background: #fff;
+    font-size: 1rem;
+}
+
+.notification-dropdown li:last-child {
+    border-bottom: none;
 }
 
 /* Profile Menu Styles */

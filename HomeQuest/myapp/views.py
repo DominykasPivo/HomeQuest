@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .models import User, GoldSeller, Seller, Property  #have to make user models
+from .models import User, GoldSeller, Seller, Property, Notification  #have to make user models
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import UserRegistrationForm, UserEditForm, PropertyForm, CommentForm
@@ -8,7 +8,7 @@ from .factories import UserFactory
 from .services import (
         clear_messages, update_user_profile, get_or_create_gold_seller, save_property_image,
         create_property_for_seller, delete_property, delete_property_image, replace_property_image, add_property_image,
-        filter_properties, add_verification_file, delete_verification_file, toggle_like, add_comment
+        filter_properties, add_verification_file, delete_verification_file, toggle_like, add_comment, create_notification
         )
 from django.core.exceptions import ValidationError
 from django.http import Http404
@@ -163,6 +163,7 @@ def manage_subscription(request):
             gold_seller.subscription_plan = 'basic'
             gold_seller.subscription_end_date = None
             gold_seller.save()
+            create_notification(request.user, "You have upgraded to the Gold Subscription successfully!")
         return redirect('manage_subscription')
 
     return render(request, 'manage_subscription.html', {'gold_seller': gold_seller})
@@ -185,7 +186,7 @@ def create_property(request):
                     property_data=form.cleaned_data,
                     image=form.cleaned_data.get('image')
                 )
-                print("asdaada")
+                create_notification(request.user, "Your property was created successfully!")
                 messages.success(request, "Property created successfully!")
                 return redirect('property_list')
             except ValidationError as e:
@@ -416,4 +417,16 @@ def properties_recommended(request):
         'page_obj': page_obj,
         'section_title': 'Recommended Properties'
     })
+
+@login_required
+def notifications(request):
+    notifications = request.user.notifications.order_by('-created_at')
+    return render(request, 'notifications.html', {'notifications': notifications})
+
+@login_required
+def mark_notification_read(request, notification_id):
+    notification = get_object_or_404(Notification, id=notification_id, user=request.user)
+    notification.is_read = True
+    notification.save()
+    return redirect('notifications')
 

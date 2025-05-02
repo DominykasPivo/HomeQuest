@@ -1,4 +1,4 @@
-from .models import User, Buyer, Seller, GoldSeller, Property, PropertyLike, Comment
+from .models import User, Buyer, Seller, GoldSeller, Property, PropertyLike, Comment, Notification
 from django.core.exceptions import ValidationError
 from datetime import timedelta
 from django.utils.timezone import now
@@ -427,3 +427,6 @@ def add_comment(property_obj, user, text):
     property_obj.comment_count = property_obj.comments.count()
     property_obj.save(update_fields=['comment_count'])
     return comment
+
+def create_notification(user, message):
+    Notification.objects.create(user=user, message=message)

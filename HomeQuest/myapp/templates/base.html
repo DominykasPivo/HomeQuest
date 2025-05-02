@@ -29,6 +29,32 @@
                 {% endif %}
             </ul>
             <div class="nav-right">
+                {% if user.is_authenticated %}
+                    <div class="notification-menu" style="position: relative; display: inline-block;">
+                        {% if has_unread_notifications %}
+                            <img src="{% static 'images/bell_notification.png' %}" alt="Notifications" class="notification-icon" onclick="toggleNotificationDropdown(event)">
+                        {% else %}
+                            <img src="{% static 'images/bell.png' %}" alt="Notifications" class="notification-icon" onclick="toggleNotificationDropdown(event)">
+                        {% endif %}
+                        <div id="notificationDropdown" class="notification-dropdown">
+                            <ul>
+                                {% for notification in user.notifications.all|dictsortreversed:"created_at"|slice:":10" %}
+                                    <li{% if not notification.is_read %} style="font-weight: bold;"{% endif %}>
+                                        {{ notification.message }}<br>
+                                        <small>{{ notification.created_at|date:"Y-m-d H:i" }}</small>
+                                        {% if not notification.is_read %}
+                                            <a href="{% url 'mark_notification_read' notification.id %}">Mark as read</a>
+                                        {% endif %}
+                                    </li>
+                                {% empty %}
+                                    <li>No notifications.</li>
+                                {% endfor %}
+                            </ul>
+                            <a href="{% url 'notifications' %}" style="display:block; text-align:center; padding:10px;">See all</a>
+                        </div>
+                    </div>
+                {% endif %}
+
                 <div class="profile-menu">
                     {% if user.is_authenticated %}
                         {% if user.profile_photo %}
@@ -62,14 +88,27 @@
         {% block content %}
         {% endblock %}
     </div>
-
+    <script>
+        function toggleNotificationDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('notificationDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('notificationDropdown');
+            if (dropdown && !event.target.closest('.notification-menu')) {
+                dropdown.style.display = 'none';
+            }
+        });
+    </script>
     <script>
         function toggleDropdown(event) {
             event.stopPropagation();
             const dropdown = event.target.nextElementSibling;
             dropdown.classList.toggle('show');
         }
-
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             const dropdowns = document.querySelectorAll('.dropdown');
