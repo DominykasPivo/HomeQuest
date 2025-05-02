@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import JSONField
 from django.contrib.auth.models import BaseUserManager, PermissionsMixin, AbstractBaseUser
-
+from django.utils import timezone
 
 class CustomUserManager(BaseUserManager):
     """
@@ -128,4 +128,11 @@ class PropertyLike(models.Model):
     def __str__(self):
         return f"{self.user} likes {self.property}"
 
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    message = models.CharField(max_length=255)
+    created_at = models.DateTimeField(default=timezone.now)
+    is_read = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"Notification for {self.user.email}: {self.message}"

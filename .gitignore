@@ -20,6 +20,15 @@ wheels/
 .installed.cfg
 *.egg
 
+<<<<<<< HEAD
+=======
+# Virtual Environment
+venv/
+ENV/
+env/
+.env
+
+>>>>>>> temp-branch-2
 # Django
 *.log
 local_settings.py
@@ -28,12 +37,15 @@ db.sqlite3-journal
 media/
 staticfiles/
 
+<<<<<<< HEAD
 # Virtual Environment
 venv/
 ENV/
 env/
 .env
 
+=======
+>>>>>>> temp-branch-2
 # IDE
 .idea/
 .vscode/
@@ -47,8 +59,12 @@ env/
 .Spotlight-V100
 .Trashes
 ehthumbs.db
+<<<<<<< HEAD
 Thumbs.db
 
 # Project specific
 *.sqlite3
 *.sqlite3-journal
+=======
+Thumbs.db 
+>>>>>>> temp-branch-2
