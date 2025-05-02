@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ section_title }}</h1>
+<ul>
+    {% for property in page_obj %}
+        <li>
+            <a href="{% url 'property_detail_all' property.property_id %}">
+                {{ property.location }} - {{ property.property_type }} - ${{ property.price }}
+                {% if property.listing_type == 'for_rent' and property.duration %} - {{ property.duration }} days{% endif %}
+            </a>
+        </li>
+    {% empty %}
+        <li>No properties found.</li>
+    {% endfor %}
+</ul>
+
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -13,10 +13,7 @@ from .services import (
 from django.core.exceptions import ValidationError
 from django.http import Http404
 from django.conf import settings
-
-
-# from datetime import timedelta
-# from django.utils.timezone import now
+from django.core.paginator import Paginator # paginator lets only a limited number of properties are shown per page, and users can navigate between pages.
 
 # Create your views here.
 def home(request):
@@ -390,7 +387,33 @@ def property_detail_all(request, property_id):
         'user_has_liked': user_has_liked,
     })
 
+def properties_for_sale(request):
+    properties = filter_properties(search_type='for_sale')
+    paginator = Paginator(properties, 20)  # Show 20 properties per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'properties_list.html', {
+        'page_obj': page_obj,
+        'section_title': 'Properties For Sale'
+    })
 
+def properties_for_rent(request):
+    properties = filter_properties(search_type='for_rent')
+    paginator = Paginator(properties, 20)  # Show 20 properties per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'properties_list.html', {
+        'page_obj': page_obj,
+        'section_title': 'Properties For Rent'
+    })
 
-
+def properties_recommended(request):
+    properties = filter_properties(search_type='recommended')
+    paginator = Paginator(properties, 20)  # Show 20 properties per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'properties_list.html', {
+        'page_obj': page_obj,
+        'section_title': 'Recommended Properties'
+    })
 

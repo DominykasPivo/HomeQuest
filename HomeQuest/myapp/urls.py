@@ -21,5 +21,8 @@ urlpatterns = [
     #User property interaction
     path('properties/search/', views.property_search, name='property_search'),
     path('properties/<int:property_id>/all/', views.property_detail_all, name='property_detail_all'),
+    path('properties/for_sale/', views.properties_for_sale, name='properties_for_sale'),
+    path('properties/for_rent/', views.properties_for_rent, name='properties_for_rent'),
+    path('properties/recommended/', views.properties_recommended, name='properties_recommended'),
 
 ]
