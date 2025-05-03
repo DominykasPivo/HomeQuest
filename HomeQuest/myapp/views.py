@@ -17,7 +17,15 @@ from django.core.paginator import Paginator # paginator lets only a limited numb
 
 # Create your views here.
 def home(request):
-    return render(request, 'home.html')
+    properties = Property.objects.all()
+    recommended_properties = filter_properties(
+        search_type='recommended',
+        limit=3,
+    )
+    return render(request, 'home.html', {
+        'properties': properties, 
+        'recommended_properties': recommended_properties
+    })
 
 def login_email_phone(request):
     return render(request, 'login_email_phone.html')
@@ -211,7 +219,6 @@ def property_detail(request, property_id):
     property_obj = get_object_or_404(Property, pk=property_id, seller__pk=request.user.pk)
     return render(request, 'property_detail.html', {
         'property': property_obj,
-        'MEDIA_URL': settings.MEDIA_URL,  # <-- Add this line
     })
 
 @login_required
@@ -252,8 +259,7 @@ def property_edit(request, property_id):
 
     return render(request, 'property_edit.html', {
         'form': form,
-        'property': property_instance,
-        'MEDIA_URL': settings.MEDIA_URL,
+        'property': property_instance
     })
 
 
@@ -271,29 +277,29 @@ def property_delete(request, property_id):
 
 
 def property_search(request):
-    search_type = request.GET.get('search_type')
+    search_type = request.GET.get('search_type', '')
     query = request.GET.get('q', '')
-    min_price = request.GET.get('min_price')
-    max_price = request.GET.get('max_price')
-    property_type = request.GET.get('property_type')
-    min_rooms = request.GET.get('min_rooms')
-    max_rooms = request.GET.get('max_rooms')
-    min_size = request.GET.get('min_size')
-    max_size = request.GET.get('max_size')
-    min_duration = request.GET.get('min_duration')  
-    max_duration = request.GET.get('max_duration') 
-    is_verified = request.GET.get('is_verified')
-    sort_by = request.GET.get('sort_by')
+    min_price = request.GET.get('min_price', '')
+    max_price = request.GET.get('max_price', '')
+    property_type = request.GET.get('property_type', '')
+    min_rooms = request.GET.get('min_rooms', '')
+    max_rooms = request.GET.get('max_rooms', '')
+    min_size = request.GET.get('min_size', '')
+    max_size = request.GET.get('max_size', '')
+    min_duration = request.GET.get('min_duration', '')  
+    max_duration = request.GET.get('max_duration', '') 
+    is_verified = request.GET.get('is_verified', '')
+    sort_by = request.GET.get('sort_by', '')
 
-    # Convert values to correct types
-    min_price = float(min_price) if min_price else None
-    max_price = float(max_price) if max_price else None
-    min_rooms = int(min_rooms) if min_rooms else None
-    max_rooms = int(max_rooms) if max_rooms else None
-    min_size = float(min_size) if min_size else None
-    max_size = float(max_size) if max_size else None
-    min_duration = int(min_duration) if min_duration else None  
-    max_duration = int(max_duration) if max_duration else None  
+    # Convert values to correct types only if they're not empty
+    min_price = float(min_price) if min_price.strip() else None
+    max_price = float(max_price) if max_price.strip() else None
+    min_rooms = int(min_rooms) if min_rooms.strip() else None
+    max_rooms = int(max_rooms) if max_rooms.strip() else None
+    min_size = float(min_size) if min_size.strip() else None
+    max_size = float(max_size) if max_size.strip() else None
+    min_duration = int(min_duration) if min_duration.strip() else None  
+    max_duration = int(max_duration) if max_duration.strip() else None  
     is_verified = True if is_verified else None
 
     filter_params = {
@@ -306,14 +312,12 @@ def property_search(request):
         'min_size': min_size,
         'max_size': max_size,
         'is_verified': is_verified,
-        'sort_by': sort_by,
+        'sort_by': sort_by if sort_by.strip() else None,
+        'search_type': search_type if search_type.strip() else None
     }
 
     # Filtered properties (matching the user's filters)
-    filtered_properties = filter_properties(
-        search_type=search_type,
-        **filter_params
-    )
+    filtered_properties = filter_properties(**filter_params)
 
     # Three blocks sorted by popularity
     for_sale_properties = filter_properties(
@@ -329,13 +333,13 @@ def property_search(request):
     recommended_properties = filter_properties(
         search_type='recommended',
         limit=10,
-    )  # Already sorted by popularity in your service
+    )
 
     return render(request, 'property_search.html', {
         'filtered_properties': filtered_properties,
         'for_sale_properties': for_sale_properties,
         'for_rent_properties': for_rent_properties,
-        'recommended_properties': recommended_properties,
+        'recommended_properties': recommended_properties
     })
 
 
@@ -384,13 +388,12 @@ def property_detail_all(request, property_id):
         'property': property_obj,
         'comments': comments,
         'comment_form': comment_form,
-        'MEDIA_URL': settings.MEDIA_URL,
         'user_has_liked': user_has_liked,
     })
 
 def properties_for_sale(request):
     properties = filter_properties(search_type='for_sale')
-    paginator = Paginator(properties, 20)  # Show 20 properties per page
+    paginator = Paginator(properties, 10)  # Show 20 properties per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'properties_list.html', {
@@ -400,7 +403,7 @@ def properties_for_sale(request):
 
 def properties_for_rent(request):
     properties = filter_properties(search_type='for_rent')
-    paginator = Paginator(properties, 20)  # Show 20 properties per page
+    paginator = Paginator(properties, 10)  # Show 20 properties per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'properties_list.html', {
@@ -410,7 +413,7 @@ def properties_for_rent(request):
 
 def properties_recommended(request):
     properties = filter_properties(search_type='recommended')
-    paginator = Paginator(properties, 20)  # Show 20 properties per page
+    paginator = Paginator(properties, 10)  # Show 20 properties per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'properties_list.html', {
@@ -425,8 +428,10 @@ def notifications(request):
 
 @login_required
 def mark_notification_read(request, notification_id):
-    notification = get_object_or_404(Notification, id=notification_id, user=request.user)
-    notification.is_read = True
-    notification.save()
-    return redirect('notifications')
+    if request.method == 'POST':
+        notification = get_object_or_404(Notification, id=notification_id, user=request.user)
+        notification.is_read = True
+        notification.save()
+        return HttpResponse(status=200)
+    return HttpResponse(status=405)  # Method not allowed for non-POST requests
 

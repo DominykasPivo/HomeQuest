@@ -3,36 +3,207 @@
 {% block title %}Login with Email - HomeQuest{% endblock %}
 
 {% block content %}
-<div class="login-container">
-    <div class="login-form">
-        <h1 class="login-title">Login with Email</h1>
-        <p class="login-subtitle">Enter your email and password to sign-in</p>
-        <form method="post" class="login-form-content">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" name="email" id="email" required class="login-input">
+<style>
+    /* Page Container */
+    .page-container {
+        max-width: 98%;
+        width: 98%;
+        margin: 0 auto;
+        padding: 2rem 3rem;
+        background: linear-gradient(135deg, #f5f5f0, #e0e8f7);
+        border-radius: 0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 1rem;
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Login Form Styles */
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem 0;
+        min-height: calc(100vh - 300px);
+        background: transparent;
+    }
+
+    .login-form {
+        background: white;
+        padding: 2.5rem;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-md);
+        width: 100%;
+        max-width: 500px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .login-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+
+    .login-subtitle {
+        color: var(--text-secondary);
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .login-form-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+    }
+
+    .login-input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .login-input:focus {
+        border-color: var(--primary-color);
+        outline: none;
+        box-shadow: 0 0 3px rgba(64, 112, 244, 0.1);
+    }
+
+    .login-option-btn {
+        width: 100%;
+        padding: 1rem;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+    .login-option-btn:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .form-errors {
+        background-color: #fff2f2;
+        border: 1px solid #ffcdd2;
+        border-radius: var(--radius-sm);
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+
+    .form-errors ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        color: #d32f2f;
+    }
+
+    .register-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: var(--text-secondary);
+    }
+
+    .register-link a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .register-link a:hover {
+        text-decoration: underline;
+    }
+
+    .back-link {
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .back-link a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .back-link a:hover {
+        color: var(--primary-color);
+    }
+
+    @media (max-width: 768px) {
+        .login-container {
+            padding: 1rem;
+        }
+
+        .login-form {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<div class="page-container">
+    <div class="login-container">
+        <div class="login-form">
+            <h1 class="login-title">Login with Email</h1>
+            <p class="login-subtitle">Enter your email and password to sign in</p>
+            
+            <form method="post" class="login-form-content">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" required class="login-input" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" required class="login-input" placeholder="Enter your password">
+                </div>
+                <button type="submit" class="login-option-btn">Sign In</button>
+            </form>
+
+            {% if messages %}
+                <div class="form-errors">
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="register-link">
+                Don't have an account? <a href="{% url 'register' %}">Register</a>
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password" required class="login-input">
+            <div class="back-link">
+                <a href="{% url 'login' %}">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Login Options
+                </a>
             </div>
-            <button type="submit" class="login-option-btn">Login</button>
-        </form>
-        {% if messages %}
-            <div class="form-errors">
-                <ul>
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-        <div class="register-link">
-            Don't have an account? <a href="{% url 'register' %}">Register</a>
-        </div>
-        <div class="back-link">
-            <a href="{% url 'login' %}">&larr; Back to Login Options</a>
         </div>
     </div>
 </div>

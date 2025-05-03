@@ -1,19 +1,408 @@
 {% extends 'base.html' %}
 {% block title %}My Properties{% endblock %}
 {% block content %}
+{% load static %}
 
-<h1>My Properties</h1>
-<a href="{% url 'property_create' %}">Add New Property</a>
-<ul>
-    {% for property in properties %}
-        <li>
-            <a href="{% url 'property_detail' property.property_id %}">{{ property.location }}</a>
-            (<a href="{% url 'property_edit' property.property_id %}">Edit</a> |
-             <a href="{% url 'property_delete' property.property_id %}">Delete</a> |
-             <a href="{% url 'property_verify' property.property_id %}">Verify</a>)
-        </li>
-    {% empty %}
-        <li>No properties found.</li>
-    {% endfor %}
-</ul>
+<style>
+    /* Page Container */
+    .page-container {
+        max-width: 98%;
+        width: 98%;
+        margin: 0 auto;
+        padding: 2rem 3rem;
+        background: linear-gradient(135deg, #f5f5f0, #e0e8f7);
+        border-radius: 0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 1rem;
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+        min-height: calc(100vh - 200px);
+    }
+
+    .content-container {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        padding: 2rem 0;
+        background: transparent;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .add-property-btn {
+        padding: 0.75rem 1.5rem;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .add-property-btn:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .properties-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    /* Modern Property Card Styles */
+    .property-card-modern {
+        background-color: white;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.4s ease;
+        transform: translateY(0);
+        position: relative;
+    }
+
+    .property-card-modern:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .property-card-img-wrap {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+    }
+
+    .property-card-img-wrap::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.5) 100%);
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+    }
+
+    .property-card-modern:hover .property-card-img-wrap::before {
+        opacity: 1;
+    }
+
+    .property-card-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    .property-card-modern:hover .property-card-img-wrap img {
+        transform: scale(1.1);
+    }
+
+    .property-card-content {
+        padding: 1.5rem;
+    }
+
+    .property-card-header {
+        margin-bottom: 1rem;
+    }
+
+    .property-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+    }
+
+    .property-card-location {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .property-card-price-row {
+        margin-bottom: 1rem;
+    }
+
+    .property-card-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .property-card-price-suffix {
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+
+    .property-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-color);
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .property-card-stats {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .stat {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .property-card-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .view-details-btn {
+        padding: 0.5rem 1rem;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .view-details-btn:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+        color: white;
+        text-decoration: none;
+    }
+
+    .action-link {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        padding: 0.5rem;
+        border-radius: var(--radius-sm);
+        transition: all 0.2s ease;
+    }
+
+    .action-link:hover {
+        color: var(--primary-color);
+        background: rgba(64, 112, 244, 0.1);
+    }
+
+    .action-link.edit:hover {
+        color: #2196F3;
+        background: rgba(33, 150, 243, 0.1);
+    }
+
+    .action-link.delete:hover {
+        color: #F44336;
+        background: rgba(244, 67, 54, 0.1);
+    }
+
+    .action-link.verify:hover {
+        color: #4CAF50;
+        background: rgba(76, 175, 80, 0.1);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background: white;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .empty-state p {
+        color: var(--text-secondary);
+        margin: 0;
+        font-size: 1.1rem;
+    }
+
+    .property-arrow {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .property-card-modern:hover .property-arrow {
+        opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+        .page-container {
+            padding: 1rem;
+        }
+
+        .page-header {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .properties-list {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="page-container">
+    <div class="content-container">
+        <div class="page-header">
+            <h1 class="page-title">My Properties</h1>
+            <a href="{% url 'property_create' %}" class="add-property-btn">
+                <i class="fas fa-plus"></i>
+                Add New Property
+            </a>
+        </div>
+
+        {% if properties %}
+            <div class="properties-list">
+                {% for property in properties %}
+                    <div class="property-card-modern" id="property-{{ property.property_id }}">
+                        <div class="property-card-img-wrap">
+                            <div style="position: relative; width: 100%; height: 100%;">
+                                {% if property.image_paths %}
+                                    {% for image in property.image_paths %}
+                                        <img src="/media/{{ image }}" alt="Property Image" 
+                                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: {% if forloop.first %}block{% else %}none{% endif %};"
+                                             class="property-image" data-index="{{ forloop.counter0 }}">
+                                    {% endfor %}
+                                {% else %}
+                                    <img src="{% static 'images/hero-bg.jpg' %}" alt="No image available" 
+                                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block;"
+                                         class="property-image" data-index="0">
+                                {% endif %}
+                                
+                                {% if property.image_paths and property.image_paths|length > 1 %}
+                                    <a href="javascript:void(0);" onclick="prevImage('property-{{ property.property_id }}')"
+                                       style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); 
+                                              background: rgba(0,0,0,0.6); color: white; width: 40px; height: 40px; 
+                                              border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+                                              z-index: 10; text-decoration: none; font-size: 16px;"
+                                       class="property-arrow">
+                                        <i class="fas fa-arrow-left"></i>
+                                    </a>
+                                    
+                                    <a href="javascript:void(0);" onclick="nextImage('property-{{ property.property_id }}')"
+                                       style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); 
+                                              background: rgba(0,0,0,0.6); color: white; width: 40px; height: 40px; 
+                                              border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+                                              z-index: 10; text-decoration: none; font-size: 16px;"
+                                       class="property-arrow">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                    
+                                    <div style="position: absolute; bottom: 15px; right: 15px; background: rgba(0,0,0,0.6); 
+                                                color: white; padding: 5px 10px; border-radius: 15px; font-size: 12px; z-index: 5;">
+                                        <span class="current-index">1</span>/<span>{{ property.image_paths|length }}</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="property-card-content">
+                            <div class="property-card-header">
+                                <h3 class="property-card-title">{{ property.property_type }} in {{ property.location }}</h3>
+                                <span class="property-card-location"><i class="fas fa-map-marker-alt"></i> {{ property.location }}</span>
+                            </div>
+                            <div class="property-card-price-row">
+                                <span class="property-card-price">${{ property.price }}</span>
+                                {% if property.listing_type == 'for_rent' %}
+                                    <span class="property-card-price-suffix">/mo</span>
+                                {% endif %}
+                            </div>
+                            <div class="property-card-footer">
+                                <div class="property-card-stats">
+                                    <span class="stat"><i class="fas fa-eye"></i> {{ property.view_count }}</span>
+                                    <span class="stat"><i class="fas fa-heart"></i> {{ property.like_count }}</span>
+                                    <span class="stat"><i class="fas fa-comment"></i> {{ property.comment_count }}</span>
+                                </div>
+                                <div class="property-card-actions">
+                                    <a href="{% url 'property_detail' property.property_id %}" class="view-details-btn">
+                                        <i class="fas fa-info-circle"></i> View Details
+                                    </a>
+                                    <a href="{% url 'property_edit' property.property_id %}" class="action-link edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'property_delete' property.property_id %}" class="action-link delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                    <a href="{% url 'property_verify' property.property_id %}" class="action-link verify">
+                                        <i class="fas fa-check-circle"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>No properties found. Add your first property to get started!</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function prevImage(propertyId) {
+    const property = document.getElementById(propertyId);
+    const images = property.querySelectorAll('.property-image');
+    const currentIndex = parseInt(property.querySelector('.property-image[style*="display: block"]').dataset.index);
+    const newIndex = (currentIndex - 1 + images.length) % images.length;
+    
+    images.forEach(img => img.style.display = 'none');
+    images[newIndex].style.display = 'block';
+    
+    property.querySelector('.current-index').textContent = newIndex + 1;
+}
+
+function nextImage(propertyId) {
+    const property = document.getElementById(propertyId);
+    const images = property.querySelectorAll('.property-image');
+    const currentIndex = parseInt(property.querySelector('.property-image[style*="display: block"]').dataset.index);
+    const newIndex = (currentIndex + 1) % images.length;
+    
+    images.forEach(img => img.style.display = 'none');
+    images[newIndex].style.display = 'block';
+    
+    property.querySelector('.current-index').textContent = newIndex + 1;
+}
+</script>
+
 {% endblock %}

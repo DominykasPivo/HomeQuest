@@ -5,122 +5,434 @@
 {% block title %}Register - HomeQuest{% endblock %}
 
 {% block content %}
-<div class="registration-container">
-    <div class="registration-form">
-        <h1 class="registration-title">Create Your Account</h1>
-        <p class="registration-subtitle">Join HomeQuest to find your perfect home</p>
-        
-        <form method="post" enctype="multipart/form-data" class="registration-form-content">
-            {% csrf_token %}
+<style>
+    /* Page Container */
+    .page-container {
+        max-width: 98%;
+        width: 98%;
+        margin: 0 auto;
+        padding: 2rem 3rem;
+        background: linear-gradient(135deg, #f5f5f0, #e0e8f7);
+        border-radius: 0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 1rem;
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%233060e0' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    /* Registration Form Styles */
+    .registration-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem 0;
+        min-height: calc(100vh - 300px);
+    }
+
+    .registration-form {
+        background: white;
+        padding: 2.5rem;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-md);
+        width: 100%;
+        max-width: 600px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .registration-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+
+    .registration-subtitle {
+        color: var(--text-secondary);
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .registration-form-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-section {
+        background: var(--bg-light);
+        padding: 1.5rem;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-color);
+    }
+
+    .form-section h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="password"],
+    .form-group input[type="tel"],
+    .form-group input[type="date"] {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        font-size: 1rem;
+        transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+        border-color: var(--primary-color);
+        outline: none;
+    }
+
+    .form-group.user-type {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .radio-option {
+        flex: 1;
+        position: relative;
+    }
+
+    .form-group.user-type label {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-weight: 500;
+        margin: 0;
+        background: white;
+    }
+
+    .form-group.user-type input[type="radio"] {
+        position: absolute !important;
+        opacity: 0 !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+    }
+
+    .form-group.user-type input[type="radio"]:checked + label {
+        border-color: var(--primary-color);
+        background-color: rgba(64, 112, 244, 0.1);
+        color: var(--primary-color);
+    }
+
+    .form-group.user-type input[type="radio"]:focus + label {
+        box-shadow: 0 0 0 2px var(--primary-color);
+    }
+
+    .form-group.user-type label:hover {
+        border-color: var(--primary-color);
+        background-color: rgba(64, 112, 244, 0.05);
+    }
+
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        border-radius: 4px;
+    }
+
+    .form-errors {
+        background-color: #fff2f2;
+        border: 1px solid #ffcdd2;
+        border-radius: var(--radius-sm);
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+
+    .form-errors ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        color: #d32f2f;
+    }
+
+    .register-button {
+        width: 100%;
+        padding: 1rem;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+    .register-button:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: var(--text-secondary);
+    }
+
+    .login-link a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        .registration-container {
+            padding: 1rem;
+        }
+
+        .registration-form {
+            padding: 1.5rem;
+        }
+
+        .form-section {
+            padding: 1rem;
+        }
+
+        .form-group.user-type {
+            flex-direction: column;
+        }
+    }
+
+    /* Profile photo styles */
+    .profile-photo-group {
+        border: 2px dashed var(--border-color);
+        padding: 1.5rem;
+        border-radius: var(--radius-sm);
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .profile-photo-group:hover {
+        border-color: var(--primary-color);
+    }
+
+    .profile-photo-group input[type="file"] {
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .profile-photo-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+    }
+
+    .profile-photo-help {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-top: 0.5rem;
+    }
+
+    /* Blur option styles */
+    #blur-photo-group {
+        margin-top: 1rem;
+        padding: 1rem;
+        background-color: rgba(64, 112, 244, 0.05);
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-color);
+    }
+
+    #blur-photo-group .checkbox-label {
+        color: var(--text-primary);
+    }
+
+    #blur-photo-group .checkbox-label input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--border-color);
+        border-radius: 4px;
+        transition: all 0.2s ease;
+    }
+
+    #blur-photo-group .checkbox-label input[type="checkbox"]:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    #blur-photo-group .checkbox-help {
+        margin-left: 1.8rem;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-top: 0.25rem;
+    }
+</style>
+
+<div class="page-container">
+    <div class="registration-container">
+        <div class="registration-form">
+            <h1 class="registration-title">Create Your Account</h1>
+            <p class="registration-subtitle">Join HomeQuest to find your perfect home</p>
             
-            <div class="form-section">
-                <h3>Account Information</h3>
-                <div class="form-group">
-                    <label for="{{ form.username.id_for_label }}">Username*</label>
-                    {{ form.username }}
+            <form method="post" enctype="multipart/form-data" class="registration-form-content">
+                {% csrf_token %}
+                
+                <div class="form-section">
+                    <h3>Account Information</h3>
+                    <div class="form-group">
+                        <label for="{{ form.email.id_for_label }}">Email*</label>
+                        {{ form.email }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.password.id_for_label }}">Password*</label>
+                        {{ form.password }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.confirm_password.id_for_label }}">Confirm Password*</label>
+                        {{ form.confirm_password }}
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="{{ form.email.id_for_label }}">Email*</label>
-                    {{ form.email }}
-                </div>
-                <div class="form-group">
-                    <label for="{{ form.password.id_for_label }}">Password*</label>
-                    {{ form.password }}
-                </div>
-                <div class="form-group">
-                    <label for="{{ form.confirm_password.id_for_label }}">Confirm Password*</label>
-                    {{ form.confirm_password }}
-                </div>
-            </div>
 
-            <div class="form-section">
-                <h3>Personal Information</h3>
-                <div class="form-group">
-                    <label for="{{ form.full_name.id_for_label }}">Full Name*</label>
-                    {{ form.full_name }}
+                <div class="form-section">
+                    <h3>Personal Information</h3>
+                    <div class="form-group">
+                        <label for="{{ form.full_name.id_for_label }}">Full Name*</label>
+                        {{ form.full_name }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.date_of_birth.id_for_label }}">Date of Birth*</label>
+                        {{ form.date_of_birth }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.phone_number.id_for_label }}">Phone Number*</label>
+                        {{ form.phone_number }}
+                    </div>
+                    <div class="form-group">
+                        <div class="profile-photo-group">
+                            <label for="{{ form.profile_photo.id_for_label }}">Profile Photo</label>
+                            {{ form.profile_photo }}
+                            <p class="profile-photo-help">Upload a custom profile picture! Supported formats: JPG, PNG</p>
+                        </div>
+                    </div>
+                    <div class="form-group" id="blur-photo-group" style="display:none;">
+                        <label class="checkbox-label" for="id_blur_profile_photo">
+                            {{ form.blur_profile_photo }}
+                            Blur my profile photo
+                        </label>
+                        <p class="checkbox-help">Enable this option if you want to maintain privacy while still having a profile photo.</p>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="{{ form.date_of_birth.id_for_label }}">Date of Birth*</label>
-                    {{ form.date_of_birth }}
-                </div>
-                <div class="form-group">
-                    <label for="{{ form.phone_number.id_for_label }}">Phone Number*</label>
-                    {{ form.phone_number }}
-                </div>
-                <div class="form-group">
-                    <label for="{{ form.profile_photo.id_for_label }}">Profile Photo</label>
-                    {{ form.profile_photo }}
-                </div>
-                <div class="form-group" id="blur-photo-group" style="display:none;">
-                    <label class="checkbox-label" for="id_blur_profile_photo">
-                        {{ form.blur_profile_photo }}
-                        Blur my profile photo
-                    </label>
-                </div>
-            </div>
 
-            <div class="form-section">
-                <h3>Account Type</h3>
-                <div class="form-group user-type">
-                    {{ form.user_type }}
-                </div>
-            </div>
-            <div class="form-section">
-                <h3>Consent</h3>
-                <div class="form-group consent">
-                    <label class="checkbox-label" for="{{ form.consent_to_share_location.id_for_label }}">
-                        <input
-                            type="checkbox"
-                            name="{{ form.consent_to_share_location.html_name }}"
-                            id="{{ form.consent_to_share_location.id_for_label }}"
-                            {% if form.consent_to_share_location.value %}checked{% endif %}
-                        >
-                        I consent to share my location for better property recommendations
-                    </label>
-                </div>
-            </div>
-
-            {% if form.non_field_errors %}
-                <div class="form-errors">
-                    <ul>
-                        {% for error in form.non_field_errors %}
-                            <li>{{ error }}</li>
+                <div class="form-section">
+                    <h3>Account Type</h3>
+                    <div class="form-group user-type">
+                        {% for radio in form.user_type %}
+                            <div class="radio-option">
+                                {{ radio.tag }}
+                                <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                            </div>
                         {% endfor %}
-                    </ul>
+                    </div>
                 </div>
-            {% endif %}
+                <div class="form-section">
+                    <h3>Consent</h3>
+                    <div class="form-group consent">
+                        <label class="checkbox-label" for="{{ form.consent_to_share_location.id_for_label }}">
+                            <input
+                                type="checkbox"
+                                name="{{ form.consent_to_share_location.html_name }}"
+                                id="{{ form.consent_to_share_location.id_for_label }}"
+                                {% if form.consent_to_share_location.value %}checked{% endif %}
+                            >
+                            I consent to share my location for better property recommendations
+                        </label>
+                    </div>
+                </div>
 
-            <button type="submit" class="register-button">Create Account</button>
-        </form>
-        
-        <div class="login-link">
-            Already have an account? <a href="{% url 'login' %}">Sign in</a>
+                {% if form.non_field_errors %}
+                    <div class="form-errors">
+                        <ul>
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <button type="submit" class="register-button">Create Account</button>
+            </form>
+            
+            <div class="login-link">
+                Already have an account? <a href="{% url 'login' %}">Sign in</a>
+            </div>
         </div>
     </div>
 </div>
-<!-- Scripts for picture blur! -->
+
 <script>
+    // Show/hide blur photo option when photo is selected
     document.addEventListener('DOMContentLoaded', function() {
-        // Try both selectors for robustness
-        const photoInput = document.getElementById('id_profile_photo') ||
-                           document.querySelector('input[type="file"][name="profile_photo"]');
+        const photoInput = document.getElementById('id_profile_photo');
         const blurGroup = document.getElementById('blur-photo-group');
-        function toggleBlurGroup() {
-            if (photoInput && blurGroup) {
-                if (photoInput.files && photoInput.files.length > 0) {
-                    blurGroup.style.display = '';
+        
+        if (photoInput && blurGroup) {
+            photoInput.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    blurGroup.style.display = 'block';
                 } else {
                     blurGroup.style.display = 'none';
-                    const blurCheckbox = document.getElementById('id_blur_profile_photo');
-                    if (blurCheckbox) blurCheckbox.checked = false;
                 }
-            }
-        }
-        if (photoInput && blurGroup) {
-            photoInput.addEventListener('change', toggleBlurGroup);
-            // Also check on page load (for autofill or browser restore)
-            toggleBlurGroup();
+            });
         }
     });
-    </script>
+</script>
 {% endblock %}

@@ -1,26 +1,310 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>{{ section_title }}</h1>
-<ul>
-    {% for property in page_obj %}
-        <li>
-            <a href="{% url 'property_detail_all' property.property_id %}">
-                {{ property.location }} - {{ property.property_type }} - ${{ property.price }}
-                {% if property.listing_type == 'for_rent' and property.duration %} - {{ property.duration }} days{% endif %}
-            </a>
-        </li>
-    {% empty %}
-        <li>No properties found.</li>
-    {% endfor %}
-</ul>
+{% load static %}
 
-<div class="pagination">
-    {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-    {% endif %}
-    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-    {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">Next</a>
-    {% endif %}
+<style>
+    .page-container {
+        max-width: 98%;
+        width: 98%;
+        margin: 0 auto;
+        padding: 2rem 3rem;
+        background: linear-gradient(135deg, #f5f5f0, #e0e8f7);
+        min-height: calc(100vh - 100px);
+    }
+
+    .content-container {
+        background: transparent;
+        padding: 2rem 0;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .properties-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Modern Property Card Styles */
+    .property-card-modern {
+        background-color: white;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.4s ease;
+        transform: translateY(0);
+    }
+
+    .property-card-modern:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .property-card-img-wrap {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+    }
+
+    .property-card-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    .property-card-modern:hover .property-card-img-wrap img {
+        transform: scale(1.1);
+    }
+
+    .property-card-content {
+        padding: 1.5rem;
+    }
+
+    .property-card-header {
+        margin-bottom: 1rem;
+    }
+
+    .property-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+    }
+
+    .property-card-location {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .property-card-price-row {
+        margin-bottom: 1rem;
+    }
+
+    .property-card-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .property-card-price-suffix {
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+
+    .property-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .property-card-stats {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .stat {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .view-details-btn {
+        padding: 0.5rem 1rem;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .view-details-btn:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+        color: white;
+        text-decoration: none;
+    }
+
+    /* Pagination Styles */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 2rem;
+        padding: 1rem 2rem;
+        background: white;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        position: relative;
+        min-height: 60px;
+    }
+
+    .pagination a {
+        padding: 0.5rem 1rem;
+        background: var(--primary-color);
+        color: white;
+        text-decoration: none;
+        border-radius: var(--radius-sm);
+        font-weight: 500;
+        transition: all 0.3s ease;
+        min-width: 100px;
+        text-align: center;
+        position: absolute;
+    }
+
+    .pagination a.prev-page {
+        left: 1rem;
+    }
+
+    .pagination a.next-page {
+        right: 1rem;
+    }
+
+    .pagination a:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+    }
+
+    .pagination span {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background: white;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .empty-state p {
+        color: var(--text-secondary);
+        margin: 0;
+        font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+        .page-container {
+            padding: 1rem;
+        }
+
+        .section-header {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .properties-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .pagination {
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 1rem;
+        }
+
+        .pagination span {
+            position: static;
+            transform: none;
+            order: -1;
+            margin-bottom: 0.5rem;
+        }
+    }
+</style>
+
+<div class="page-container">
+    <div class="content-container">
+        <div class="section-header">
+            <h1 class="section-title">{{ section_title }}</h1>
+        </div>
+
+        {% if page_obj %}
+            <div class="properties-grid">
+                {% for property in page_obj %}
+                    <div class="property-card-modern">
+                        <div class="property-card-img-wrap">
+                            {% if property.image_paths %}
+                                <img src="/media/{{ property.image_paths.0 }}" alt="Property Image">
+                            {% else %}
+                                <img src="{% static 'images/hero-bg.jpg' %}" alt="No image available">
+                            {% endif %}
+                        </div>
+                        <div class="property-card-content">
+                            <div class="property-card-header">
+                                <h3 class="property-card-title">{{ property.property_type }} in {{ property.location }}</h3>
+                                <span class="property-card-location">
+                                    <i class="fas fa-map-marker-alt"></i> {{ property.location }}
+                                </span>
+                            </div>
+                            <div class="property-card-price-row">
+                                <span class="property-card-price">${{ property.price }}</span>
+                                {% if property.listing_type == 'for_rent' %}
+                                    <span class="property-card-price-suffix">/mo</span>
+                                {% endif %}
+                            </div>
+                            <div class="property-card-footer">
+                                <div class="property-card-stats">
+                                    <span class="stat"><i class="fas fa-eye"></i> {{ property.view_count }}</span>
+                                    <span class="stat"><i class="fas fa-heart"></i> {{ property.like_count }}</span>
+                                    <span class="stat"><i class="fas fa-comment"></i> {{ property.comment_count }}</span>
+                                </div>
+                                <a href="{% url 'property_detail_all' property.property_id %}" class="view-details-btn">
+                                    <i class="fas fa-info-circle"></i> View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}" class="prev-page">
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </a>
+                {% endif %}
+                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="next-page">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </a>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>No properties found in this category.</p>
+            </div>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

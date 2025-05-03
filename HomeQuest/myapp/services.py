@@ -287,38 +287,50 @@ def filter_properties(
 ):
     properties = Property.objects.all()
 
-    if search_type == 'for_rent':
-        properties = properties.filter(listing_type='for_rent')
-    elif search_type == 'for_sale':
-        properties = properties.filter(listing_type='for_sale')
-    elif search_type == 'recommended':
-        properties = properties.order_by('-like_count', '-view_count', '-comment_count')
+    # Apply sorting first
+    if sort_by:
+        if sort_by == 'most_viewed':
+            properties = properties.order_by('-view_count')
+        elif sort_by == 'most_commented':
+            properties = properties.order_by('-comment_count')
+        elif sort_by == 'most_liked':
+            properties = properties.order_by('-like_count')
 
-    if property_type:
+    # Apply other filters only if they have actual values
+    if search_type and search_type != '':
+        if search_type == 'for_rent':
+            properties = properties.filter(listing_type='for_rent')
+        elif search_type == 'for_sale':
+            properties = properties.filter(listing_type='for_sale')
+        elif search_type == 'recommended':
+            if not sort_by:  # Only apply recommended sorting if no explicit sort is specified
+                properties = properties.order_by('-like_count', '-view_count', '-comment_count')
+
+    if property_type and property_type != '':
         properties = properties.filter(property_type=property_type)
-    if min_rooms:
+    if min_rooms and str(min_rooms).strip():
         properties = properties.filter(room_num__gte=min_rooms)
-    if max_rooms:
+    if max_rooms and str(max_rooms).strip():
         properties = properties.filter(room_num__lte=max_rooms)
-    if min_size:
+    if min_size and str(min_size).strip():
         properties = properties.filter(size__gte=min_size)
-    if max_size:
+    if max_size and str(max_size).strip():
         properties = properties.filter(size__lte=max_size)
-    if is_verified is not None:
-        properties = properties.filter(is_verified=is_verified)
+    if is_verified:
+        properties = properties.filter(is_verified=True)
     if seller_id:
         properties = properties.filter(seller__pk=seller_id)
-    if min_duration:
+    if min_duration and str(min_duration).strip():
         properties = properties.filter(duration__gte=min_duration)
-    if max_duration:
+    if max_duration and str(max_duration).strip():
         properties = properties.filter(duration__lte=max_duration)
-    if min_price:
+    if min_price and str(min_price).strip():
         properties = properties.filter(price__gte=min_price)
-    if max_price:
+    if max_price and str(max_price).strip():
         properties = properties.filter(price__lte=max_price)
 
     # Fuzzy location search (after all filters)
-    if query:
+    if query and query.strip():
         locations = list(properties.values_list('location', flat=True))
         map_locations = list(properties.values_list('map_location', flat=True))
         all_locations = list(set(locations + map_locations))
@@ -340,26 +352,6 @@ def filter_properties(
             properties = properties.filter(
                 Q(location__icontains=query) | Q(map_location__icontains=query)
             )
-
-    
-    # Sorting logic for filtered results
-    if isinstance(properties, QuerySet):
-        if sort_by == 'most_viewed':
-            properties = properties.order_by('-view_count')
-        elif sort_by == 'most_commented':
-            properties = properties.order_by('-comment_count')
-        elif sort_by == 'most_liked':
-            properties = properties.order_by('-like_count')
-        elif search_type in ('for_sale', 'for_rent'):
-            properties = properties.order_by('-like_count', '-view_count', '-comment_count')
-    elif isinstance(properties, list) and sort_by:
-        if sort_by == 'most_viewed':
-            properties.sort(key=lambda x: x.view_count, reverse=True)
-        elif sort_by == 'most_commented':
-            properties.sort(key=lambda x: x.comment_count, reverse=True)
-        elif sort_by == 'most_liked':
-            properties.sort(key=lambda x: x.like_count, reverse=True)
-
 
     if limit is not None:
         if isinstance(properties, list):
