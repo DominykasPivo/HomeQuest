@@ -2,9 +2,9 @@ from .models import User, Buyer, Seller, GoldSeller, Property, PropertyLike, Com
 from django.core.exceptions import ValidationError
 from datetime import timedelta
 from django.utils.timezone import now
-import os
+import os, random
 from django.conf import settings
-
+from django.core.mail import send_mail
 import logging
 from django.contrib.messages import get_messages
 import shutil # for deleting directories
@@ -72,6 +72,10 @@ def update_user_profile(user, **kwargs):
     if new_email and new_email != user.email:
         if User.objects.filter(email=new_email).exclude(id=user.id).exists():
             raise ValidationError(f"The email '{new_email}' is already in use by another account.")
+        return {'status': 'verify_email',
+                'new_email': new_email,
+                'other_data': kwargs  # Store other form data for later update
+                }
 
     # Validate phone number uniqueness only if a new phone number is provided
     new_phone_number = kwargs.get('phone_number')
@@ -109,7 +113,7 @@ def update_user_profile(user, **kwargs):
         user.set_password(kwargs['password']) # Hash the new password
 
     user.save()
-    return user
+    return {'status': 'updated'}
 
 
 def get_or_create_gold_seller(user, upgrade_to_gold=False):
@@ -434,7 +438,6 @@ def create_notification(user, message):
 
 
 def ensure_user_has_2fa(user):
-    """Ensure a user has 2FA enabled, creating and confirming a device if needed. Returns the device."""
     device, created = EmailDevice.objects.get_or_create(
         user=user,
         name='default',
@@ -448,14 +451,25 @@ def ensure_user_has_2fa(user):
         
     return device
 
-def generate_2fa(user):
-    """Generate and send a 2FA verification code via email."""
-    device = ensure_user_has_2fa(user) # Ensure the user has a device
-    device.generate_challenge()
-    return True
+def generate_2fa(user, target_email=None):
+    device = ensure_user_has_2fa(user) 
+    
+    if target_email and target_email != user.email:
+        token = str(random.randint(100000, 999999))  # Generate a random 6-digit token
+        
+        send_mail(
+            subject=settings.OTP_EMAIL_SUBJECT,
+            message=f"Your verification code is: {token}\nUse this code to verify your new email address.",
+            from_email=settings.OTP_EMAIL_SENDER,
+            recipient_list=[target_email],
+            fail_silently=False,
+        )
+        return token
+    else:
+        device.generate_challenge()
+        return True
 
 def verify_2fa_token(user, token):
-    """Verify a 2FA token."""
     device = EmailDevice.objects.filter(user=user, name='default').first()
     if device and device.verify_token(token):
         return True

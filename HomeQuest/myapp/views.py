@@ -121,7 +121,39 @@ def login_phone(request):
     return render(request, 'login_phone.html')
 
 def verify_2fa(request):
-    """Verify 2FA code and complete login"""
+    """Verify 2FA code and complete login or email change."""
+
+    new_email = request.session.get('new_email')
+    profile_data = request.session.get('profile_update_data')
+    
+    if new_email:
+        if request.method == 'POST':
+            token = request.POST.get('token')
+            
+            stored_token = request.session.get('email_verification_token')
+
+            if token == stored_token:
+                user = request.user
+                user.email = new_email
+                
+                if profile_data:
+                    update_user_profile(user, **profile_data)
+                else:
+                    user.save()
+                
+                # Clean up the session
+                for key in ['new_email', 'profile_update_data', 'email_verification_token']:
+                    if key in request.session:
+                        del request.session[key]
+                
+                messages.success(request, "Email verified and profile updated successfully!")
+                return redirect('profile')
+            else:
+                messages.error(request, "Invalid verification code. Please try again.")
+        
+        return render(request, '2fa.html', {'verification_type': 'email_change', 'new_email': new_email})
+
+
     # Get the pre-authenticated user from session
     user_id = request.session.get('pre_2fa_user_id')
     
@@ -171,7 +203,7 @@ def edit_profile(request):
         form = UserEditForm(request.POST, request.FILES) 
         if form.is_valid():
             try:
-                update_user_profile(
+                result = update_user_profile(
                     user,
                     full_name=form.cleaned_data.get('full_name'),
                     email=form.cleaned_data.get('email'),
@@ -181,6 +213,19 @@ def edit_profile(request):
                     blur_profile_photo=form.cleaned_data.get('blur_profile_photo'),
                     password=form.cleaned_data.get('password'),
                 )
+                
+                if result.get('status') == 'verify_email':
+                   
+                    request.session['new_email'] = result['new_email']
+                    request.session['profile_update_data'] = result['other_data']
+                    
+                    
+                    token = generate_2fa(request.user, target_email=result['new_email'])
+                    request.session['email_verification_token'] = token
+                    
+                    messages.info(request, f"We've sent a verification code to {result['new_email']}. Please verify to update your email.")
+                    return redirect('verify_2fa')
+
                 messages.success(request, 'Your profile has been updated successfully.')
 
                 if form.cleaned_data.get('password'): # Check if password was changed
@@ -226,26 +271,6 @@ def manage_subscription(request):
 
     return render(request, 'manage_subscription.html', {'gold_seller': gold_seller})
 
-# @login_required
-# def buy_gold_subscription(request):
-#     plans = SUBSCRIPTION_PLANS
-#     if request.method == 'POST':
-#         form = SubscriptionPurchaseForm(request.POST, plans=plans)
-#         if form.is_valid():
-#             payment_method = form.cleaned_data['payment_method']
-#             selected_plan = form.cleaned_data['plan']
-#             # ... payment logic ...
-#             gold_seller = get_or_create_gold_seller(request.user)
-#             update_subscription(gold_seller, 'buy_gold', selected_plan)
-
-#             Notification.objects.create(user=request.user,
-#                 message=f"You have successfully purchased a Gold subscription ({gold_seller.get_subscription_type_display()})."
-#             )
-#             messages.success(request, "Your subscription has been updated!")
-#             return redirect('manage_subscription')
-#     else:
-#         form = SubscriptionPurchaseForm(plans=plans)
-#     return render(request, 'buy_gold_subscription.html', {'form': form})
 
 @login_required
 def buy_gold_subscription(request):

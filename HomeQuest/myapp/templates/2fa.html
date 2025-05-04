@@ -7,7 +7,11 @@
     <div class="form-container">
         <h1>Verification Required</h1>
         
-        <p>We've sent a verification code to your email. Please enter it below to complete login:</p>
+        {% if verification_type == 'email_change' %}
+            <p>We've sent a verification code to <strong>{{ new_email }}</strong>. Please enter it below to update your email:</p>
+        {% else %}
+            <p>We've sent a verification code to your email. Please enter it below to complete login:</p>
+        {% endif %}
         
         <form method="post">
             {% csrf_token %}
@@ -17,6 +21,10 @@
             </div>
             
             <button type="submit" class="btn btn-primary">Verify</button>
+            
+            {% if verification_type == 'email_change' %}
+                <a href="{% url 'edit_profile' %}" class="btn btn-secondary">Cancel</a>
+            {% endif %}
         </form>
         
         {% if messages %}
