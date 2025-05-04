@@ -1,19 +1,35 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .models import User, GoldSeller, Seller, Property, Notification  #have to make user models
+from .models import User, GoldSeller, Seller, Property, Notification, PaymentProcessor  #have to make user models
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import UserRegistrationForm, UserEditForm, PropertyForm, CommentForm
+from .forms import UserRegistrationForm, UserEditForm, PropertyForm, CommentForm, SubscriptionPurchaseForm
 from django.contrib.auth.decorators import login_required
 from .factories import UserFactory
 from .services import (
-        clear_messages, update_user_profile, get_or_create_gold_seller, save_property_image,
+        clear_messages, update_user_profile, get_or_create_gold_seller, save_property_image, update_subscription,
         create_property_for_seller, delete_property, delete_property_image, replace_property_image, add_property_image,
-        filter_properties, add_verification_file, delete_verification_file, toggle_like, add_comment, create_notification
+        filter_properties, add_verification_file, delete_verification_file, toggle_like, add_comment, create_notification,
+        generate_2fa, verify_2fa_token
         )
 from django.core.exceptions import ValidationError
 from django.http import Http404
 from django.conf import settings
 from django.core.paginator import Paginator # paginator lets only a limited number of properties are shown per page, and users can navigate between pages.
+from .payment_strategies import CardPayment, PayPalPayment, IBANPayment
+
+SUBSCRIPTION_PLANS = [
+    ('weekly', 'Weekly - 15 EUR'),
+    ('monthly', 'Monthly - 40 EUR'),
+    ('quarterly', 'Quarterly - 60 EUR'),
+    ('yearly', 'Yearly - 100 EUR'),
+]
+SUBSCRIPTION_PRICES = {
+    'basic': 0,
+    'weekly': 15,
+    'monthly': 40,
+    'quarterly': 60,
+    'yearly': 100,
+}
 
 # Create your views here.
 def home(request):
@@ -64,7 +80,6 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 def login_email(request):
-    # Clear any existing messages
     clear_messages(request)
 
     if request.method == 'POST':
@@ -76,8 +91,10 @@ def login_email(request):
             # Authenticate using the username (since Django uses username internally)
             user = authenticate(request, email=email, password=password)
             if user is not None:
-                login(request, user)
-                return redirect('home')  # Redirect to the home page after login
+                request.session['pre_2fa_user_id'] = user.pk
+                generate_2fa(user) 
+                messages.info(request, 'The verification code has been sent to your email.')
+                return redirect('verify_2fa')  # Redirect to the 2FA verification page
             else:
                 messages.error(request, 'Invalid email or password.')
         except User.DoesNotExist:
@@ -85,7 +102,7 @@ def login_email(request):
     return render(request, 'login_email.html')
 
 def login_phone(request):
-    # Clear any existing messages
+
     clear_messages(request)
 
     if request.method == 'POST':
@@ -102,6 +119,40 @@ def login_phone(request):
         except User.DoesNotExist:
             messages.error(request, 'Invalid phone number or password.')
     return render(request, 'login_phone.html')
+
+def verify_2fa(request):
+    """Verify 2FA code and complete login"""
+    # Get the pre-authenticated user from session
+    user_id = request.session.get('pre_2fa_user_id')
+    
+    if not user_id:
+        messages.error(request, "Authentication session expired. Please log in again.")
+        return redirect('login_email')
+    
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        messages.error(request, "User not found. Please log in again.")
+        return redirect('login_email')
+    
+    if request.method == 'POST':
+        token = request.POST.get('token')
+        
+        if verify_2fa_token(user, token):
+            # 2FA successful, complete login
+            login(request, user)
+            
+            # Clean up the session
+            if 'pre_2fa_user_id' in request.session:
+                del request.session['pre_2fa_user_id']
+                
+            messages.success(request, "Login successful!")
+            return redirect('home')
+        else:
+            messages.error(request, "Invalid verification code. Please try again.")
+    
+    return render(request, '2fa.html')
+
 
 
 @login_required
@@ -151,31 +202,105 @@ def edit_profile(request):
 
 @login_required
 def manage_subscription(request):
-    try:
-        # Ensure the user is a Seller
-        seller = Seller.objects.get(pk=request.user.pk)
-    except Seller.DoesNotExist:
-        messages.error(request, "You must be a Seller to access this page.")
-        return redirect('home')
-
-    # Get the GoldSeller instance if it exists
+    seller = get_object_or_404(Seller, pk=request.user.pk)
     gold_seller = GoldSeller.objects.filter(pk=seller.pk).first()
+
+    # Auto-downgrade if subscription expired
+    if gold_seller and not gold_seller.is_subscription_active():
+        gold_seller.subscription_type = 'basic'
+        gold_seller.subscription_plan = 'basic'
+        gold_seller.subscription_end_date = None
+        gold_seller.save()
 
     if request.method == 'POST':
         action = request.POST.get('action')
-        if action == 'buy_gold':
-            # Upgrade to GoldSeller
-            gold_seller = get_or_create_gold_seller(request.user, upgrade_to_gold=True)
-        elif action == 'cancel_gold' and gold_seller:
-            # Downgrade to basic
+        if action == 'cancel' and gold_seller and gold_seller.subscription_plan != 'basic':
             gold_seller.subscription_plan = 'basic'
+            gold_seller.subscription_type = 'basic'
             gold_seller.subscription_end_date = None
             gold_seller.save()
-            create_notification(request.user, "You have upgraded to the Gold Subscription successfully!")
-        return redirect('manage_subscription')
+            messages.success(request, "Your subscription has been cancelled. You are now on the Basic plan.")
+            return redirect('manage_subscription')
+        elif action == 'buy':
+            return redirect('buy_gold_subscription')
 
     return render(request, 'manage_subscription.html', {'gold_seller': gold_seller})
 
+# @login_required
+# def buy_gold_subscription(request):
+#     plans = SUBSCRIPTION_PLANS
+#     if request.method == 'POST':
+#         form = SubscriptionPurchaseForm(request.POST, plans=plans)
+#         if form.is_valid():
+#             payment_method = form.cleaned_data['payment_method']
+#             selected_plan = form.cleaned_data['plan']
+#             # ... payment logic ...
+#             gold_seller = get_or_create_gold_seller(request.user)
+#             update_subscription(gold_seller, 'buy_gold', selected_plan)
+
+#             Notification.objects.create(user=request.user,
+#                 message=f"You have successfully purchased a Gold subscription ({gold_seller.get_subscription_type_display()})."
+#             )
+#             messages.success(request, "Your subscription has been updated!")
+#             return redirect('manage_subscription')
+#     else:
+#         form = SubscriptionPurchaseForm(plans=plans)
+#     return render(request, 'buy_gold_subscription.html', {'form': form})
+
+@login_required
+def buy_gold_subscription(request):
+    plans = SUBSCRIPTION_PLANS
+    if request.method == 'POST':
+        form = SubscriptionPurchaseForm(request.POST, plans=plans)
+        if form.is_valid():
+            payment_method = form.cleaned_data['payment_method']
+            selected_plan = form.cleaned_data['plan']
+            amount = SUBSCRIPTION_PRICES[selected_plan]
+
+            # --- Payment processing ---
+            processor = PaymentProcessor()
+            payment_kwargs = {}
+            if payment_method == 'card':
+                processor.set_strategy(CardPayment())
+                payment_kwargs = {
+                    'card_number': request.POST.get('card_number'),
+                    'full_name': request.POST.get('card_full_name'),
+                    'expiration_date': request.POST.get('expiration_date'),
+                    'cvv': request.POST.get('cvv'),
+                }
+            elif payment_method == 'iban':
+                processor.set_strategy(IBANPayment())
+                payment_kwargs = {
+                    'iban': request.POST.get('iban'),
+                    'full_name': request.POST.get('iban_full_name'),
+                    'bank_name': request.POST.get('bank_name'),
+                    'bic': request.POST.get('bic'),
+                }
+            elif payment_method == 'paypal':
+                processor.set_strategy(PayPalPayment())
+                payment_kwargs = {
+                    'paypal_email': request.POST.get('paypal_email'),
+                    'paypal_password': request.POST.get('paypal_password'),
+                }
+
+            payment_success = processor.process_payment(amount, **payment_kwargs)
+            if not payment_success:
+                messages.error(request, "Payment failed. Please check your details and try again.")
+                return render(request, 'buy_gold_subscription.html', {'form': form})
+
+            # --- Subscription logic using services ---
+            gold_seller = get_or_create_gold_seller(request.user)
+            update_subscription(gold_seller, 'buy_gold', selected_plan)
+
+            Notification.objects.create(
+                user=request.user,
+                message=f"You have successfully purchased a Gold subscription ({gold_seller.get_subscription_type_display()})."
+            )
+            messages.success(request, "Your subscription has been updated!")
+            return redirect('manage_subscription')
+    else:
+        form = SubscriptionPurchaseForm(plans=plans)
+    return render(request, 'buy_gold_subscription.html', {'form': form})
 
 @login_required
 def create_property(request):
@@ -184,6 +309,14 @@ def create_property(request):
     except Seller.DoesNotExist:
         messages.error(request, "Only sellers can create properties.")
         return redirect('home')
+    
+
+    gold_seller = GoldSeller.objects.filter(pk=seller.pk).first()
+    if not gold_seller or not gold_seller.subscription_plan:
+        # Basic seller: limit to 2 properties
+         if seller.properties.count() >= 2:
+            messages.error(request, "Basic sellers can only post up to 2 properties. Upgrade to Gold for unlimited listings.")
+            return redirect('manage_subscription')
 
     if request.method == 'POST':
         form = PropertyForm(request.POST, request.FILES)
@@ -393,7 +526,7 @@ def property_detail_all(request, property_id):
 
 def properties_for_sale(request):
     properties = filter_properties(search_type='for_sale')
-    paginator = Paginator(properties, 10)  # Show 20 properties per page
+    paginator = Paginator(properties, 10)  
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'properties_list.html', {
@@ -403,7 +536,7 @@ def properties_for_sale(request):
 
 def properties_for_rent(request):
     properties = filter_properties(search_type='for_rent')
-    paginator = Paginator(properties, 10)  # Show 20 properties per page
+    paginator = Paginator(properties, 10)  
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'properties_list.html', {
@@ -413,7 +546,7 @@ def properties_for_rent(request):
 
 def properties_recommended(request):
     properties = filter_properties(search_type='recommended')
-    paginator = Paginator(properties, 10)  # Show 20 properties per page
+    paginator = Paginator(properties, 10)  
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'properties_list.html', {

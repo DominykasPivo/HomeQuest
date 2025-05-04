@@ -13,7 +13,7 @@
         </div>
 
         <div class="profile-photo-section">
-            {% if user.profile_photo and user.profile_photo.url %}
+            {% if user.profile_photo and user.profile_photo.url and user.profile_photo.name != "profile_photos/default-profile.png" %}
                 <img src="{{ user.profile_photo.url }}" alt="Profile Photo" class="profile-photo"
                     {% if user.blur_profile_photo %}style="filter: blur(8px);" {% endif %}>
             {% else %}

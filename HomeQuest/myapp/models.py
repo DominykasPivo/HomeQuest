@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import JSONField
 from django.contrib.auth.models import BaseUserManager, PermissionsMixin, AbstractBaseUser
 from django.utils import timezone
+from .payment_strategies import PaymentStrategy
 
 class CustomUserManager(BaseUserManager):
     """
@@ -67,18 +68,33 @@ class Seller(User):
         return f"Seller: {self.email}"
     
 
+
 class GoldSeller(Seller):
-    SUBSCRIPTION_PLANS = [
+    SUBSCRIPTION_TYPES = [
         ('basic', 'Basic'),
         ('gold', 'Gold'),
     ]
+    PLAN_CHOICES = [
+        ('basic', 'Basic'),
+        ('weekly', 'Weekly'),
+        ('monthly', 'Monthly'),
+        ('quarterly', 'Quarterly'),
+        ('yearly', 'Yearly'),
+    ]
 
-    #seller = models.OneToOneField(Seller, on_delete=models.CASCADE, related_name='gold_seller_profile')
+    subscription_type = models.CharField(max_length=20, choices=SUBSCRIPTION_TYPES, default='basic')
+    subscription_plan = models.CharField(max_length=20, choices=PLAN_CHOICES, default='basic')
     subscription_end_date = models.DateField(blank=True, null=True)
-    subscription_plan = models.CharField(max_length=20, choices=SUBSCRIPTION_PLANS, default='basic')
+
+    def is_subscription_active(self):
+        if self.subscription_plan == 'basic':
+            return False
+        if self.subscription_end_date and self.subscription_end_date >= timezone.now().date():
+            return True
+        return False
 
     def __str__(self):
-        return f"GoldSeller: {self.email} ({self.subscription_plan})"
+        return f"GoldSeller: {self.email} ({self.subscription_type}, {self.subscription_plan})"
     
 
 class Property(models.Model):
@@ -136,3 +152,21 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.user.email}: {self.message}"
+
+class PaymentProcessor:
+    _instance = None
+    # Singleton pattern to ensure only one instance of PaymentProcessor exists
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._strategy = None
+        return cls._instance
+    # Set the payment strategy
+    def set_strategy(self, strategy: PaymentStrategy):
+        self._strategy = strategy
+    
+    def process_payment(self, amount, **kwargs):
+        if not self._strategy:
+            raise Exception("Payment strategy not set.")
+        return self._strategy.pay(amount, **kwargs)
+

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Verification Required - HomeQuest{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="form-container">
+        <h1>Verification Required</h1>
+        
+        <p>We've sent a verification code to your email. Please enter it below to complete login:</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="token">Verification Code</label>
+                <input type="text" name="token" id="token" class="form-control" required autofocus>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Verify</button>
+        </form>
+        
+        {% if messages %}
+            <div class="messages mt-3">
+                {% for message in messages %}
+                    <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

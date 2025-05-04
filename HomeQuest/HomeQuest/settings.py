@@ -38,11 +38,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "myapp",
+    #authentication
+    'django_otp',
+    'django_otp.plugins.otp_email',
+    'two_factor',
+
     'crispy_forms',
     'crispy_bootstrap5',
 ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+LOGIN_URL = '/login_email/'  # Redirect to the email login page if not authenticated
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -50,6 +57,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -68,7 +76,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
-                'myapp.context_processors.unread_notifications',  # Add your custom context processor here
+                'myapp.context_processors.unread_notifications', 
             ],
         },
     },
@@ -142,3 +150,14 @@ AUTH_USER_MODEL = 'myapp.User'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'no.reply.homequest.email@gmail.com'  # Your Gmail address
+EMAIL_HOST_PASSWORD = 'nygk zipk xjpj oetj'  # App password (not your regular Gmail password)
+
+# Keep these settings
+OTP_EMAIL_SENDER = 'no.reply.homequest.email@gmail.com'  # Use same email as EMAIL_HOST_USER
+OTP_EMAIL_SUBJECT = 'HomeQuest Authentication Code'

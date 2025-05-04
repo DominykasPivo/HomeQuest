@@ -1,29 +1,16 @@
 {% extends 'base.html' %}
-
-{% block title %}Manage Subscription{% endblock %}
-
 {% block content %}
 <h1>Manage Subscription</h1>
-
-{% if gold_seller %}
-    <p>Current Plan: {{ gold_seller.subscription_plan|title }}</p>
-    {% if gold_seller.subscription_plan == 'gold' %}
+<form method="post">
+    {% csrf_token %}
+    {% if gold_seller and gold_seller.is_subscription_active %}
+        <p>Subscription: {{ gold_seller.get_subscription_type_display }}</p>
+        <p>Current Plan: {{ gold_seller.get_subscription_plan_display }}</p>
         <p>Subscription End Date: {{ gold_seller.subscription_end_date }}</p>
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit" name="action" value="cancel_gold">Cancel Gold Subscription</button>
-        </form>
+        <button type="submit" name="action" value="cancel" onclick="return confirm('Are you sure you want to cancel your subscription?');">Cancel Subscription</button>
     {% else %}
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit" name="action" value="buy_gold">Upgrade to Gold</button>
-        </form>
+        <p>Subscription: Basic</p>
+        <button type="submit" name="action" value="buy">Buy Gold Subscription</button>
     {% endif %}
-{% else %}
-    <p>Current Plan: Basic</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" name="action" value="buy_gold">Upgrade to Gold</button>
-    </form>
-{% endif %}
+</form>
 {% endblock %}

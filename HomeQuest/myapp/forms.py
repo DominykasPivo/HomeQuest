@@ -113,7 +113,7 @@ class PropertyForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # Make all fields required except duration
         for name, field in self.fields.items():
-            if name not in ['duration', 'image']:
+            if name not in ['duration']:
                 field.required = True
             else:
                 field.required = False
@@ -133,3 +133,18 @@ class CommentForm(forms.ModelForm):
         widgets = {
             'text': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Add your comment...'}),
         }
+
+
+class SubscriptionPurchaseForm(forms.Form):
+    PAYMENT_METHODS = [
+        ('card', 'Card'),
+        ('iban', 'IBAN'),
+        ('paypal', 'PayPal'),
+    ]
+    plan = forms.ChoiceField(label="Select Plan")
+    payment_method = forms.ChoiceField(choices=PAYMENT_METHODS, label="Payment Method")
+
+    def __init__(self, *args, plans=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if plans is not None:
+            self.fields['plan'].choices = plans

@@ -4,6 +4,7 @@ from datetime import timedelta
 from django.utils.timezone import now
 import os
 from django.conf import settings
+
 import logging
 from django.contrib.messages import get_messages
 import shutil # for deleting directories
@@ -11,6 +12,7 @@ from django.db.models import Q
 from django.db.models.query import QuerySet # for filtering properties
 from django.core.files.uploadedfile import UploadedFile
 import difflib # for comparing strings // for search bar finding similar properties
+from django_otp.plugins.otp_email.models import EmailDevice # for 2FA
 
 def clear_messages(request):
     """
@@ -39,7 +41,6 @@ def create_user(user_type, **kwargs):
                 blur_profile_photo=kwargs.get('blur_profile_photo'),  
             )
         elif user_type == 'seller':
-            # Create a GoldSeller directly
             gold_seller = GoldSeller.objects.create(
                 email=kwargs.get('email'),
                 full_name=kwargs.get('full_name'),
@@ -48,10 +49,11 @@ def create_user(user_type, **kwargs):
                 phone_number=kwargs.get('phone_number'),
                 profile_photo=kwargs.get('profile_photo'),
                 blur_profile_photo=kwargs.get('blur_profile_photo'),
-                subscription_plan='basic',  # Default to basic
-                subscription_end_date=None  # No subscription end date for basic
+                subscription_type='basic',      # Set to 'basic'
+                subscription_plan='basic',      # Set to 'basic'
+                subscription_end_date=None
             )
-            user = gold_seller  # The GoldSeller is also a User
+            user = gold_seller
         else:
             raise ValidationError("Invalid user type. Must be 'buyer' or 'seller'.")
         
@@ -131,18 +133,25 @@ def get_or_create_gold_seller(user, upgrade_to_gold=False):
 
     return gold_seller
 
-def update_subscription(gold_seller, action):
+def update_subscription(gold_seller, action, plan_key=None):
     """
     Update the subscription plan and end date for a GoldSeller.
     """
-    if action == 'buy_gold':
-        gold_seller.subscription_plan = 'gold'
-        gold_seller.subscription_end_date = now().date() + timedelta(days=30)  # 30-day subscription
+    if action == 'buy_gold' and plan_key:
+        gold_seller.subscription_type = 'gold'
+        gold_seller.subscription_plan = plan_key
+        days = {
+            'weekly': 7,
+            'monthly': 30,
+            'quarterly': 90,
+            'yearly': 365,
+        }.get(plan_key, 30)
+        gold_seller.subscription_end_date = now().date() + timedelta(days=days)
     elif action == 'cancel_gold':
+        gold_seller.subscription_type = 'basic'
         gold_seller.subscription_plan = 'basic'
-        gold_seller.subscription_end_date = None  # Clear the subscription end date
+        gold_seller.subscription_end_date = None
     gold_seller.save()
-
 
 def save_property_image(property_instance, image):
     if not image:
@@ -334,7 +343,7 @@ def filter_properties(
         locations = list(properties.values_list('location', flat=True))
         map_locations = list(properties.values_list('map_location', flat=True))
         all_locations = list(set(locations + map_locations))
-        closest = difflib.get_close_matches(query, all_locations, n=10, cutoff=0.5)
+        closest = difflib.get_close_matches(query, all_locations, n=5, cutoff=0.5)
         if closest:
             filtered = properties.filter(
                 Q(location__in=closest) | Q(map_location__in=closest)
@@ -422,3 +431,32 @@ def add_comment(property_obj, user, text):
 
 def create_notification(user, message):
     Notification.objects.create(user=user, message=message)
+
+
+def ensure_user_has_2fa(user):
+    """Ensure a user has 2FA enabled, creating and confirming a device if needed. Returns the device."""
+    device, created = EmailDevice.objects.get_or_create(
+        user=user,
+        name='default',
+        defaults={'confirmed': True}  # Auto-confirm for mandatory 2FA
+    )
+    
+    # Make sure existing devices are confirmed
+    if not device.confirmed:
+        device.confirmed = True
+        device.save()
+        
+    return device
+
+def generate_2fa(user):
+    """Generate and send a 2FA verification code via email."""
+    device = ensure_user_has_2fa(user) # Ensure the user has a device
+    device.generate_challenge()
+    return True
+
+def verify_2fa_token(user, token):
+    """Verify a 2FA token."""
+    device = EmailDevice.objects.filter(user=user, name='default').first()
+    if device and device.verify_token(token):
+        return True
+    return False

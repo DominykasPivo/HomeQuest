@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
@@ -11,7 +11,11 @@ urlpatterns = [
     path("profile/", views.profile, name="profile"),
     path("logout/", views.logout_view, name="logout"), 
     path('edit_profile/', views.edit_profile, name='edit_profile'),
+    path('2fa/', views.verify_2fa, name='verify_2fa'),
+    # User subscription management
     path('manage_subscription/', views.manage_subscription, name='manage_subscription'),
+    path('buy_gold_subscription/', views.buy_gold_subscription, name='buy_gold_subscription'),
+    # Notifications
     path('notifications/', views.notifications, name='notifications'),
     path('notifications/mark_read/<int:notification_id>/', views.mark_notification_read, name='mark_notification_read'),
     # Property management
