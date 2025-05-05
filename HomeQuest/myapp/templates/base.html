@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 {% load user_extras %}
 <!DOCTYPE html>
 <html lang="en">
@@ -459,14 +460,14 @@
                 <a href="{% url 'home' %}" class="brand">HomeQuest</a>
             </div>
             <ul>
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'property_search' %}">Search Properties</a></li>
+                <li><a href="{% url 'home' %}">{% trans "Home" %}</a></li>
+                <li><a href="{% url 'property_search' %}">{% trans "Search Properties" %}</a></li>
                 {% if not user.is_authenticated %}
-                    <li><a href="{% url 'register' %}">Register</a></li>
-                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}">{% trans "Register" %}</a></li>
+                    <li><a href="{% url 'login' %}">{% trans "Login" %}</a></li>
                 {% endif %}
                 {% if user.is_authenticated and user.is_seller %}
-                    <li><a href="{% url 'property_list' %}">Manage Properties</a></li>
+                    <li><a href="{% url 'property_list' %}">{% trans "Manage Properties" %}</a></li>
                 {% endif %}
             </ul>
             <div class="nav-right">
@@ -484,7 +485,7 @@
                             <div class="notification-header">
                                 <h3><i class="fas fa-bell"></i> Notifications</h3>
                                 {% if unread_notifications_count > 0 %}
-                                    <span class="notification-count">{{ unread_notifications_count }} new</span>
+                                    <span class="notification-count">{{ unread_notifications_count }} {% trans "new" %}</span>
                                 {% endif %}
                             </div>
                             <div class="notification-list">
@@ -509,17 +510,33 @@
                                     <div class="empty-notification">
                                         <div class="empty-state">
                                             <i class="far fa-bell-slash empty-icon"></i>
-                                            <p>No notifications yet</p>
+                                            <p>{% trans "No notifications yet" %}</p>
                                         </div>
                                     </div>
                                 {% endfor %}
                             </div>
                             <div class="notification-footer-link">
-                                <a href="{% url 'notifications' %}"><i class="fas fa-list"></i> See all notifications</a>
+                                <a href="{% url 'notifications' %}"><i class="fas fa-list"></i>{% trans "See all notifications" %}</a>
                             </div>
                         </div>
                     </div>
                 {% endif %}
+                
+                <div class="language-menu">
+                    <button class="language-button" onclick="toggleDropdown(event)" aria-label="Change language">
+                        <span class="current-language">{% if LANGUAGE_CODE == 'de' %}DE{% else %}EN{% endif %}</span>
+                        <i class="fas fa-globe"></i>
+                    </button>
+                    <div class="dropdown">
+                        <button onclick="changeLanguage('en')" {% if LANGUAGE_CODE == 'en' %}class="active"{% endif %}>
+                            <span class="lang-flag">🇬🇧</span> English
+                        </button>
+                        <button onclick="changeLanguage('de')" {% if LANGUAGE_CODE == 'de' %}class="active"{% endif %}>
+                            <span class="lang-flag">🇩🇪</span> Deutsch
+                        </button>
+                    </div>
+                </div>
+
 
                 <div class="profile-menu">
                     {% if user.is_authenticated %}
@@ -530,19 +547,19 @@
                             <img src="{% static 'images/default-profile.png' %}" alt="Profile" class="profile-icon" onclick="toggleDropdown(event)">
                         {% endif %}
                         <div class="dropdown">
-                            <a href="{% url 'profile' %}">View Profile</a>
-                            <a href="{% url 'edit_profile' %}">Edit Profile</a>
+                            <a href="{% url 'profile' %}">{% trans "View Profile" %}</a>
+                            <a href="{% url 'edit_profile' %}">{% trans "Edit Profile" %}</a>
                             {% if user.is_seller %}
-                                <a href="{% url 'manage_subscription' %}">Manage Subscription</a>
+                                <a href="{% url 'manage_subscription' %}">{% trans "Manage Subscription" %}</a>
                             {% endif %}
-                            <a href="{% url 'logout' %}">Logout</a>
+                            <a href="{% url 'logout' %}">{% trans "Logout" %}</a>
                         </div>
                     {% else %}
                         <img src="{% static 'images/default-profile.png' %}" alt="Profile" class="profile-icon" onclick="toggleDropdown(event)">
                         <div class="dropdown">
-                            <a href="{% url 'login' %}">Sign In</a>
+                            <a href="{% url 'login' %}">{% trans "Sign In" %}</a>
                             <div class="dropdown-cta">
-                                Don't have an account? <a href="{% url 'register' %}">Register now</a>
+                                {% trans "Don't have an account?" %} <a href="{% url 'register' %}">{% trans "Register now" %}</a>
                             </div>
                         </div>
                     {% endif %}
@@ -554,6 +571,7 @@
         {% block content %}
         {% endblock %}
     </div>
+
     <script>
         function toggleDropdown(event) {
             event.stopPropagation();
@@ -617,7 +635,20 @@
             })
             .catch(error => console.error('Error:', error));
         }
+        function changeLanguage(lang) {
+            // Set the language cookie
+            document.cookie = "django_language=" + lang + "; path=/; max-age=31536000";
+            
+            // Update session storage (optional)
+            sessionStorage.setItem('django_language', lang);
+            
+            // Refresh the page to apply the new language
+            window.location.reload();
+        }
+
+
     </script>
     {% csrf_token %}
 </body>
 </html>
+

@@ -1,0 +1,157 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-05 13:54+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\myapp\templates\base.html:463
+msgid "Home"
+msgstr "Startseite"
+
+
+msgid "Search Properties"
+msgstr "Suchen Sie nach Eigenschaften"
+
+#: .\myapp\templates\base.html:466
+msgid "Register"
+msgstr "Registrieren"
+
+#: .\myapp\templates\base.html:467
+msgid "Login"
+msgstr "Anmelden"
+
+
+msgid "Manage Properties"
+msgstr "Eigenschaften verwalten"
+
+#: .\myapp\templates\base.html:488
+msgid "new"
+msgstr "neu"
+
+#: .\myapp\templates\base.html:513
+msgid "No notifications yet"
+msgstr "Noch keine Benachrichtigungen"
+
+
+msgid "View Profile"
+msgstr "Profil anzeigen"
+
+#: .\myapp\templates\base.html:551
+msgid "Edit Profile"
+msgstr "Profil bearbeiten"
+
+#: .\myapp\templates\base.html:553
+msgid "Manage Subscription"
+msgstr "Abonnement verwalten"
+
+#: .\myapp\templates\base.html:555
+msgid "Logout"
+msgstr "Abmelden"
+
+#: .\myapp\templates\base.html:560
+msgid "Sign In"
+msgstr "Anmelden"
+
+#: .\myapp\templates\base.html:562
+msgid "Don't have an account?"
+msgstr "Sie haben noch kein Konto?"
+
+#: .\myapp\templates\base.html:562
+msgid "Register now"
+msgstr "Registrieren Sie sich jetzt"
+
+#: .\myapp\templates\home.html:625
+msgid "Welcome to HomeQuest"
+msgstr "Willkommen bei HomeQuest"
+
+#: .\myapp\templates\home.html:626
+msgid "Find Your Perfect Home"
+msgstr "Finden Sie Ihr perfektes Zuhause"
+
+#: .\myapp\templates\home.html:628
+msgid "Explore Properties"
+msgstr "Entdecken Sie Immobilien"
+
+#: .\myapp\templates\home.html:629
+msgid "Join HomeQuest"
+msgstr "Treten Sie HomeQuest bei"
+
+#: .\myapp\templates\home.html:633
+msgid "Modern apartment building"
+msgstr "Modernes Mehrfamilienhaus"
+
+#: .\myapp\templates\home.html:643
+msgid "Flexible Roles"
+msgstr "Flexible Rollen"
+
+#: .\myapp\templates\home.html:644
+msgid "Choose your path - buy your dream home or list properties for sale."
+msgstr ""
+"Wählen Sie Ihren Weg – kaufen Sie Ihr Traumhaus oder listen Sie Immobilien "
+"zum Verkauf auf."
+
+#: .\myapp\templates\home.html:650
+msgid "Verified Accounts"
+msgstr "Verifizierte Konten"
+
+#: .\myapp\templates\home.html:651
+msgid "Secure and verified profiles for both buyers and sellers."
+msgstr "Sichere und verifizierte Profile für Käufer und Verkäufer."
+
+#: .\myapp\templates\home.html:657
+msgid "Powerful Tools"
+msgstr "Leistungsstarke Werkzeuge"
+
+#: .\myapp\templates\home.html:658
+msgid "Access specialized features based on your account type."
+msgstr "Greifen Sie basierend auf Ihrem Kontotyp auf spezielle Funktionen zu."
+
+#: .\myapp\templates\home.html:664
+msgid "Recommended Properties"
+msgstr "Empfohlene Eigenschaften"
+
+#: .\myapp\templates\home.html:666
+msgid "View All"
+msgstr "Alle anzeigen"
+
+#: .\myapp\templates\home.html:677
+msgid "Verified"
+msgstr "Verifiziert"
+
+#: .\myapp\templates\home.html:737
+msgid "View"
+msgstr "Sicht"
+
+#: .\myapp\templates\home.html:742
+msgid "No recommended properties found."
+msgstr "Keine empfohlenen Eigenschaften gefunden."
+
+#: .\myapp\templates\home.html:749
+msgid "Ready to Start Your Journey?"
+msgstr "Bereit, Ihre Reise zu beginnen?"
+
+#: .\myapp\templates\home.html:750
+msgid ""
+"Join thousands of satisfied customers who found their dream home with "
+"HomeQuest."
+msgstr ""
+"Schließen Sie sich Tausenden zufriedenen Kunden an, die mit HomeQuest ihr "
+"Traumhaus gefunden haben."
+
+#: .\myapp\templates\home.html:751
+msgid "Get Started"
+msgstr "Legen Sie los"

@@ -612,3 +612,13 @@ def mark_notification_read(request, notification_id):
         return HttpResponse(status=200)
     return HttpResponse(status=405)  # Method not allowed for non-POST requests
 
+def set_language(request):
+    language = request.GET.get('language', 'en')
+    next_url = request.GET.get('next', '/')
+    
+    response = redirect(next_url)
+    response.set_cookie('django_language', language)
+    
+    # Update session
+    request.session['django_language'] = language
+    return response

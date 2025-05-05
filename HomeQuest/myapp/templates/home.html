@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 {% block title %}Home{% endblock %}
 {% block content %}
 <style>
@@ -621,15 +622,15 @@
     <div class="hero-section">
         <div class="hero-container">
             <div class="hero-text">
-                <h1>Welcome to HomeQuest</h1>
-                <h2>Find Your Perfect Home</h2>
+                <h1>{% trans "Welcome to HomeQuest" %}</h1>
+                <h2>{% trans "Find Your Perfect Home" %}</h2>
                 <div class="hero-buttons">
-                    <a href="{% url 'property_search' %}" class="hero-button">Explore Properties</a>
-                    <a href="{% url 'register' %}" class="hero-button secondary">Join HomeQuest</a>
+                    <a href="{% url 'property_search' %}" class="hero-button">{% trans "Explore Properties" %}</a>
+                    <a href="{% url 'register' %}" class="hero-button secondary">{% trans "Join HomeQuest" %}</a>
                 </div>
             </div>
             <div class="hero-image">
-                <img src="{% static 'images/hero-bg.jpg' %}" alt="Beautiful Home">
+                <img src="{% static 'images/hero-image.jpg' %}" alt="{% trans 'Modern apartment building' %}">
             </div>
         </div>
     </div>
@@ -639,30 +640,30 @@
             <div class="feature-icon">
                 <i class="fas fa-exchange-alt"></i>
             </div>
-            <h3>Flexible Roles</h3>
-            <p>Choose your path - buy your dream home or list properties for sale.</p>
+            <h3>{% trans "Flexible Roles" %}</h3>
+            <p>{% trans "Choose your path - buy your dream home or list properties for sale." %}</p>
         </div>
         <div class="feature-item">
             <div class="feature-icon">
                 <i class="fas fa-user-shield"></i>
             </div>
-            <h3>Verified Accounts</h3>
-            <p>Secure and verified profiles for both buyers and sellers.</p>
+            <h3>{% trans "Verified Accounts" %}</h3>
+            <p>{% trans "Secure and verified profiles for both buyers and sellers." %}</p>
         </div>
         <div class="feature-item">
             <div class="feature-icon">
                 <i class="fas fa-tools"></i>
             </div>
-            <h3>Powerful Tools</h3>
-            <p>Access specialized features based on your account type.</p>
+            <h3>{% trans "Powerful Tools" %}</h3>
+            <p>{% trans "Access specialized features based on your account type." %}</p>
         </div>
     </div>
 
     <div class="recommended-section">
         <div class="section-header">
-            <h2>Recommended Properties</h2>
+            <h2>{% trans "Recommended Properties" %}</h2>
             <a href="{% url 'properties_recommended' %}" class="view-all-link">
-                View All <i class="fas fa-arrow-right"></i>
+                {% trans "View All" %} <i class="fas fa-arrow-right"></i>
             </a>
         </div>
         <div class="recommended-grid">
@@ -673,7 +674,7 @@
                             {% if property.is_verified %}
                             <div class="verification-badge-card">
                                 <i class="fas fa-check-circle"></i>
-                                Verified
+                                {% trans "Verified" %}
                             </div>
                             {% endif %}
                             {% if property.image_paths %}
@@ -733,21 +734,21 @@
                                 <span class="stat"><i class="fas fa-heart"></i> {{ property.like_count }}</span>
                                 <span class="stat"><i class="fas fa-comment"></i> {{ property.comment_count }}</span>
                             </div>
-                            <a href="{% url 'property_detail_all' property.property_id %}" class="property-card-btn">View</a>
+                            <a href="{% url 'property_detail_all' property.property_id %}" class="property-card-btn">{% trans "View" %}</a>
                         </div>
                     </div>
                 </div>
             {% empty %}
-                <p>No recommended properties found.</p>
+                <p>{% trans "No recommended properties found." %}</p>
             {% endfor %}
         </div>
     </div>
 
     <div class="cta-section">
         <div class="cta-content">
-            <h2>Ready to Start Your Journey?</h2>
-            <p>Join thousands of satisfied customers who found their dream home with HomeQuest.</p>
-            <a href="{% url 'register' %}" class="cta-button">Get Started</a>
+            <h2>{% trans "Ready to Start Your Journey?" %}</h2>
+            <p>{% trans "Join thousands of satisfied customers who found their dream home with HomeQuest." %}</p>
+            <a href="{% url 'register' %}" class="cta-button">{% trans "Get Started" %}</a>
         </div>
     </div>
 </div>
