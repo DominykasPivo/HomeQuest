@@ -37,8 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "myapp",
-    #authentication
+    "authentication",
+    "notification_system",
+    "subscription_management",
+    "payment",
+    "property_management",
+    "user_management",
+
     'django_otp',
     'django_otp.plugins.otp_email',
     'two_factor',
@@ -70,7 +75,9 @@ ROOT_URLCONF = 'HomeQuest.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [ 
+            BASE_DIR / 'HomeQuest' / 'templates',  
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,7 +86,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
-                'myapp.context_processors.unread_notifications', 
+                'notification_system.context_processors.unread_notifications', 
             ],
         },
     },
@@ -157,7 +164,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom user model to use as default user model
 # https://docs.djangoproject.com/en/5.1/topics/auth/customizing/#specifying-a-custom-user-model-when-starting-a-project
-AUTH_USER_MODEL = 'myapp.User'
+AUTH_USER_MODEL = 'user_management.User'
 
 
 MEDIA_URL = '/media/'
@@ -170,6 +177,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'no.reply.homequest.email@gmail.com'  # Your Gmail address
 EMAIL_HOST_PASSWORD = 'nygk zipk xjpj oetj'  # App password (not your regular Gmail password)
 
-# Keep these settings
-OTP_EMAIL_SENDER = 'no.reply.homequest.email@gmail.com'  # Use same email as EMAIL_HOST_USER
+
+OTP_EMAIL_SENDER = 'no.reply.homequest.email@gmail.com'  
 OTP_EMAIL_SUBJECT = 'HomeQuest Authentication Code'

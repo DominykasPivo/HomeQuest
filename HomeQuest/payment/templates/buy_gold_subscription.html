@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Buy Gold Subscription</h1>
+<form method="post" id="subscription-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <div id="card-fields" style="display: none;">
+        <label>Card Number</label>
+        <input type="text" name="card_number" maxlength="19" placeholder="1234 5678 9012 3456"><br>
+        <label>Full Name</label>
+        <input type="text" name="card_full_name" placeholder="Name on Card"><br>
+        <label>Expiration Date</label>
+        <input type="text" name="expiration_date" placeholder="MM/YY"><br>
+        <label>CVV</label>
+        <input type="text" name="cvv" maxlength="4" placeholder="CVV"><br>
+    </div>
+    <div id="iban-fields" style="display: none;">
+        <label>IBAN</label>
+        <input type="text" name="iban" placeholder="IBAN"><br>
+        <label>Full Name</label>
+        <input type="text" name="iban_full_name" placeholder="Account Holder Name"><br>
+        <label>Bank Name</label>
+        <input type="text" name="bank_name" placeholder="Bank Name"><br>
+        <label>BIC</label>
+        <input type="text" name="bic" placeholder="BIC"><br>
+    </div>
+    <div id="paypal-fields" style="display: none;">
+        <label>PayPal Email</label>
+        <input type="email" name="paypal_email" placeholder="PayPal Email"><br>
+        <label>PayPal Password</label>
+        <input type="password" name="paypal_password" placeholder="PayPal Password"><br>
+    </div>
+
+    <button type="submit">Pay and Activate</button>
+</form>
+
+<script>
+    function showPaymentFields() {
+        var method = document.querySelector('input[name="payment_method"]:checked, select[name="payment_method"]').value;
+        document.getElementById("card-fields").style.display = "none";
+        document.getElementById("iban-fields").style.display = "none";
+        document.getElementById("paypal-fields").style.display = "none";
+        if (method === "card") {
+            document.getElementById("card-fields").style.display = "block";
+        } else if (method === "iban") {
+            document.getElementById("iban-fields").style.display = "block";
+        } else if (method === "paypal") {
+            document.getElementById("paypal-fields").style.display = "block";
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Attach event listeners to payment method radio/select
+        var radios = document.querySelectorAll('input[name="payment_method"], select[name="payment_method"]');
+        radios.forEach(function(radio) {
+            radio.addEventListener("change", showPaymentFields);
+        });
+        // Show fields if already selected (e.g. after validation error)
+        if (document.querySelector('input[name="payment_method"]:checked, select[name="payment_method"]')) {
+            showPaymentFields();
+        }
+    });
+</script>
+{% endblock %}

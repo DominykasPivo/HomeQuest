@@ -1,0 +1,781 @@
+{% extends 'base.html' %}
+{% block title %}Property Details{% endblock %}
+{% block content %}
+{% load static %}
+
+<style>
+    .page-container {
+        max-width: 98%;
+        width: 98%;
+        margin: 0 auto;
+        padding: 2rem 3rem;
+        background: linear-gradient(135deg, #f5f5f0, #e0e8f7);
+        min-height: calc(100vh - 100px);
+    }
+
+    .content-wrapper {
+        background: white;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-md);
+        overflow: hidden;
+    }
+
+    .page-header {
+        padding: 2rem;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .page-title-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .verification-badge {
+        background: rgba(76, 175, 80, 0.1);
+        color: #4CAF50;
+        padding: 0.5rem 1rem;
+        border-radius: 100px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .verification-badge i {
+        font-size: 1.1rem;
+    }
+
+    .content-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+    }
+
+    .main-content {
+        padding: 2rem;
+        border-right: 1px solid var(--border-color);
+    }
+
+    .sidebar {
+        padding: 2rem;
+        background: var(--bg-light);
+    }
+
+    /* Image Slider */
+    .image-slider {
+        position: relative;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .image-slider .main-image {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        display: none;
+    }
+
+    .image-slider .main-image.active {
+        display: block;
+    }
+
+    .thumbnail-bar {
+        display: flex;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        overflow-x: auto;
+        margin-bottom: 2rem;
+        scrollbar-width: thin;
+        scrollbar-color: #4c6fff #f0f0f0;
+        min-height: 60px;
+        align-items: center;
+    }
+
+    .thumbnail-bar::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .thumbnail-bar::-webkit-scrollbar-track {
+        background: #f0f0f0;
+        border-radius: 3px;
+    }
+
+    .thumbnail-bar::-webkit-scrollbar-thumb {
+        background: #4c6fff;
+        border-radius: 3px;
+    }
+
+    .thumbnail {
+        flex: 0 0 auto;
+        width: 80px;
+        height: 60px;
+        border-radius: 4px;
+        cursor: pointer;
+        object-fit: cover;
+        border: 2px solid transparent;
+        transition: all 0.2s ease;
+        opacity: 0.7;
+    }
+
+    .thumbnail:hover {
+        opacity: 0.9;
+    }
+
+    .thumbnail.active {
+        border-color: #4c6fff;
+        opacity: 1;
+    }
+
+    .slider-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        z-index: 10;
+    }
+
+    .slider-nav:hover {
+        background: rgba(0, 0, 0, 0.8);
+    }
+
+    .slider-prev { left: 1rem; }
+    .slider-next { right: 1rem; }
+
+    .slider-dots {
+        position: absolute;
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 0.5rem;
+        z-index: 10;
+    }
+
+    .slider-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .slider-dot.active {
+        background: white;
+    }
+
+    /* Property Details */
+    .detail-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .detail-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .detail-value {
+        font-size: 1.1rem;
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+    /* Stats Section */
+    .stats-section {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: white;
+        border-radius: var(--radius-md);
+    }
+
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+
+    /* Like Button */
+    .like-section {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .like-button {
+        background: none;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        color: var(--text-primary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .like-button.liked {
+        color: #e74c3c;
+    }
+
+    .like-button:hover {
+        transform: translateY(-2px);
+    }
+
+    .like-button i {
+        font-size: 1.25rem;
+    }
+
+    /* Comments Section */
+    .comments-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .comments-header {
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .comments-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .comment-count {
+        background: var(--primary-color);
+        color: white;
+        padding: 0.35rem 1rem;
+        border-radius: var(--radius-full);
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .comment-form {
+        margin-bottom: 3rem;
+        background: #f8f9ff;
+        padding: 1.5rem;
+        border-radius: 8px;
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .comment-input {
+        flex: 1;
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 1px solid #e1e4f5;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        resize: none;
+        min-height: 60px;
+        background: white;
+        transition: all 0.2s ease;
+        color: #333;
+    }
+
+    .comment-input::placeholder {
+        color: #a0a7b8;
+    }
+
+    .comment-input:focus {
+        outline: none;
+        border-color: #4c6fff;
+        box-shadow: 0 0 0 2px rgba(76, 111, 255, 0.1);
+    }
+
+    .comment-submit {
+        background: #4c6fff;
+        color: white;
+        border: none;
+        padding: 0.625rem 1.25rem;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        white-space: nowrap;
+        min-width: fit-content;
+    }
+
+    .comment-submit:hover {
+        background: #3d5ce0;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(76, 111, 255, 0.15);
+    }
+
+    .comment-submit::before {
+        content: '\f075';
+        font-family: 'Font Awesome 5 Free';
+        font-size: 0.9rem;
+        font-weight: 400;
+    }
+
+    .comment-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .comment-item {
+        background: white;
+        border-radius: var(--radius-lg);
+        padding: 1.75rem;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+    }
+
+    .comment-item:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .comment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.25rem;
+    }
+
+    .comment-user {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .user-avatar {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid var(--primary-color);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .user-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .user-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .user-name {
+        font-weight: 700;
+        color: var(--text-primary);
+        font-size: 1.1rem;
+    }
+
+    .comment-date {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
+    .comment-text {
+        color: var(--text-primary);
+        line-height: 1.6;
+        font-size: 1rem;
+    }
+
+    .no-comments {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: white;
+        border-radius: var(--radius-lg);
+        color: var(--text-secondary);
+        border: 2px dashed var(--border-color);
+    }
+
+    .no-comments i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        display: block;
+        color: var(--primary-color);
+        opacity: 0.7;
+    }
+
+    .login-prompt {
+        text-align: center;
+        padding: 2rem;
+        background: white;
+        border-radius: var(--radius-lg);
+        margin-bottom: 2rem;
+        border: 2px dashed var(--border-color);
+    }
+
+    .login-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+
+    .login-link:hover {
+        color: var(--primary-hover);
+        text-decoration: underline;
+    }
+
+    .action-btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .btn-secondary {
+        background: white;
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+        background: var(--bg-light);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-sm);
+    }
+
+    @media (max-width: 768px) {
+        .page-container {
+            padding: 1rem;
+        }
+
+        .content-container {
+            grid-template-columns: 1fr;
+        }
+
+        .main-content {
+            border-right: none;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .image-slider {
+            height: 300px;
+        }
+
+        .detail-group {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-section {
+            padding: 1rem;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .comment-form {
+            flex-direction: column;
+            padding: 1rem;
+        }
+
+        .comment-submit {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    .no-more-images {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.25rem;
+        background: var(--bg-light);
+        border-radius: var(--radius-sm);
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .no-more-images i {
+        font-size: 1.1rem;
+        opacity: 0.7;
+    }
+</style>
+
+<div class="page-container">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <div class="page-title-wrapper">
+                <h1 class="page-title">Property Details</h1>
+                {% if property.is_verified %}
+                <div class="verification-badge">
+                    <i class="fas fa-check-circle"></i>
+                    Verified Property
+                </div>
+{% endif %}
+            </div>
+        </div>
+
+        <div class="content-container">
+            <div class="main-content">
+                <div class="image-slider" id="propertyImageSlider">
+    {% if property.image_paths %}
+                        {% for image in property.image_paths %}
+                            <img src="/media/{{ image }}" alt="Property Image" class="main-image {% if forloop.first %}active{% endif %}" data-index="{{ forloop.counter0 }}">
+    {% endfor %}
+                        {% if property.image_paths|length > 1 %}
+                            <div class="slider-nav slider-prev" onclick="prevImage()">
+                                <i class="fas fa-chevron-left"></i>
+                            </div>
+                            <div class="slider-nav slider-next" onclick="nextImage()">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        {% endif %}
+    {% else %}
+                        <img src="{% static 'images/hero-bg.jpg' %}" alt="No image available" class="main-image active">
+                    {% endif %}
+                </div>
+
+                <div class="thumbnail-bar" id="thumbnailBar">
+                    {% if property.image_paths %}
+                        {% for image in property.image_paths %}
+                            <img src="/media/{{ image }}" alt="Property Image Thumbnail" 
+                                 class="thumbnail {% if forloop.first %}active{% endif %}" 
+                                 onclick="showImage({{ forloop.counter0 }})" 
+                                 data-index="{{ forloop.counter0 }}">
+                        {% endfor %}
+                        {% if property.image_paths|length == 1 %}
+                            <div class="no-more-images">
+                                <i class="fas fa-image"></i>
+                                No additional images
+                            </div>
+    {% endif %}
+                    {% else %}
+                        <div class="no-more-images">
+                            <i class="fas fa-image"></i>
+                            No images available
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="detail-group">
+                    <div class="detail-item">
+                        <span class="detail-label">Location</span>
+                        <span class="detail-value">{{ property.location }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Map Location</span>
+                        <span class="detail-value">{{ property.map_location }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Price</span>
+                        <span class="detail-value">${{ property.price }}{% if property.listing_type == 'for_rent' %}/mo{% endif %}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Size</span>
+                        <span class="detail-value">{{ property.size }} sq ft</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Rooms</span>
+                        <span class="detail-value">{{ property.room_num }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Property Type</span>
+                        <span class="detail-value">{{ property.property_type|title }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Listing Type</span>
+                        <span class="detail-value">{% if property.listing_type == 'for_sale' %}For Sale{% else %}For Rent{% endif %}</span>
+                    </div>
+                    {% if property.listing_type == "for_rent" %}
+                    <div class="detail-item">
+                        <span class="detail-label">Duration</span>
+                        <span class="detail-value">{{ property.duration }} days</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="comments-section">
+                    <div class="comments-header">
+                        <h2 class="comments-title">Comments</h2>
+                        <span class="comment-count">{{ property.comment_count }}</span>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                        <form method="post" class="comment-form">
+                            {% csrf_token %}
+                            <textarea name="text" class="comment-input" placeholder="Add your comment..." rows="2"></textarea>
+                            <button type="submit" class="comment-submit">Post Comment</button>
+            </form>
+        {% else %}
+                        <div class="login-prompt">
+                            <p>Please <a href="{% url 'login' %}" class="login-link">log in</a> to leave a comment.</p>
+                        </div>
+        {% endif %}
+
+                    {% if comments %}
+                        <div class="comment-list">
+    {% for comment in comments %}
+                                <div class="comment-item">
+                                    <div class="comment-header">
+                                        <div class="comment-user">
+                                            <div class="user-avatar">
+                                                {% if comment.user.profile_photo and comment.user.profile_photo.name != "profile_photos/default-profile.png" %}
+                                                    <img src="{{ comment.user.profile_photo.url }}"
+                                                        alt="{{ comment.user.full_name }}"
+                                                        {% if comment.user.blur_profile_photo %}style="filter: blur(5px);" {% endif %}>
+                                                {% else %}
+                                                    <img src="{% static 'images/default-profile.png' %}" alt="Default profile">
+                                                {% endif %}
+                                            </div>
+                                            <div class="user-info">
+                                                <div class="user-name">{{ comment.user.full_name }}</div>
+                                                <div class="comment-date">{{ comment.created_at|date:"M d, Y" }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="comment-text">
+                                        {{ comment.text }}
+                                    </div>
+                                </div>
+    {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="no-comments">
+                            <i class="fas fa-comments" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                            No comments yet
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="stats-section">
+                    <div class="stat-item">
+                        <span class="stat-value">{{ property.view_count }}</span>
+                        <span class="stat-label">Views</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">{{ property.like_count }}</span>
+                        <span class="stat-label">Likes</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">{{ property.comment_count }}</span>
+                        <span class="stat-label">Comments</span>
+                    </div>
+                </div>
+
+{% if user.is_authenticated %}
+                    <div class="like-section">
+                        <form method="post" style="text-align: center;">
+    {% csrf_token %}
+                            <button type="submit" name="like" class="like-button {% if user_has_liked %}liked{% endif %}">
+                                <i class="{% if user_has_liked %}fas{% else %}far{% endif %} fa-heart"></i>
+                                {% if user_has_liked %}Unlike{% else %}Like{% endif %}
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+
+                <a href="{% url 'property_search' %}" class="action-btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Search
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentImageIndex = 0;
+    const images = document.querySelectorAll('.image-slider .main-image');
+    const thumbnails = document.querySelectorAll('.thumbnail');
+
+    function showImage(index) {
+        // Remove active class from all images and thumbnails
+        images.forEach(img => img.classList.remove('active'));
+        thumbnails.forEach(thumb => thumb.classList.remove('active'));
+        
+        // Update current index
+        currentImageIndex = index;
+        
+        // Add active class to current image and thumbnail
+        images[currentImageIndex].classList.add('active');
+        thumbnails[currentImageIndex].classList.add('active');
+        
+        // Scroll thumbnail into view
+        thumbnails[currentImageIndex].scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'center'
+        });
+    }
+
+    function nextImage() {
+        const nextIndex = (currentImageIndex + 1) % images.length;
+        showImage(nextIndex);
+    }
+
+    function prevImage() {
+        const prevIndex = (currentImageIndex - 1 + images.length) % images.length;
+        showImage(prevIndex);
+    }
+</script>
+
+{% endblock %}
