@@ -21,7 +21,11 @@
         {% for image_path in property.image_paths %}
             <li>
                 <img src="{{ MEDIA_URL }}{{ image_path }}" alt="Property Image" style="max-width: 200px;">
-                <button type="submit" name="delete_image" value="{{ image_path }}">Delete</button>
+                {% if property.image_paths|length > 1 %}
+                    <button type="submit" name="delete_image" value="{{ image_path }}">Delete</button>
+                {% else %}
+                    <button type="button" disabled title="Cannot delete the only image" class="btn-disabled">Delete</button>
+                {% endif %}
                 <input type="file" name="replace_image_{{ forloop.counter0 }}" accept="image/*">
                 <button type="submit" name="replace_image_btn" value="{{ image_path }}">Replace</button>
             </li>
@@ -57,5 +61,13 @@
         }
     });
 </script>
+
+<style>
+    .btn-disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: #e9ecef;
+    }
+    </style>
 
 {% endblock %}

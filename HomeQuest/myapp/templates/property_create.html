@@ -2,7 +2,44 @@
 {% block title %}Create Property{% endblock %}
 {% block content %}
 
-<h1>Create Property</h1>
+<div class="container">
+    <h1 class="mb-4">Create Property</h1>
+
+    
+    {% if not is_gold_seller %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Property Limit</h5>
+                        <p class="text-muted">Basic sellers can list a maximum of 2 properties</p>
+                    </div>
+                    <div class="property-counter {% if property_count >= 2 %}text-danger{% elif property_count == 1 %}text-warning{% else %}text-success{% endif %}">
+                        <strong>{{ property_count }}/2</strong> properties used
+                    </div>
+                </div>
+                
+                <div class="progress mt-3">
+                    <div class="progress-bar {% if property_count >= 2 %}bg-danger{% elif property_count == 1 %}bg-warning{% else %}bg-success{% endif %}" 
+                         role="progressbar" 
+                         style="width: {% if property_count == 0 %}0%{% elif property_count == 1 %}50%{% else %}100%{% endif %}" 
+                         aria-valuenow="{{ property_count }}" 
+                         aria-valuemin="0" 
+                         aria-valuemax="2">
+                    </div>
+                </div>
+                
+                {% if property_count >= 2 %}
+                    <div class="alert alert-warning mt-3">
+                        <i class="fas fa-exclamation-triangle"></i> You've reached your limit.
+                        <a href="{% url 'manage_subscription' %}" class="btn btn-sm btn-primary ms-2">Upgrade to Gold</a>
+                        for unlimited listings.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {% for field in form %}

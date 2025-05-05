@@ -108,10 +108,15 @@ def login_phone(request):
     if request.method == 'POST':
         phone_number = request.POST.get('phone_number')
         password = request.POST.get('password')
+        print(phone_number)
+        print(password )
         try:
             user = User.objects.get(phone_number=phone_number)
-            user = authenticate(request, phone_number = user.phone_number, password=password)
-            if user is not None:
+            print(user, user.phone_number, phone_number)
+            
+            print(user)
+            print(user.check_password(password))
+            if user.check_password(password):
                 login(request, user)
                 return redirect('home')  # Redirect to the home page after login
             else:
@@ -335,15 +340,23 @@ def create_property(request):
         messages.error(request, "Only sellers can create properties.")
         return redirect('home')
     
-
+    property_count = Property.objects.filter(seller=seller).count()
     gold_seller = GoldSeller.objects.filter(pk=seller.pk).first()
-    if not gold_seller or not gold_seller.subscription_plan:
-        # Basic seller: limit to 2 properties
-         if seller.properties.count() >= 2:
-            messages.error(request, "Basic sellers can only post up to 2 properties. Upgrade to Gold for unlimited listings.")
-            return redirect('manage_subscription')
 
+    if gold_seller and gold_seller.subscription_type == 'gold' and gold_seller.is_subscription_active():
+        is_gold_seller = True
+    else:
+        is_gold_seller = False
+    print(gold_seller, gold_seller.subscription_type, gold_seller.is_subscription_active())
+    print(is_gold_seller)
     if request.method == 'POST':
+
+        if not is_gold_seller:
+            property_count = Property.objects.filter(seller=seller).count()
+            if property_count >= 2:
+                messages.error(request, "Basic sellers can list a maximum of 2 properties. Upgrade to Gold for unlimited listings.")
+                return redirect('manage_subscription')
+            
         form = PropertyForm(request.POST, request.FILES)
         if form.is_valid():
             try:
@@ -364,13 +377,15 @@ def create_property(request):
     else:
         form = PropertyForm()
 
-    return render(request, 'property_create.html', {'form': form})
+    return render(request, 'property_create.html', {'form': form, 
+                                                    'property_count': property_count,
+                                                    'is_gold_seller': is_gold_seller,})
 
 @login_required
 def property_list(request):
     seller = get_object_or_404(Seller, pk=request.user.pk)
     properties = Property.objects.filter(seller=seller)
-    return render(request, 'property_list.html', {'properties': properties})
+    return render(request, 'property_list.html', {'properties': properties,})
 
 @login_required
 def property_detail(request, property_id):
@@ -388,7 +403,11 @@ def property_edit(request, property_id):
         # Delete image
         if 'delete_image' in request.POST:
             image_to_delete = request.POST['delete_image']
-            delete_property_image(property_instance, image_to_delete)
+            _, deleted = delete_property_image(property_instance, image_to_delete)
+            if deleted:
+                messages.success(request, "Image deleted successfully!")
+            else:
+                messages.error(request, "Image could not be deleted.")
             return redirect('property_edit', property_id=property_id)
 
         # Replace image

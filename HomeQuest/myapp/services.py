@@ -179,6 +179,7 @@ def create_property_for_seller(seller, property_data, image=None):
     if not isinstance(seller, Seller):
         raise ValidationError("Only sellers can create properties.")
 
+        
     # Create and save the property instance
     property_instance = Property(
         seller=seller,
@@ -262,6 +263,11 @@ def delete_property(property_instance):
 
 def delete_property_image(property_instance, image_to_delete):
     image_paths = property_instance.image_paths or []
+
+    
+    if len(image_paths) <= 1:
+        return property_instance, False
+    
     if image_to_delete in image_paths:
         image_full_path = os.path.join(settings.MEDIA_ROOT, image_to_delete)
         if os.path.exists(image_full_path):
@@ -269,7 +275,8 @@ def delete_property_image(property_instance, image_to_delete):
         image_paths.remove(image_to_delete)
         property_instance.image_paths = image_paths
         property_instance.save()
-    return property_instance
+        return property_instance, True
+    return property_instance, False
 
 def replace_property_image(property_instance, image_to_replace, new_image, save_property_image_func):
     image_paths = property_instance.image_paths or []
