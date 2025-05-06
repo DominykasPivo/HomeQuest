@@ -1,39 +1,214 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block title %}Buy Gold Subscription - HomeQuest{% endblock %}
+
 {% block content %}
-<h1>Buy Gold Subscription</h1>
-<form method="post" id="subscription-form">
-    {% csrf_token %}
-    {{ form.as_p }}
+<style>
+    .page-container {
+        max-width: 98%;
+        width: 98%;
+        margin: 0 auto;
+        padding: 2rem 3rem;
+        background: linear-gradient(135deg, #f5f5f0, #e0e8f7);
+        border-radius: 0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 1rem;
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+        min-height: calc(100vh - 200px);
+    }
 
-    <div id="card-fields" style="display: none;">
-        <label>Card Number</label>
-        <input type="text" name="card_number" maxlength="19" placeholder="1234 5678 9012 3456"><br>
-        <label>Full Name</label>
-        <input type="text" name="card_full_name" placeholder="Name on Card"><br>
-        <label>Expiration Date</label>
-        <input type="text" name="expiration_date" placeholder="MM/YY"><br>
-        <label>CVV</label>
-        <input type="text" name="cvv" maxlength="4" placeholder="CVV"><br>
-    </div>
-    <div id="iban-fields" style="display: none;">
-        <label>IBAN</label>
-        <input type="text" name="iban" placeholder="IBAN"><br>
-        <label>Full Name</label>
-        <input type="text" name="iban_full_name" placeholder="Account Holder Name"><br>
-        <label>Bank Name</label>
-        <input type="text" name="bank_name" placeholder="Bank Name"><br>
-        <label>BIC</label>
-        <input type="text" name="bic" placeholder="BIC"><br>
-    </div>
-    <div id="paypal-fields" style="display: none;">
-        <label>PayPal Email</label>
-        <input type="email" name="paypal_email" placeholder="PayPal Email"><br>
-        <label>PayPal Password</label>
-        <input type="password" name="paypal_password" placeholder="PayPal Password"><br>
-    </div>
+    .subscription-container {
+        background: white;
+        padding: 2.5rem;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-md);
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+    }
 
-    <button type="submit">Pay and Activate</button>
-</form>
+    .subscription-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .subscription-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .subscription-subtitle {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+    }
+
+    .form-group select,
+    .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-group select:focus,
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+    }
+
+    .payment-section {
+        background: rgba(var(--primary-rgb), 0.05);
+        padding: 2rem;
+        border-radius: var(--radius-md);
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .payment-section h3 {
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .payment-fields {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .btn-submit {
+        background: var(--primary-color);
+        color: white;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .page-container {
+            padding: 1rem;
+        }
+
+        .subscription-container {
+            padding: 1.5rem;
+        }
+
+        .payment-section {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<div class="page-container">
+    <div class="subscription-container">
+        <div class="subscription-header">
+            <h1 class="subscription-title">Upgrade to Gold</h1>
+            <p class="subscription-subtitle">Choose your plan and payment method to unlock unlimited property listings and premium features</p>
+        </div>
+
+        <form method="post" id="subscription-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_plan">Select Your Plan</label>
+                {{ form.plan }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_payment_method">Payment Method</label>
+                {{ form.payment_method }}
+            </div>
+
+            <div id="card-fields" class="payment-section" style="display: none;">
+                <h3>Credit Card Details</h3>
+                <div class="payment-fields">
+                    <div class="form-group">
+                        <label>Card Number</label>
+                        <input type="text" name="card_number" maxlength="19" placeholder="1234 5678 9012 3456">
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="card_full_name" placeholder="Name on Card">
+                    </div>
+                    <div class="form-group">
+                        <label>Expiration Date</label>
+                        <input type="text" name="expiration_date" placeholder="MM/YY">
+                    </div>
+                    <div class="form-group">
+                        <label>CVV</label>
+                        <input type="text" name="cvv" maxlength="4" placeholder="CVV">
+                    </div>
+                </div>
+            </div>
+
+            <div id="iban-fields" class="payment-section" style="display: none;">
+                <h3>Bank Transfer Details</h3>
+                <div class="payment-fields">
+                    <div class="form-group">
+                        <label>IBAN</label>
+                        <input type="text" name="iban" placeholder="IBAN">
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="iban_full_name" placeholder="Account Holder Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Bank Name</label>
+                        <input type="text" name="bank_name" placeholder="Bank Name">
+                    </div>
+                    <div class="form-group">
+                        <label>BIC</label>
+                        <input type="text" name="bic" placeholder="BIC">
+                    </div>
+                </div>
+            </div>
+
+            <div id="paypal-fields" class="payment-section" style="display: none;">
+                <h3>PayPal Details</h3>
+                <div class="payment-fields">
+                    <div class="form-group">
+                        <label>PayPal Email</label>
+                        <input type="email" name="paypal_email" placeholder="PayPal Email">
+                    </div>
+                    <div class="form-group">
+                        <label>PayPal Password</label>
+                        <input type="password" name="paypal_password" placeholder="PayPal Password">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Pay and Activate Subscription</button>
+        </form>
+    </div>
+</div>
 
 <script>
     function showPaymentFields() {
@@ -41,6 +216,7 @@
         document.getElementById("card-fields").style.display = "none";
         document.getElementById("iban-fields").style.display = "none";
         document.getElementById("paypal-fields").style.display = "none";
+        
         if (method === "card") {
             document.getElementById("card-fields").style.display = "block";
         } else if (method === "iban") {
@@ -56,6 +232,7 @@
         radios.forEach(function(radio) {
             radio.addEventListener("change", showPaymentFields);
         });
+        
         // Show fields if already selected (e.g. after validation error)
         if (document.querySelector('input[name="payment_method"]:checked, select[name="payment_method"]')) {
             showPaymentFields();

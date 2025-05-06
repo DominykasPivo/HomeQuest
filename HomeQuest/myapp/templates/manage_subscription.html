@@ -1,16 +1,183 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block title %}Manage Subscription - HomeQuest{% endblock %}
+
 {% block content %}
-<h1>Manage Subscription</h1>
-<form method="post">
-    {% csrf_token %}
-    {% if gold_seller and gold_seller.is_subscription_active %}
-        <p>Subscription: {{ gold_seller.get_subscription_type_display }}</p>
-        <p>Current Plan: {{ gold_seller.get_subscription_plan_display }}</p>
-        <p>Subscription End Date: {{ gold_seller.subscription_end_date }}</p>
-        <button type="submit" name="action" value="cancel" onclick="return confirm('Are you sure you want to cancel your subscription?');">Cancel Subscription</button>
-    {% else %}
-        <p>Subscription: Basic</p>
-        <button type="submit" name="action" value="buy">Buy Gold Subscription</button>
-    {% endif %}
-</form>
+<style>
+    .page-container {
+        max-width: 98%;
+        width: 98%;
+        margin: 0 auto;
+        padding: 2rem 3rem;
+        background: linear-gradient(135deg, #f5f5f0, #e0e8f7);
+        border-radius: 0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 1rem;
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+        min-height: calc(100vh - 200px);
+    }
+
+    .subscription-container {
+        background: white;
+        padding: 2.5rem;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-md);
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .subscription-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .subscription-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .subscription-subtitle {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+    }
+
+    .subscription-info {
+        background: rgba(var(--primary-rgb), 0.05);
+        padding: 2rem;
+        border-radius: var(--radius-md);
+        margin-bottom: 2rem;
+    }
+
+    .subscription-detail {
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .subscription-detail:last-child {
+        border-bottom: none;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .detail-value {
+        color: var(--text-secondary);
+    }
+
+    .subscription-actions {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn {
+        padding: 0.75rem 2rem;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: none;
+        font-size: 1rem;
+    }
+
+    .btn-primary {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+    }
+
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #c82333;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .page-container {
+            padding: 1rem;
+        }
+
+        .subscription-container {
+            padding: 1.5rem;
+        }
+
+        .subscription-actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="page-container">
+    <div class="subscription-container">
+        <div class="subscription-header">
+            <h1 class="subscription-title">Manage Your Subscription</h1>
+            <p class="subscription-subtitle">View and manage your HomeQuest subscription details</p>
+        </div>
+
+        <div class="subscription-info">
+            {% if gold_seller and gold_seller.is_subscription_active %}
+                <div class="subscription-detail">
+                    <span class="detail-label">Current Plan</span>
+                    <span class="detail-value">{{ gold_seller.get_subscription_type_display }}</span>
+                </div>
+                <div class="subscription-detail">
+                    <span class="detail-label">Plan Type</span>
+                    <span class="detail-value">{{ gold_seller.get_subscription_plan_display }}</span>
+                </div>
+                <div class="subscription-detail">
+                    <span class="detail-label">Valid Until</span>
+                    <span class="detail-value">{{ gold_seller.subscription_end_date|date:"F d, Y" }}</span>
+                </div>
+            {% else %}
+                <div class="subscription-detail">
+                    <span class="detail-label">Current Plan</span>
+                    <span class="detail-value">Basic</span>
+                </div>
+                <div class="subscription-detail">
+                    <span class="detail-label">Features</span>
+                    <span class="detail-value">Limited to 2 property listings</span>
+                </div>
+            {% endif %}
+        </div>
+
+        <form method="post" class="subscription-actions">
+            {% csrf_token %}
+            {% if gold_seller and gold_seller.is_subscription_active %}
+                <button type="submit" name="action" value="cancel" class="btn btn-danger" 
+                        onclick="return confirm('Are you sure you want to cancel your subscription? This will downgrade your account to Basic.');">
+                    Cancel Subscription
+                </button>
+            {% else %}
+                <button type="submit" name="action" value="buy" class="btn btn-primary">
+                    Upgrade to Gold
+                </button>
+            {% endif %}
+        </form>
+    </div>
+</div>
 {% endblock %}

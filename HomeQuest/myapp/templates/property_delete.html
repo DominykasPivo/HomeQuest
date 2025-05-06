@@ -1,12 +1,152 @@
 {% extends 'base.html' %}
-{% block title %}Delete Property{% endblock %}
-{% block content %}
+{% load static %}
+{% block title %}Delete Property - HomeQuest{% endblock %}
 
-<h1>Delete Property</h1>
-<p>Are you sure you want to delete "{{ property.location }}"?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Yes, delete</button>
-    <a href="{% url 'property_list' %}">Cancel</a>
-</form>
+{% block content %}
+<style>
+    .page-container {
+        max-width: 98%;
+        width: 98%;
+        margin: 0 auto;
+        padding: 2rem 3rem;
+        background: linear-gradient(135deg, #f5f5f0, #e0e8f7);
+        border-radius: 0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 1rem;
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+        min-height: calc(100vh - 200px);
+    }
+
+    .delete-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem 0;
+        min-height: calc(100vh - 300px);
+    }
+
+    .delete-form {
+        background: white;
+        padding: 2.5rem;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-md);
+        width: 100%;
+        max-width: 500px;
+        text-align: center;
+    }
+
+    .delete-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .delete-message {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        margin: 1.5rem 0;
+        line-height: 1.5;
+    }
+
+    .property-name {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    .warning-icon {
+        font-size: 4rem;
+        color: #dc3545;
+        margin-bottom: 1.5rem;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn {
+        flex: 1;
+        padding: 1rem;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #c82333;
+        transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+        background: white;
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+        background: var(--bg-light);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .page-container {
+            padding: 1rem;
+        }
+
+        .delete-form {
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="page-container">
+    <div class="delete-container">
+        <div class="delete-form">
+            <i class="fas fa-exclamation-triangle warning-icon"></i>
+            <h1 class="delete-title">Delete Property</h1>
+            <p class="delete-message">
+                Are you sure you want to delete "<span class="property-name">{{ property.location }}</span>"?<br>
+                This action cannot be undone.
+            </p>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Yes, Delete
+                    </button>
+                    <a href="{% url 'property_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,77 +1,154 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Create Property{% endblock %}
+
 {% block content %}
+<style>
+    .form-container {
+        max-width: 98%;
+        width: 98%;
+        margin: 0 auto;
+        padding: 2rem 3rem;
+        background: linear-gradient(135deg, #f5f5f0, #e0e8f7);
+        border-radius: 0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 1rem;
+        margin-bottom: 3rem;
+    }
 
-<div class="container">
-    <h1 class="mb-4">Create Property</h1>
+    .form-card {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+    }
 
-    
-    {% if not is_gold_seller %}
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="card-title">Property Limit</h5>
-                        <p class="text-muted">Basic sellers can list a maximum of 2 properties</p>
-                    </div>
-                    <div class="property-counter {% if property_count >= 2 %}text-danger{% elif property_count == 1 %}text-warning{% else %}text-success{% endif %}">
-                        <strong>{{ property_count }}/2</strong> properties used
-                    </div>
-                </div>
-                
-                <div class="progress mt-3">
-                    <div class="progress-bar {% if property_count >= 2 %}bg-danger{% elif property_count == 1 %}bg-warning{% else %}bg-success{% endif %}" 
-                         role="progressbar" 
-                         style="width: {% if property_count == 0 %}0%{% elif property_count == 1 %}50%{% else %}100%{% endif %}" 
-                         aria-valuenow="{{ property_count }}" 
-                         aria-valuemin="0" 
-                         aria-valuemax="2">
-                    </div>
-                </div>
-                
-                {% if property_count >= 2 %}
-                    <div class="alert alert-warning mt-3">
-                        <i class="fas fa-exclamation-triangle"></i> You've reached your limit.
-                        <a href="{% url 'manage_subscription' %}" class="btn btn-sm btn-primary ms-2">Upgrade to Gold</a>
-                        for unlimited listings.
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    {% endif %}
+    .form-card h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {% for field in form %}
-        <div id="field_{{ field.name }}">
-            {{ field.label_tag }} {{ field }}
-            {% if field.errors %}
-                <span style="color:red">{{ field.errors }}</span>
-            {% endif %}
-        </div>
-    {% endfor %}
-    <button type="submit">Create Property</button>
-</form>
-<a href="{% url 'property_list' %}">Cancel</a>
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    function toggleDuration() {
-        var listingType = document.getElementById('id_listing_type');
-        var durationDiv = document.getElementById('field_duration');
-        if (listingType && durationDiv) {
-            if (listingType.value === 'for_rent') {
-                durationDiv.style.display = '';
-            } else {
-                durationDiv.style.display = 'none';
-            }
+    label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+    input[type="file"] {
+        padding: 0.3rem;
+    }
+
+    .error {
+        color: red;
+        font-size: 0.9rem;
+    }
+
+    .form-actions {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    button,
+    .cancel-link {
+        padding: 0.75rem 1.25rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button {
+        background-color: #406ff4;
+        color: white;
+    }
+
+    button:hover {
+        background-color: #3055c7;
+    }
+
+    .cancel-link {
+        background-color: #ddd;
+        color: #333;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .cancel-link:hover {
+        background-color: #bbb;
+    }
+
+    @media (max-width: 768px) {
+        .form-container {
+            padding: 1rem;
+        }
+
+        .form-card {
+            padding: 1.5rem;
         }
     }
-    var listingType = document.getElementById('id_listing_type');
-    if (listingType) {
-        listingType.addEventListener('change', toggleDuration);
-        toggleDuration(); // Initial call
-    }
-});
+</style>
+
+<div class="form-container">
+    <div class="form-card">
+        <h1>Create Property</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group" id="field_{{ field.name }}">
+                    {{ field.label_tag }} {{ field }}
+                    {% if field.errors %}
+                        <span class="error">{{ field.errors }}</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <button type="submit">Create Property</button>
+                <a href="{% url 'property_list' %}" class="cancel-link">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function toggleDuration() {
+            var listingType = document.getElementById('id_listing_type');
+            var durationDiv = document.getElementById('field_duration');
+            if (listingType && durationDiv) {
+                durationDiv.style.display = listingType.value === 'for_rent' ? '' : 'none';
+            }
+        }
+        var listingType = document.getElementById('id_listing_type');
+        if (listingType) {
+            listingType.addEventListener('change', toggleDuration);
+            toggleDuration();
+        }
+    });
 </script>
 {% endblock %}
