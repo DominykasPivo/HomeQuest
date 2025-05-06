@@ -8,6 +8,8 @@ from user_management.models import User, Seller
 from notification_system.services import create_notification
 from subscription_management.models import GoldSeller
 import difflib
+from authentication.real_auth import RealAuthenticationSystem
+from authentication.proxy import AuthenticationProxy
 
 def save_property_image(property_instance, image):
     if not image:
@@ -548,8 +550,8 @@ def add_verification_file(property_instance, file):
         new_path = save_verification_file(property_instance, file)
         verification_files.append(new_path)
         property_instance.verification_files = verification_files
-        property_instance.is_verified = True
-        property_instance.save()
+        auth_system = AuthenticationProxy(RealAuthenticationSystem())
+        auth_system.verify_property(property_instance)
     return property_instance
 
 def delete_verification_file(property_instance, file_to_delete):

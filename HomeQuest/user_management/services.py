@@ -12,7 +12,6 @@ def create_user(user_type, **kwargs):
     Create a user and assign a role (Buyer or Seller).
     """
     try:
-        # Create the correct subclass directly!
         if user_type == 'buyer':
             user = Buyer.objects.create(
                 email=kwargs.get('email'),

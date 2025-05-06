@@ -28,10 +28,8 @@ def ensure_user_has_2fa(user):
 
 def generate_2fa(user, target_email=None):
     device = ensure_user_has_2fa(user) 
-    
     if target_email and target_email != user.email:
         token = str(random.randint(100000, 999999))  # Generate a random 6-digit token
-        
         send_mail(
             subject=settings.OTP_EMAIL_SUBJECT,
             message=f"Your verification code is: {token}\nUse this code to verify your new email address.",

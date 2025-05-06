@@ -7,6 +7,8 @@ from .forms import UserRegistrationForm, UserEditForm
 from .services import update_user_profile
 from authentication.services import generate_2fa, clear_messages
 from django.contrib.auth import logout
+from authentication.real_auth import RealAuthenticationSystem
+from authentication.proxy import AuthenticationProxy
 
 def register(request):
     clear_messages(request)
@@ -16,7 +18,7 @@ def register(request):
             user_type = form.cleaned_data['user_type']
             try:
                 # Create the user and assign the role
-                user = UserFactory.create_user(
+                UserFactory.create_user(
                     user_type=user_type,
                     email=form.cleaned_data['email'],
                     full_name=form.cleaned_data['full_name'],
@@ -65,19 +67,16 @@ def edit_profile(request):
                 )
                 
                 if result.get('status') == 'verify_email':
-                
                     request.session['new_email'] = result['new_email']
                     request.session['profile_update_data'] = result['other_data']
                     token = generate_2fa(request.user, target_email=result['new_email'])
                     request.session['email_verification_token'] = token
-                    
                     messages.info(request, f"We've sent a verification code to {result['new_email']}. Please verify to update your email.")
                     return redirect('verify_2fa')
 
                 messages.success(request, 'Your profile has been updated successfully.')
 
                 if form.cleaned_data.get('password'): # Check if password was changed
-                    # If the password was changed, log the user out
                     logout(request)
                     messages.info(request, 'You have been logged out due to a password change. Please log in again.')
                     return redirect('login')

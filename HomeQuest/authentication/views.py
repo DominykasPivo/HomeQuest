@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.conf import settings
 from user_management.services import update_user_profile
 from .services import clear_messages, generate_2fa, verify_2fa_token
 from user_management.models import User
+from authentication.real_auth import RealAuthenticationSystem
+from authentication.proxy import AuthenticationProxy
+
 
 def login_email_phone(request):
     """View for selecting login method (email or phone)"""
@@ -13,15 +16,15 @@ def login_email_phone(request):
 def login_email(request):
     """Handle login with email and password"""
     clear_messages(request)
-
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
         try:
-            user = authenticate(request, email=email, password=password)
+            auth_system = AuthenticationProxy(RealAuthenticationSystem())
+            user = auth_system.email_authenticate_user(request, email, password)
             if user is not None:
                 request.session['pre_2fa_user_id'] = user.pk
-                generate_2fa(user) 
+                auth_system.send_email_authentication_code(user, email)
                 messages.info(request, 'The verification code has been sent to your email.')
                 return redirect('verify_2fa')
             else:
@@ -37,34 +40,30 @@ def login_phone(request):
     if request.method == 'POST':
         phone_number = request.POST.get('phone_number')
         password = request.POST.get('password')
-        try:
-            user = User.objects.get(phone_number=phone_number)
-            if user.check_password(password):
-                login(request, user)
-                return redirect('home')
-            else:
-                messages.error(request, 'Invalid phone number or password.')
-        except User.DoesNotExist:
+        auth_system = AuthenticationProxy(RealAuthenticationSystem())
+        user = auth_system.phone_num_authenticate_user(request, phone_number, password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
             messages.error(request, 'Invalid phone number or password.')
     return render(request, 'login_phone.html')
 
 def verify_2fa(request):
     """Verify 2FA code and complete login or email change."""
-
     new_email = request.session.get('new_email')
     profile_data = request.session.get('profile_update_data')
-    
+    auth_system = AuthenticationProxy(RealAuthenticationSystem())
+    # If the user changes his email
     if new_email:
         if request.method == 'POST':
             token = request.POST.get('token')
-            
             stored_token = request.session.get('email_verification_token')
-
             if token == stored_token:
                 user = request.user
                 user.email = new_email
                 
-                if profile_data:
+                if profile_data: # update other profile data if available
                     update_user_profile(user, **profile_data)
                 else:
                     user.save()
@@ -82,9 +81,8 @@ def verify_2fa(request):
         return render(request, '2fa.html', {'verification_type': 'email_change', 'new_email': new_email})
 
 
-    # Get the pre-authenticated user from session
+    # Normal 2FA login flow
     user_id = request.session.get('pre_2fa_user_id')
-    
     if not user_id:
         messages.error(request, "Authentication session expired. Please log in again.")
         return redirect('login_email')
@@ -98,14 +96,12 @@ def verify_2fa(request):
     if request.method == 'POST':
         token = request.POST.get('token')
         
-        if verify_2fa_token(user, token):
+        if auth_system.verify_code(user, token):
             # 2FA successful, complete login
             login(request, user)
-            
             # Clean up the session
             if 'pre_2fa_user_id' in request.session:
                 del request.session['pre_2fa_user_id']
-                
             messages.success(request, "Login successful!")
             return redirect('home')
         else:
