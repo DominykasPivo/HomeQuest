@@ -22,6 +22,7 @@ def manage_subscription(request):
         action = request.POST.get('action')
         if action == 'cancel' and gold_seller and gold_seller.subscription_plan != 'basic':
             cancel_subscription(gold_seller)
+            create_notification(gold_seller, "Your subscription has been cancelled. You are now on the Basic plan.")
             messages.success(request, "Your subscription has been cancelled. You are now on the Basic plan.")
             return redirect('manage_subscription')
         elif action == 'buy':

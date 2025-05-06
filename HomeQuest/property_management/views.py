@@ -112,6 +112,7 @@ def property_edit(request, property_id):
         if 'save_changes' in request.POST:
             if form.is_valid():
                 form.save()
+                create_notification(request.user, "Your property was updated successfully!")
                 messages.success(request, "Property updated successfully!")
                 return redirect('property_detail', property_id=property_instance.pk)
             else:
@@ -128,6 +129,7 @@ def property_delete(request, property_id):
     if request.method == 'POST':
         try:
             delete_property(property_instance)
+            create_notification(request.user, "Your property was deleted successfully!")
             messages.success(request, "Property deleted successfully!")
             return redirect('property_list')
         except Exception as e:
@@ -209,6 +211,7 @@ def property_verify(request, property_id):
             verification_file = request.FILES['verification_file']
             add_verification_file(property_instance, verification_file)
             messages.success(request, "Verification file uploaded successfully!")
+            create_notification(request.user, "Your verification file was uploaded successfully!")
             return redirect('property_verify', property_id=property_id)
         elif request.POST.get('delete_verification_file'):
             file_to_delete = request.POST['delete_verification_file']
@@ -216,6 +219,7 @@ def property_verify(request, property_id):
                 messages.success(request, "Verification file deleted successfully!")
             else:
                 messages.error(request, "File could not be deleted.")
+            create_notification(request.user, "Your verification file was deleted successfully!")
             return redirect('property_verify', property_id=property_id)
     return render(request, 'property_verify.html', {'property': property_instance})
 
