@@ -3,6 +3,132 @@
 {% block title %}Profile - HomeQuest{% endblock %}
 
 {% block content %}
+<style>
+    /* Profile Container */
+    .profile-container {
+        max-width: 98%;
+        width: 98%;
+        margin: 0 auto;
+        padding: 2rem 3rem;
+        background: linear-gradient(135deg, #f5f5f0, #e0e8f7);
+        border-radius: 0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 1rem;
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Profile Card */
+    .profile-card {
+        background: white;
+        padding: 2.5rem;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-md);
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    /* Profile Header */
+    .profile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .profile-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .header-actions .edit-btn {
+        padding: 0.5rem 1rem;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .header-actions .edit-btn:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    /* Profile Photo Section */
+    .profile-photo-section {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .profile-photo {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 1rem;
+    }
+
+    .profile-photo-info h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .profile-photo-info .email {
+        font-size: 1rem;
+        color: var(--text-secondary);
+    }
+
+    /* Profile Grid */
+    .profile-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+
+    .profile-field {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .profile-field label {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .field-value {
+        font-size: 1rem;
+        color: var(--text-secondary);
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        .profile-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-card {
+            padding: 1.5rem;
+        }
+
+        .profile-photo-section {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+</style>
+
 <div class="profile-container">
     <div class="profile-card">
         <div class="profile-header">
@@ -13,7 +139,7 @@
         </div>
 
         <div class="profile-photo-section">
-            {% if user.profile_photo and user.profile_photo.url and user.profile_photo.name != "profile_photos/default-profile.png" %}
+            {% if user.profile_photo and user.profile_photo.url %}
                 <img src="{{ user.profile_photo.url }}" alt="Profile Photo" class="profile-photo"
                     {% if user.blur_profile_photo %}style="filter: blur(8px);" {% endif %}>
             {% else %}
