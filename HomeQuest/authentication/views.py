@@ -31,6 +31,8 @@ def login_email(request):
                 messages.error(request, 'Invalid email or password.')
         except User.DoesNotExist:
             messages.error(request, 'Invalid email or password.')
+        except Exception as e:
+            messages.error(request, f"An unexpected error occurred: {str(e)}")
     return render(request, 'login_email.html')
 
 def login_phone(request):

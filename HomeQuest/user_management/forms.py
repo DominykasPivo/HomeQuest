@@ -55,8 +55,11 @@ class UserRegistrationForm(forms.ModelForm):
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data.get('phone_number')
-        if phone_number and User.objects.filter(phone_number=phone_number).exists():
-            raise forms.ValidationError("A user with this phone number already exists.")
+        if phone_number:
+            if not re.match(r'^\+?[\d\s\-\(\)]{8,15}$', phone_number):
+                raise forms.ValidationError("Enter a valid phone number (8-15 characters, digits, spaces, +, -, () allowed).")
+            if phone_number and User.objects.filter(phone_number=phone_number).exists():
+                raise forms.ValidationError("A user with this phone number already exists.")
         return phone_number
 
     def clean(self):
@@ -66,6 +69,11 @@ class UserRegistrationForm(forms.ModelForm):
 
         if password != confirm_password:
             raise forms.ValidationError("Passwords do not match.")
+        if password:
+            try:
+                validate_password(password)
+            except ValidationError as e:
+                self.add_error('password', e)
         return cleaned_data
 
 class UserEditForm(forms.ModelForm):
@@ -97,3 +105,35 @@ class UserEditForm(forms.ModelForm):
         # Make all fields optional
         for field in self.fields.values():
             field.required = False
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email:
+            qs = User.objects.filter(email=email)
+            if self.instance.pk:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise forms.ValidationError("A user with this email already exists.")
+        return email
+
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        if phone_number:
+            if not re.match(r'^\+?[\d\s\-\(\)]{8,15}$', phone_number):
+                raise forms.ValidationError("Enter a valid phone number (8-15 characters, digits, spaces, +, -, () allowed).")
+            qs = User.objects.filter(phone_number=phone_number)
+            if self.instance.pk:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise forms.ValidationError("A user with this phone number already exists.")
+        return phone_number
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        if password:
+            try:
+                validate_password(password)
+            except ValidationError as e:
+                self.add_error('password', e)
+        return cleaned_data
