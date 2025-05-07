@@ -42,14 +42,14 @@ class UserManagementTests(TestCase):
             'phone_number': '+1234567890'
         }
 
-    # Test Registration for buyer
+    # Test Registration for buyer (Unit Test)
     def test_register_buyer(self):
         response = self.client.post(self.register_url, self.user_data)
         self.assertEqual(response.status_code, 302)
         self.assertTrue(User.objects.filter(email='test@example.com').exists())
         self.assertTrue(Buyer.objects.filter(email='test@example.com').exists())
         
-    # Test Registration for seller
+    # Test Registration for seller (Unit Test)
     def test_register_seller(self):
         self.user_data['user_type'] = 'seller'
         response = self.client.post(self.register_url, self.user_data)
@@ -70,7 +70,7 @@ class UserManagementTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFalse(User.objects.filter(email='test@example.com').exists())
    
-    # Tests profile page access and control
+    # Tests profile page access and control (Unit Test)
     def test_profile_access(self):
         response = self.client.get(self.profile_url)
         self.assertEqual(response.status_code, 302)
@@ -86,7 +86,7 @@ class UserManagementTests(TestCase):
         response = self.client.get(self.profile_url)
         self.assertEqual(response.status_code, 200)
 
-    # Tests profila updating functionality, and that changes are saved correctly
+    # Tests the entire profile updating process (Integration test)
     def test_edit_profile(self):
         user = User.objects.create_user(
             email='test@example.com',
@@ -117,7 +117,7 @@ class UserManagementTests(TestCase):
         self.assertEqual(user.phone_number, '+9876543210')
         self.assertTrue(user.blur_profile_photo)
 
-    # Tests the email change process
+    # Tests the complete email change process (Integration test)
     def test_edit_profile_with_email_change(self):
         user = User.objects.create_user(
             email='test@example.com',
@@ -136,14 +136,14 @@ class UserManagementTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/2fa/')
 
-    #Tests error where user cannot register with an email thats already being used
+    #Tests error where user cannot register with an email thats already being used (Unit Test)
     def test_duplicate_email_registration(self):
         self.client.post(self.register_url, self.user_data)
         response = self.client.post(self.register_url, self.user_data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(User.objects.filter(email='test@example.com').count(), 1)
 
-    # Tests password strength and requirements
+    # Tests password strength and requirements (Unit Test)
     def test_password_validation(self):
         invalid_data = self.user_data.copy()
         invalid_data['password'] = 'short'

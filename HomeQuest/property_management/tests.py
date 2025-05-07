@@ -41,7 +41,7 @@ class PropertyManagementTests(TestCase):
             'duration': 0,
         }
 
-    # Tests the function of creating a property
+    # Tests the function of creating a property (Unit Test)
     def test_create_property(self):
         property = Property.objects.create(**self.property_data)
         self.assertEqual(property.location, 'Test Location')
@@ -49,7 +49,7 @@ class PropertyManagementTests(TestCase):
         self.assertEqual(property.seller, self.seller)
         self.assertFalse(property.is_verified)
 
-    # Tests if the property data is valid
+    # Tests if the property data is valid (Unit Test)
     def test_property_form_validation(self):
         form = PropertyForm(data={
             'location': 'Test Location',
@@ -77,7 +77,7 @@ class PropertyManagementTests(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn('duration', form.errors)
 
-    # Tests the comment on property function
+    # Tests the comment on property function (Unit Test)
     def test_property_comments(self):
         property = Property.objects.create(**self.property_data)
         
@@ -91,7 +91,7 @@ class PropertyManagementTests(TestCase):
         self.assertEqual(comment.user, self.user)
         self.assertEqual(comment.property, property)
     
-    # Tests the like a property function
+    # Tests the like a property function (Unit Test)
     def test_property_likes(self):
         property = Property.objects.create(**self.property_data)
         
@@ -113,7 +113,7 @@ class PropertyManagementTests(TestCase):
 
 class PropertyFormTests(TestCase):
 
-    # Checks if the comments are valid and accepted, verifies empty comments
+    # Checks if the comments are valid and accepted, verifies empty comments (Unit Test)
     def test_comment_form(self):
         form = CommentForm(data={
             'text': 'Test comment'
