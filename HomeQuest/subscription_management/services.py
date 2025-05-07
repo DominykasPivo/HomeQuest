@@ -1,9 +1,11 @@
 from datetime import timedelta
 from django.utils import timezone
+from django.conf import settings
 from .models import GoldSeller
 from user_management.models import Seller
 from django.core.exceptions import ValidationError
 from django.utils.timezone import now
+import os
 
 def get_or_create_gold_seller(user, upgrade_to_gold=False):
     """

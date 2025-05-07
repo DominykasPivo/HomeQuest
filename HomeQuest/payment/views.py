@@ -7,7 +7,7 @@ from .models import PaymentProcessor
 from notification_system.models import Notification
 from subscription_management.services import get_or_create_gold_seller, update_subscription
 
-# Subscription pricing constants
+# Subscription prices 
 SUBSCRIPTION_PLANS = [
     ('weekly', 'Weekly - 15 EUR'),
     ('monthly', 'Monthly - 40 EUR'),
@@ -33,7 +33,7 @@ def buy_gold_subscription(request):
             selected_plan = form.cleaned_data['plan']
             amount = SUBSCRIPTION_PRICES[selected_plan]
 
-            # --- Payment processing ---
+            
             processor = PaymentProcessor()
             payment_kwargs = {}
             if payment_method == 'card':
@@ -64,7 +64,7 @@ def buy_gold_subscription(request):
                 messages.error(request, "Payment failed. Please check your details and try again.")
                 return render(request, 'buy_gold_subscription.html', {'form': form})
 
-            # --- Subscription logic using services ---
+            
             gold_seller = get_or_create_gold_seller(request.user)
             update_subscription(gold_seller, 'buy_gold', selected_plan)
 

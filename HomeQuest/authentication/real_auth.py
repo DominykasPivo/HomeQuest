@@ -4,6 +4,13 @@ from authentication.services import generate_2fa, verify_2fa_token
 from user_management.models import User
 
 class RealAuthenticationSystem(IAuthenticationSystem):
+    _instance = None
+
+    def new(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(RealAuthenticationSystem, cls).new(cls)
+        return cls._instance
+    
     def email_authenticate_user(self, request, email, password):
         return authenticate(request, email=email, password=password)
 
@@ -20,7 +27,7 @@ class RealAuthenticationSystem(IAuthenticationSystem):
         return True
 
     def send_phone_num_authentication_code(self, phone_number):
-        # Implement SMS sending logic here
+        # Cant implement SMS logic since we have to pay for it
         pass
 
     def verify_code(self, user, code):

@@ -54,7 +54,7 @@ INSTALLED_APPS = [
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-LOGIN_URL = '/login_email/'  # Redirect to the email login page if not authenticated
+LOGIN_URL = '/login_email/'  
 
 
 
@@ -174,8 +174,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'no.reply.homequest.email@gmail.com'  # Your Gmail address
-EMAIL_HOST_PASSWORD = 'nygk zipk xjpj oetj'  # App password (not your regular Gmail password)
+EMAIL_HOST_USER = 'no.reply.homequest.email@gmail.com'   
+EMAIL_HOST_PASSWORD = 'nygk zipk xjpj oetj' 
 
 
 OTP_EMAIL_SENDER = 'no.reply.homequest.email@gmail.com'  

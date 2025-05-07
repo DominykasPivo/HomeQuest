@@ -27,13 +27,13 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         db_table = 'user'
-    # Mandatory fields
+    
     full_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     date_of_birth = models.DateField()
     consent_to_share_location = models.BooleanField(default=False)
     
-    # Optional fields
+    
     profile_photo = models.ImageField(
         upload_to='profile_photos/',
         blank=True,
@@ -53,7 +53,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-# Direct inheritance as in the original models
+
 class Buyer(User):
     class Meta:
         db_table = 'buyer'

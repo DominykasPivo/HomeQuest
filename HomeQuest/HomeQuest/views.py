@@ -21,6 +21,6 @@ def set_language(request):
     response = redirect(next_url)
     response.set_cookie('django_language', language)
     
-    # Update session
+ 
     request.session['django_language'] = language
     return response

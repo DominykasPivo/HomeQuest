@@ -10,16 +10,16 @@ def clear_messages(request):
     """
     storage = get_messages(request)
     for _ in storage:
-        pass  # Consume and clear all messages
+        pass  
 
 def ensure_user_has_2fa(user):
     device, created = EmailDevice.objects.get_or_create(
         user=user,
         name='default',
-        defaults={'confirmed': True}  # Auto-confirm for mandatory 2FA
+        defaults={'confirmed': True}  
     )
     
-    # Make sure existing devices are confirmed
+    
     if not device.confirmed:
         device.confirmed = True
         device.save()
@@ -29,7 +29,7 @@ def ensure_user_has_2fa(user):
 def generate_2fa(user, target_email=None):
     device = ensure_user_has_2fa(user) 
     if target_email and target_email != user.email:
-        token = str(random.randint(100000, 999999))  # Generate a random 6-digit token
+        token = str(random.randint(100000, 999999))  
         send_mail(
             subject=settings.OTP_EMAIL_SUBJECT,
             message=f"Your verification code is: {token}\nUse this code to verify your new email address.",

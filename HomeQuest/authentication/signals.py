@@ -5,7 +5,6 @@ from .services import ensure_user_has_2fa
 
 User = get_user_model()
 
-#Automatically set up 2FA for new users
 @receiver(post_save, sender=User)
 def post_save_generate_code(sender, instance, created, **kwargs):
     if created:

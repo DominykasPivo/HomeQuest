@@ -49,17 +49,17 @@ def update_user_profile(user, **kwargs):
     """
     Update the user's profile with the provided data.
     """
-    # Validate email uniqueness only if a new email is provided
+  
     new_email = kwargs.get('email')
     if new_email and new_email != user.email:
         if User.objects.filter(email=new_email).exclude(id=user.id).exists():
             raise ValidationError(f"The email '{new_email}' is already in use by another account.")
         return {'status': 'verify_email',
                 'new_email': new_email,
-                'other_data': kwargs  # Store other form data for later update
+                'other_data': kwargs  
                 }
 
-    # Validate phone number uniqueness only if a new phone number is provided
+   
     new_phone_number = kwargs.get('phone_number')
     if new_phone_number and new_phone_number != user.phone_number:
         if User.objects.filter(phone_number=new_phone_number).exclude(id=user.id).exists():

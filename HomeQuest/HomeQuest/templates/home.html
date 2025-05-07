@@ -630,7 +630,7 @@
                 </div>
             </div>
             <div class="hero-image">
-                <img src="{% static 'images/hero-image.jpg' %}" alt="{% trans 'Modern apartment building' %}">
+                <img src="{% static 'images/home-image.jpg' %}" alt="{% trans 'Modern apartment building' %}">
             </div>
         </div>
     </div>
@@ -690,7 +690,6 @@
                             {% endif %}
                             
                             {% if property.image_paths and property.image_paths|length > 1 %}
-                                <!-- Left arrow - direct styling for maximum visibility -->
                                 <a href="javascript:void(0);" onclick="prevImage('property-{{ property.property_id }}')"
                                    style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); 
                                           background: rgba(0,0,0,0.6); color: white; width: 40px; height: 40px; 
@@ -700,7 +699,6 @@
                                     <i class="fas fa-arrow-left"></i>
                                 </a>
                                 
-                                <!-- Right arrow - direct styling for maximum visibility -->
                                 <a href="javascript:void(0);" onclick="nextImage('property-{{ property.property_id }}')"
                                    style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); 
                                           background: rgba(0,0,0,0.6); color: white; width: 40px; height: 40px; 
@@ -754,13 +752,13 @@
 </div>
 
 <script>
-    // Very simple image navigation with direct DOM manipulation
+    
     function prevImage(propertyId) {
         const property = document.getElementById(propertyId);
         const images = property.querySelectorAll('.property-image');
         const counter = property.querySelector('.current-index');
         
-        // Find current visible image
+        
         let currentIndex = 0;
         for (let i = 0; i < images.length; i++) {
             if (images[i].style.display === 'block') {
@@ -769,16 +767,16 @@
             }
         }
         
-        // Hide current image
+        
         images[currentIndex].style.display = 'none';
         
-        // Calculate previous index with wrapping
+        
         let prevIndex = (currentIndex - 1 + images.length) % images.length;
         
-        // Show previous image
+        
         images[prevIndex].style.display = 'block';
         
-        // Update counter
+        
         if (counter) {
             counter.textContent = prevIndex + 1;
         }
@@ -789,7 +787,7 @@
         const images = property.querySelectorAll('.property-image');
         const counter = property.querySelector('.current-index');
         
-        // Find current visible image
+        
         let currentIndex = 0;
         for (let i = 0; i < images.length; i++) {
             if (images[i].style.display === 'block') {
@@ -798,36 +796,36 @@
             }
         }
         
-        // Hide current image
+        
         images[currentIndex].style.display = 'none';
         
-        // Calculate next index with wrapping
+        
         let nextIndex = (currentIndex + 1) % images.length;
         
-        // Show next image
+        
         images[nextIndex].style.display = 'block';
         
-        // Update counter
+        
         if (counter) {
             counter.textContent = nextIndex + 1;
         }
     }
 
-    // Add hover functionality to show/hide arrows
+    
     document.addEventListener('DOMContentLoaded', function() {
         const propertyCards = document.querySelectorAll('.property-card-modern');
         
         propertyCards.forEach(function(card) {
             const arrows = card.querySelectorAll('.property-arrow');
             
-            // Show arrows on hover
+            
             card.addEventListener('mouseenter', function() {
                 arrows.forEach(function(arrow) {
                     arrow.style.opacity = '1';
                 });
             });
             
-            // Hide arrows when mouse leaves
+
             card.addEventListener('mouseleave', function() {
                 arrows.forEach(function(arrow) {
                     arrow.style.opacity = '0';

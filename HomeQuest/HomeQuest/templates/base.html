@@ -702,25 +702,25 @@
             })
             .then(response => {
                 if (response.ok) {
-                    // Find and update the notification item
+                    
                     const notificationItem = clickedButton.closest('.notification-item');
                     
-                    // Remove unread class and button
+                    
                     notificationItem.classList.remove('unread-notification');
                     clickedButton.remove();
                     
-                    // Update count in header
+                    
                     const countElement = document.querySelector('.notification-count');
                     if (countElement) {
                         const currentCount = parseInt(countElement.textContent);
                         if (currentCount <= 1) {
                             countElement.remove();
-                            // Update bell icon
+                            
                             const bellIcon = document.querySelector('.notification-icon');
                             if (bellIcon) {
                                 bellIcon.src = "{% static 'images/bell.png' %}";
                             }
-                            // Remove badge if exists
+                            
                             const badge = document.querySelector('.notification-badge');
                             if (badge) badge.remove();
                         } else {
@@ -738,13 +738,13 @@
             const button = event.target.closest('.language-button');
             const icon = button.querySelector('.fas');
             
-            // Close other dropdowns
+            
             closeAllDropdowns();
             
-            // Toggle this dropdown
+            
             dropdown.classList.toggle('show');
             
-            // Rotate icon
+            
             if (dropdown.classList.contains('show')) {
                 icon.style.transform = 'rotate(180deg)';
             } else {
@@ -758,7 +758,7 @@
             window.location.reload();
         }
 
-        // Add transition for icon rotation
+        
         document.addEventListener('DOMContentLoaded', function() {
             const icons = document.querySelectorAll('.language-button .fas');
             icons.forEach(icon => {

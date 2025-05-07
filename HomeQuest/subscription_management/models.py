@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from user_management.models import Seller
 
-# Keep the original inheritance structure
+
 class GoldSeller(Seller):
     class Meta:
         db_table = 'goldseller'

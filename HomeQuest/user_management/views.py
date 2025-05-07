@@ -17,7 +17,7 @@ def register(request):
         if form.is_valid():
             user_type = form.cleaned_data['user_type']
             try:
-                # Create the user and assign the role
+                
                 UserFactory.create_user(
                     user_type=user_type,
                     email=form.cleaned_data['email'],
@@ -30,7 +30,7 @@ def register(request):
                     password=form.cleaned_data['password'],
                 )
                 messages.success(request, 'Registration successful! Please log in.')
-                return redirect('login')  # Redirect to the login page
+                return redirect('login')  
             except ValidationError as e:
                 messages.error(request, e.message)
             except Exception as e:
@@ -50,7 +50,7 @@ def profile(request):
 @login_required
 def edit_profile(request):
     clear_messages(request)
-    user = request.user  # Get the currently logged-in user
+    user = request.user  
     if request.method == 'POST':
         form = UserEditForm(request.POST, request.FILES) 
         if form.is_valid():
@@ -76,7 +76,7 @@ def edit_profile(request):
 
                 messages.success(request, 'Your profile has been updated successfully.')
 
-                if form.cleaned_data.get('password'): # Check if password was changed
+                if form.cleaned_data.get('password'): 
                     logout(request)
                     messages.info(request, 'You have been logged out due to a password change. Please log in again.')
                     return redirect('login')
@@ -87,6 +87,6 @@ def edit_profile(request):
         else:
             messages.error(request, 'There was an error updating your profile.')
     else:
-        form = UserEditForm(initial={'blur_profile_photo': user.blur_profile_photo}) ## Pre-fill the form with the user's current data
+        form = UserEditForm(initial={'blur_profile_photo': user.blur_profile_photo}) 
 
     return render(request, 'edit_profile.html', {'form': form})

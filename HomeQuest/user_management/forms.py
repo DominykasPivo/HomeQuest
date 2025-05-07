@@ -13,7 +13,7 @@ class UserRegistrationForm(forms.ModelForm):
         required=True,
         widget=forms.TextInput(attrs={'placeholder': ''}),
         label="Full Name",
-        help_text=""  # Remove the default help text
+        help_text=""  
     )
     date_of_birth = forms.DateField(
         required=True,
@@ -103,7 +103,7 @@ class UserEditForm(forms.ModelForm):
         }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Make all fields optional
+       
         for field in self.fields.values():
             field.required = False
 

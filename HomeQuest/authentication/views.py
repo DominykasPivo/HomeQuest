@@ -56,7 +56,7 @@ def verify_2fa(request):
     new_email = request.session.get('new_email')
     profile_data = request.session.get('profile_update_data')
     auth_system = AuthenticationProxy(RealAuthenticationSystem())
-    # If the user changes his email
+   
     if new_email:
         if request.method == 'POST':
             token = request.POST.get('token')
@@ -65,12 +65,12 @@ def verify_2fa(request):
                 user = request.user
                 user.email = new_email
                 
-                if profile_data: # update other profile data if available
+                if profile_data: 
                     update_user_profile(user, **profile_data)
                 else:
                     user.save()
                 
-                # Clean up the session
+                
                 for key in ['new_email', 'profile_update_data', 'email_verification_token']:
                     if key in request.session:
                         del request.session[key]
@@ -83,7 +83,6 @@ def verify_2fa(request):
         return render(request, '2fa.html', {'verification_type': 'email_change', 'new_email': new_email})
 
 
-    # Normal 2FA login flow
     user_id = request.session.get('pre_2fa_user_id')
     if not user_id:
         messages.error(request, "Authentication session expired. Please log in again.")

@@ -18,7 +18,7 @@ urlpatterns = [
 
 urlpatterns.extend([path('', include(tf_urls))])
 
-#urlpatterns.append(path('', include("myapp.urls")))
+
 
 
 

@@ -65,33 +65,32 @@ def create_property_for_seller(seller, property_data, image=None):
 def delete_property_image(property_instance, image_path):
     """Delete a property image file and remove it from the property's image_paths"""
     try:
-        # Get the absolute path
+        
         abs_path = os.path.join(settings.MEDIA_ROOT, image_path)
         
-        # Check if the file exists and delete it
         if os.path.exists(abs_path):
             os.remove(abs_path)
             
-        # Remove the path from the property's image_paths
+        
         if image_path in property_instance.image_paths:
             property_instance.image_paths.remove(image_path)
             property_instance.save()
             
-        return True, True  # Success, deleted
+        return True, True  
     except Exception as e:
-        return False, False  # Error
+        return False, False  
 
 def replace_property_image(property_instance, old_image_path, new_image, save_image_func):
     """Replace a property image with a new one"""
     try:
-        # First delete the old image
+       
         delete_success, _ = delete_property_image(property_instance, old_image_path)
         
         if delete_success and new_image:
-            # Save the new image
+          
             new_paths = save_image_func(property_instance, new_image)
             
-            # Update the property's image_paths
+         
             if old_image_path in property_instance.image_paths:
                 idx = property_instance.image_paths.index(old_image_path)
                 property_instance.image_paths[idx] = new_paths[0]
@@ -121,25 +120,25 @@ def add_property_image(property_instance, image):
 def delete_property(property_instance):
     """Delete a property and all its associated files"""
     try:
-        # Delete all images
+        
         for image_path in property_instance.image_paths:
             abs_path = os.path.join(settings.MEDIA_ROOT, image_path)
             if os.path.exists(abs_path):
                 os.remove(abs_path)
         
-        # Delete property folder
+        
         property_folder = f'property_images/property_{property_instance.property_id}'
         abs_folder = os.path.join(settings.MEDIA_ROOT, property_folder)
         if os.path.exists(abs_folder):
             shutil.rmtree(abs_folder)
         
-        # Delete verification files
+        
         for file_path in property_instance.verification_files:
             abs_path = os.path.join(settings.MEDIA_ROOT, file_path)
             if os.path.exists(abs_path):
                 os.remove(abs_path)
         
-        # Delete the property from database
+        
         property_instance.delete()
         return True
     except Exception as e:
@@ -195,7 +194,7 @@ def filter_properties(
 ):
     properties = Property.objects.all()
 
-    # Apply sorting first
+    
     if sort_by:
         if sort_by == 'most_viewed':
             properties = properties.order_by('-view_count')
@@ -204,14 +203,14 @@ def filter_properties(
         elif sort_by == 'most_liked':
             properties = properties.order_by('-like_count')
 
-    # Apply other filters only if they have actual values
+   
     if search_type and search_type != '':
         if search_type == 'for_rent':
             properties = properties.filter(listing_type='for_rent')
         elif search_type == 'for_sale':
             properties = properties.filter(listing_type='for_sale')
         elif search_type == 'recommended':
-            if not sort_by:  # Only apply recommended sorting if no explicit sort is specified
+            if not sort_by:  
                 properties = properties.order_by('-like_count', '-view_count', '-comment_count')
 
     if property_type and property_type != '':
@@ -237,7 +236,7 @@ def filter_properties(
     if max_price and str(max_price).strip():
         properties = properties.filter(price__lte=max_price)
 
-    # Fuzzy location search (after all filters)
+   
     if query and query.strip():
         locations = list(properties.values_list('location', flat=True))
         map_locations = list(properties.values_list('map_location', flat=True))
@@ -291,7 +290,7 @@ def create_property_for_seller(seller, property_data, image=None):
         raise ValidationError("Only sellers can create properties.")
 
         
-    # Create and save the property instance
+    
     property_instance = Property(
         seller=seller,
         location=property_data.get('location'),
@@ -304,11 +303,11 @@ def create_property_for_seller(seller, property_data, image=None):
         duration=property_data.get('duration'),
         is_verified=property_data.get('is_verified', False),
     )
-    property_instance.save()  # Save the property to generate an ID
+    property_instance.save()  
 
     if image:
         image_paths = save_property_image(property_instance, image)
-        # Convert backslashes to forward slashes for JSON compatibility
+        
         image_paths = [p.replace('\\', '/') for p in image_paths]
         try:
             property_instance.image_paths = image_paths
@@ -357,12 +356,12 @@ def delete_property(property_instance):
     """
     Delete a property instance and its image folder.
     """
-    # Delete the property images folder
+   
     folder = f'property_images/property_{property_instance.property_id}'
     abs_folder = os.path.join(settings.MEDIA_ROOT, folder)
     if os.path.exists(abs_folder):
         shutil.rmtree(abs_folder)
-    # Delete the property itself
+    
     if property_instance.verification_files:
         verification_folder = f'property_verifications/property_{property_instance.property_id}'
         abs_verification_folder = os.path.join(settings.MEDIA_ROOT, verification_folder)
@@ -418,7 +417,7 @@ def filter_properties(
 ):
     properties = Property.objects.all()
 
-    # Apply sorting first
+    
     if sort_by:
         if sort_by == 'most_viewed':
             properties = properties.order_by('-view_count')
@@ -427,14 +426,14 @@ def filter_properties(
         elif sort_by == 'most_liked':
             properties = properties.order_by('-like_count')
 
-    # Apply other filters only if they have actual values
+    
     if search_type and search_type != '':
         if search_type == 'for_rent':
             properties = properties.filter(listing_type='for_rent')
         elif search_type == 'for_sale':
             properties = properties.filter(listing_type='for_sale')
         elif search_type == 'recommended':
-            if not sort_by:  # Only apply recommended sorting if no explicit sort is specified
+            if not sort_by:  
                 properties = properties.order_by('-like_count', '-view_count', '-comment_count')
 
     if property_type and property_type != '':
@@ -460,7 +459,7 @@ def filter_properties(
     if max_price and str(max_price).strip():
         properties = properties.filter(price__lte=max_price)
 
-    # Fuzzy location search (after all filters)
+    
     if query and query.strip():
         locations = list(properties.values_list('location', flat=True))
         map_locations = list(properties.values_list('map_location', flat=True))
@@ -520,10 +519,10 @@ def delete_verification_file(property_instance, file_to_delete):
             os.remove(abs_path)
         verification_files.remove(file_to_delete)
         property_instance.verification_files = verification_files
-        # If no files left, unverify and remove the folder
+       
         if not verification_files:
             property_instance.is_verified = False
-            # Remove the property verification folder
+            
             folder = os.path.dirname(abs_path)
             if os.path.exists(folder):
                 shutil.rmtree(folder)
@@ -539,7 +538,7 @@ def toggle_like(property_obj, user):
         liked = False
     else:
         liked = True
-    # Update like_count
+    
     property_obj.like_count = property_obj.likes.count()
     property_obj.save(update_fields=['like_count'])
     return liked
