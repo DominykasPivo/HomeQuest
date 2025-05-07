@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
-{% block title %}Notifications{% endblock %}
+{% block title %}{% trans "Notifications" %}{% endblock %}
 {% block content %}
 
 <style>
@@ -111,7 +112,7 @@
     <div class="notifications-container">
         <div class="notifications-header">
             <i class="fas fa-bell"></i>
-            <h1>Notifications</h1>
+            <h1>{% trans "Notifications" %}</h1>
         </div>
 
         <div class="notification-list">
@@ -125,14 +126,14 @@
                     {% if not notification.is_read %}
                         <form method="post" action="{% url 'mark_notification_read' notification.id %}" style="display:inline;">
                             {% csrf_token %}
-                            <button type="submit" class="mark-read-btn">Mark as read</button>
+                            <button type="submit" class="mark-read-btn">{% trans "Mark as read" %}</button>
                         </form>
                     {% endif %}
                 </div>
             {% empty %}
                 <div class="empty-state">
                     <i class="far fa-bell-slash"></i>
-                    <p>No notifications yet</p>
+                    <p>{% trans "No notifications yet" %}</p>
                 </div>
             {% endfor %}
         </div>

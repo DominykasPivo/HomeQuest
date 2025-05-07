@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
-
 {% load crispy_forms_tags %}
-
+{% load i18n %}
 {% block title %}Register - HomeQuest{% endblock %}
-
 {% block content %}
 <style>
     /* Page Container */
@@ -309,60 +307,60 @@
 <div class="page-container">
     <div class="registration-container">
         <div class="registration-form">
-            <h1 class="registration-title">Create Your Account</h1>
-            <p class="registration-subtitle">Join HomeQuest to find your perfect home</p>
+            <h1 class="registration-title">{% trans "Create Your Account" %}</h1>
+            <p class="registration-subtitle">{% trans "Join HomeQuest to find your perfect home" %}</p>
             
             <form method="post" enctype="multipart/form-data" class="registration-form-content">
                 {% csrf_token %}
                 
                 <div class="form-section">
-                    <h3>Account Information</h3>
+                    <h3>{% trans "Account Information" %}</h3>
                     <div class="form-group">
-                        <label for="{{ form.email.id_for_label }}">Email*</label>
+                        <label for="{{ form.email.id_for_label }}">{% trans "Email" %}*</label>
                         {{ form.email }}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.password.id_for_label }}">Password*</label>
+                        <label for="{{ form.password.id_for_label }}">{% trans "Password" %}*</label>
                         {{ form.password }}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.confirm_password.id_for_label }}">Confirm Password*</label>
+                        <label for="{{ form.confirm_password.id_for_label }}">{% trans "Confirm Password" %}*</label>
                         {{ form.confirm_password }}
                     </div>
                 </div>
 
                 <div class="form-section">
-                    <h3>Personal Information</h3>
+                    <h3>{% trans "Personal Information" %}</h3>
                     <div class="form-group">
-                        <label for="{{ form.full_name.id_for_label }}">Full Name*</label>
+                        <label for="{{ form.full_name.id_for_label }}">{% trans "Full Name" %}*</label>
                         {{ form.full_name }}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.date_of_birth.id_for_label }}">Date of Birth*</label>
+                        <label for="{{ form.date_of_birth.id_for_label }}">{% trans "Date of Birth" %}*</label>
                         {{ form.date_of_birth }}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.phone_number.id_for_label }}">Phone Number</label>
+                        <label for="{{ form.phone_number.id_for_label }}">{% trans "Phone Number" %}</label>
                         {{ form.phone_number }}
                     </div>
                     <div class="form-group">
                         <div class="profile-photo-group">
-                            <label for="{{ form.profile_photo.id_for_label }}">Profile Photo</label>
+                            <label for="{{ form.profile_photo.id_for_label }}">{% trans "Profile Photo" %}</label>
                             {{ form.profile_photo }}
-                            <p class="profile-photo-help">Upload a custom profile picture! Supported formats: JPG, PNG</p>
+                            <p class="profile-photo-help">{% trans "Upload a custom profile picture! Supported formats: JPG, PNG" %}</p>
                         </div>
                     </div>
                     <div class="form-group" id="blur-photo-group" style="display:none;">
                         <label class="checkbox-label" for="id_blur_profile_photo">
                             {{ form.blur_profile_photo }}
-                            Blur my profile photo
+                            {% trans "Blur my profile photo" %}
                         </label>
-                        <p class="checkbox-help">Enable this option if you want to maintain privacy while still having a profile photo.</p>
+                        <p class="checkbox-help">{% trans "Enable this option if you want to maintain privacy while still having a profile photo." %}</p>
                     </div>
                 </div>
 
                 <div class="form-section">
-                    <h3>Account Type</h3>
+                    <h3>{% trans "Account Type" %}</h3>
                     <div class="form-group user-type">
                         {% for radio in form.user_type %}
                             <div class="radio-option">
@@ -382,7 +380,7 @@
                                 id="{{ form.consent_to_share_location.id_for_label }}"
                                 {% if form.consent_to_share_location.value %}checked{% endif %}
                             >
-                            I consent to share my location for better property recommendations
+                            {% trans "I consent to share my location for better property recommendations" %}
                         </label>
                     </div>
                 </div>
@@ -401,11 +399,11 @@
                     </div>
                 {% endif %}
 
-                <button type="submit" class="register-button">Create Account</button>
+                <button type="submit" class="register-button">{% trans "Create Account" %}</button>
             </form>
             
             <div class="login-link">
-                Already have an account? <a href="{% url 'login' %}">Sign in</a>
+                {% trans "Already have an account?" %} <a href="{% url 'login' %}">{% trans "Sign in" %}</a>
             </div>
         </div>
     </div>

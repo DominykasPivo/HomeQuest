@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse, Http404
+from django.utils.translation import gettext_lazy as _
 
 from .models import Property, PropertyLike, Comment
 from .forms import PropertyForm, CommentForm
@@ -225,8 +226,9 @@ def property_verify(request, property_id):
 
 def property_detail_all(request, property_id):
     property_obj = get_object_or_404(Property, pk=property_id)
-    property_obj.view_count += 1
-    property_obj.save(update_fields=['view_count'])
+    if request.method == 'GET':
+        property_obj.view_count += 1
+        property_obj.save(update_fields=['view_count'])
 
     comments = property_obj.comments.select_related('user').order_by('created_at')
     comment_form = CommentForm()
@@ -259,7 +261,7 @@ def properties_for_sale(request):
     page_obj = paginator.get_page(page_number)
     return render(request, 'properties_list.html', {
         'page_obj': page_obj,
-        'section_title': 'Properties For Sale'
+        'section_title': _('Properties For Sale')
     })
 
 def properties_for_rent(request):
@@ -269,7 +271,7 @@ def properties_for_rent(request):
     page_obj = paginator.get_page(page_number)
     return render(request, 'properties_list.html', {
         'page_obj': page_obj,
-        'section_title': 'Properties For Rent'
+        'section_title': _('Properties For Rent')
     })
 
 def properties_recommended(request):
@@ -279,5 +281,5 @@ def properties_recommended(request):
     page_obj = paginator.get_page(page_number)
     return render(request, 'properties_list.html', {
         'page_obj': page_obj,
-        'section_title': 'Recommended Properties'
+        'section_title': _('Recommended Properties')
     })

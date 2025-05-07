@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load static %}
 {% block title %}Create Property{% endblock %}
 
@@ -194,36 +195,26 @@
         <div class="form-card limit-card">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h5 class="card-title">Property Limit</h5>
-                    <p class="text-muted">Basic sellers can list a maximum of 2 properties</p>
+                    <h5 class="card-title">{% trans "Property Limit" %}</h5>
+                    <p class="text-muted">{% trans "Basic sellers can list a maximum of 2 properties" %}</p>
                 </div>
                 <div class="property-counter {% if property_count >= 2 %}text-danger{% elif property_count == 1 %}text-warning{% else %}text-success{% endif %}">
-                    <strong>{{ property_count }}/2</strong> properties used
-                </div>
-            </div>
-            
-            <div class="progress">
-                <div class="progress-bar {% if property_count >= 2 %}bg-danger{% elif property_count == 1 %}bg-warning{% else %}bg-success{% endif %}" 
-                     role="progressbar" 
-                     style="width: {% if property_count == 0 %}0%{% elif property_count == 1 %}50%{% else %}100%{% endif %}" 
-                     aria-valuenow="{{ property_count }}" 
-                     aria-valuemin="0" 
-                     aria-valuemax="2">
+                    <strong>{{ property_count }}/2</strong> {% trans "properties used" %}
                 </div>
             </div>
             
             {% if property_count >= 2 %}
                 <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle"></i> You've reached your limit.
-                    <a href="{% url 'manage_subscription' %}" class="btn btn-sm btn-primary ms-2">Upgrade to Gold</a>
-                    for unlimited listings.
+                    <i class="fas fa-exclamation-triangle"></i> {% trans "You've reached your limit." %}
+                    <a href="{% url 'manage_subscription' %}" class="btn btn-sm btn-primary ms-2">{% trans "Upgrade to Gold" %}</a>
+                    {% trans "for unlimited listings." %}
                 </div>
             {% endif %}
         </div>
     {% endif %}
 
     <div class="form-card">
-        <h1>Create Property</h1>
+        <h1>{% trans "Create Property" %}</h1>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% for field in form %}
@@ -236,8 +227,8 @@
             {% endfor %}
 
             <div class="form-actions">
-                <button type="submit">Create Property</button>
-                <a href="{% url 'property_list' %}" class="cancel-link">Cancel</a>
+                <button type="submit">{% trans "Create Property" %}</button>
+                <a href="{% url 'property_list' %}" class="cancel-link">{% trans "Cancel" %}</a>
             </div>
         </form>
     </div>

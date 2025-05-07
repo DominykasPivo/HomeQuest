@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
-
-{% block title %}Login with Phone - HomeQuest{% endblock %}
-
+{% load i18n %}
+{% block title %}{% trans "Login with Phone - HomeQuest" %}{% endblock %}
 {% block content %}
 <style>
     /* Page Container */
@@ -169,20 +168,20 @@
 <div class="page-container">
     <div class="login-container">
         <div class="login-form">
-            <h1 class="login-title">Login with Phone</h1>
-            <p class="login-subtitle">Enter your phone number and password to sign in</p>
+            <h1 class="login-title">{% trans "Login with Phone" %}</h1>
+            <p class="login-subtitle">{% trans "Enter your phone number and password to sign in" %}</p>
             
             <form method="post" class="login-form-content">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="phone_number">Phone Number</label>
+                    <label for="phone_number">{% trans "Phone Number" %}</label>
                     <input type="tel" name="phone_number" id="phone_number" required class="login-input" placeholder="Enter your phone number">
                 </div>
                 <div class="form-group">
-                    <label for="password">Password</label>
+                    <label for="password">{% trans "Password" %}</label>
                     <input type="password" name="password" id="password" required class="login-input" placeholder="Enter your password">
                 </div>
-                <button type="submit" class="login-option-btn">Sign In</button>
+                <button type="submit" class="login-option-btn">{% trans "Sign In" %}</button>
             </form>
 
             {% if messages %}
@@ -196,12 +195,12 @@
             {% endif %}
 
             <div class="register-link">
-                Don't have an account? <a href="{% url 'register' %}">Register</a>
+                {% trans "Don't have an account?" %} <a href="{% url 'register' %}">{% trans "Register" %}</a>
             </div>
             <div class="back-link">
                 <a href="{% url 'login' %}">
                     <i class="fas fa-arrow-left"></i>
-                    Back to Login Options
+                    {% trans "Back to Login Options" %}
                 </a>
             </div>
         </div>

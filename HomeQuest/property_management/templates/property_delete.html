@@ -1,12 +1,145 @@
 {% extends 'base.html' %}
 {% block title %}Delete Property{% endblock %}
 {% block content %}
+{% load i18n %}
 
-<h1>Delete Property</h1>
-<p>Are you sure you want to delete "{{ property.location }}"?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Yes, delete</button>
-    <a href="{% url 'property_list' %}">Cancel</a>
-</form>
+<style>
+    .delete-container {
+        max-width: 98%;
+        width: 98%;
+        margin: 0 auto;
+        padding: 2rem 3rem;
+        background: linear-gradient(135deg, #f5f5f0, #e0e8f7);
+        min-height: calc(100vh - 100px);
+    }
+
+    .delete-card {
+        background: white;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-md);
+        padding: 2.5rem;
+        max-width: 600px;
+        margin: 2rem auto;
+        text-align: center;
+    }
+
+    .delete-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+    }
+
+    .delete-message {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .property-info {
+        background: var(--bg-light);
+        padding: 1.5rem;
+        border-radius: var(--radius-md);
+        margin-bottom: 2rem;
+    }
+
+    .property-location {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 1.2rem;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .delete-btn {
+        padding: 0.75rem 1.5rem;
+        background-color: var(--danger-color, #dc3545);
+        color: white;
+        border: none;
+        border-radius: var(--radius-md);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .delete-btn:hover {
+        background-color: var(--danger-hover, #c82333);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .cancel-btn {
+        padding: 0.75rem 1.5rem;
+        background-color: var(--bg-light);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .cancel-btn:hover {
+        background-color: var(--bg-lighter);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .warning-icon {
+        font-size: 3rem;
+        color: var(--danger-color, #dc3545);
+        margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .delete-container {
+            padding: 1rem;
+        }
+
+        .delete-card {
+            padding: 1.5rem;
+        }
+
+        .button-group {
+            flex-direction: column;
+        }
+
+        .delete-btn, .cancel-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="delete-container">
+    <div class="delete-card">
+        <i class="fas fa-exclamation-triangle warning-icon"></i>
+        <h1 class="delete-title">{% trans "Delete Property" %}</h1>
+        <p class="delete-message">{% trans "Are you sure you want to delete?" %}</p>
+        
+        <div class="property-info">
+            <div class="property-location">{{ property.location }}</div>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="button-group">
+                <button type="submit" class="delete-btn">
+                    <i class="fas fa-trash"></i> {% trans "Yes, delete" %}
+                </button>
+                <a href="{% url 'property_list' %}" class="cancel-btn">
+                    <i class="fas fa-times"></i> {% trans "Cancel" %}
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

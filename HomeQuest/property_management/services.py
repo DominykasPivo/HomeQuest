@@ -184,50 +184,8 @@ def delete_verification_file(property_instance, file_path):
     except Exception:
         return False
 
-def toggle_like(property_instance, user):
-    """Toggle like/unlike for a property"""
-    try:
-        like, created = PropertyLike.objects.get_or_create(property=property_instance, user=user)
-        
-        if created:
-            # User liked the property
-            property_instance.like_count += 1
-            property_instance.save(update_fields=['like_count'])
-            
-            # Notify the seller about the like
-            notification_message = f"Someone liked your property at {property_instance.location}"
-            create_notification(property_instance.seller.user, notification_message)
-            
-            return True
-        else:
-            # User already liked the property, so unlike it
-            like.delete()
-            property_instance.like_count = max(0, property_instance.like_count - 1)
-            property_instance.save(update_fields=['like_count'])
-            return False
-    except Exception as e:
-        raise
 
-def add_comment(property_instance, user, text):
-    """Add a comment to a property"""
-    try:
-        comment = Comment.objects.create(
-            property=property_instance,
-            user=user,
-            text=text
-        )
-        
-        # Update comment count
-        property_instance.comment_count += 1
-        property_instance.save(update_fields=['comment_count'])
-        
-        # Notify the seller about the comment
-        notification_message = f"Someone commented on your property at {property_instance.location}"
-        create_notification(property_instance.seller.user, notification_message)
-        
-        return comment
-    except Exception as e:
-        raise
+
 
 
 def filter_properties(

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Property Details{% endblock %}
 {% block content %}
+{% load i18n %}
 {% load static %}
 
 <style>
@@ -563,11 +564,11 @@
     <div class="content-wrapper">
         <div class="page-header">
             <div class="page-title-wrapper">
-                <h1 class="page-title">Property Details</h1>
+                <h1 class="page-title">{% trans "Property Details"%}</h1>
                 {% if property.is_verified %}
                 <div class="verification-badge">
                     <i class="fas fa-check-circle"></i>
-                    Verified Property
+                    {% trans "Verified Property"%}
                 </div>
 {% endif %}
             </div>
@@ -604,57 +605,57 @@
                         {% if property.image_paths|length == 1 %}
                             <div class="no-more-images">
                                 <i class="fas fa-image"></i>
-                                No additional images
+                                {% trans "No additional images"%}
                             </div>
     {% endif %}
                     {% else %}
                         <div class="no-more-images">
                             <i class="fas fa-image"></i>
-                            No images available
+                            {% trans "No images available"%}
                         </div>
                     {% endif %}
                 </div>
 
                 <div class="detail-group">
                     <div class="detail-item">
-                        <span class="detail-label">Location</span>
+                        <span class="detail-label">{% trans "Location" %}</span>
                         <span class="detail-value">{{ property.location }}</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Map Location</span>
+                        <span class="detail-label">{% trans "Map Location"%}</span>
                         <span class="detail-value">{{ property.map_location }}</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Price</span>
+                        <span class="detail-label">{% trans "Price"%}</span>
                         <span class="detail-value">${{ property.price }}{% if property.listing_type == 'for_rent' %}/mo{% endif %}</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Size</span>
-                        <span class="detail-value">{{ property.size }} sq ft</span>
+                        <span class="detail-label">{% trans "Size"%}</span>
+                        <span class="detail-value">{{ property.size }} {% trans "sq ft"%}</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Rooms</span>
+                        <span class="detail-label">{% trans "Rooms"%}</span>
                         <span class="detail-value">{{ property.room_num }}</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Property Type</span>
+                        <span class="detail-label">{% trans "Property Type"%}</span>
                         <span class="detail-value">{{ property.property_type|title }}</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Listing Type</span>
-                        <span class="detail-value">{% if property.listing_type == 'for_sale' %}For Sale{% else %}For Rent{% endif %}</span>
+                        <span class="detail-label">{% trans "Listing Type"%}</span>
+                        <span class="detail-value">{% if property.listing_type == 'for_sale' %}{% trans "For Sale"%}{% else %}{% trans "For Rent"%}{% endif %}</span>
                     </div>
                     {% if property.listing_type == "for_rent" %}
                     <div class="detail-item">
-                        <span class="detail-label">Duration</span>
-                        <span class="detail-value">{{ property.duration }} days</span>
+                        <span class="detail-label">{% trans "Duration"%}</span>
+                        <span class="detail-value">{{ property.duration }} {% trans "days"%}</span>
                     </div>
                     {% endif %}
                 </div>
 
                 <div class="comments-section">
                     <div class="comments-header">
-                        <h2 class="comments-title">Comments</h2>
+                        <h2 class="comments-title">{% trans "Comments" %}</h2>
                         <span class="comment-count">{{ property.comment_count }}</span>
                     </div>
 
@@ -662,11 +663,11 @@
                         <form method="post" class="comment-form">
                             {% csrf_token %}
                             <textarea name="text" class="comment-input" placeholder="Add your comment..." rows="2"></textarea>
-                            <button type="submit" class="comment-submit">Post Comment</button>
+                            <button type="submit" class="comment-submit">{% trans "Post Comment"%}</button>
             </form>
         {% else %}
                         <div class="login-prompt">
-                            <p>Please <a href="{% url 'login' %}" class="login-link">log in</a> to leave a comment.</p>
+                            <p>{% trans "Please"%} <a href="{% url 'login' %}" class="login-link">{% trans "Log in"%}</a> {% trans "to leave a comment."%}</p>
                         </div>
         {% endif %}
 
@@ -700,7 +701,7 @@
                     {% else %}
                         <div class="no-comments">
                             <i class="fas fa-comments" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
-                            No comments yet
+                            {% trans "No comments yet"%}
                         </div>
                     {% endif %}
                 </div>
@@ -710,15 +711,15 @@
                 <div class="stats-section">
                     <div class="stat-item">
                         <span class="stat-value">{{ property.view_count }}</span>
-                        <span class="stat-label">Views</span>
+                        <span class="stat-label">{% trans "Views"%}</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-value">{{ property.like_count }}</span>
-                        <span class="stat-label">Likes</span>
+                        <span class="stat-label">{% trans "Likes"%}</span>
                     </div>
                     <div class="stat-item">
                         <span class="stat-value">{{ property.comment_count }}</span>
-                        <span class="stat-label">Comments</span>
+                        <span class="stat-label">{% trans "Comments"%}</span>
                     </div>
                 </div>
 
@@ -728,14 +729,14 @@
     {% csrf_token %}
                             <button type="submit" name="like" class="like-button {% if user_has_liked %}liked{% endif %}">
                                 <i class="{% if user_has_liked %}fas{% else %}far{% endif %} fa-heart"></i>
-                                {% if user_has_liked %}Unlike{% else %}Like{% endif %}
+                                {% if user_has_liked %}{% trans "Unlike" %}{% else %}{% trans "Like" %}{% endif %}
                             </button>
                         </form>
                     </div>
                 {% endif %}
 
                 <a href="{% url 'property_search' %}" class="action-btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Back to Search
+                    <i class="fas fa-arrow-left"></i> {% trans "Back to Search"%}
                 </a>
             </div>
         </div>

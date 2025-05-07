@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
-
 {% load crispy_forms_tags %}
-
+{% load i18n %}
 {% block title %}Edit Profile - HomeQuest{% endblock %}
-
 {% block content %}
+
 <style>
     /* Page Container */
     .profile-edit-container {
@@ -135,37 +134,37 @@
 
 <div class="profile-edit-container">
     <div class="profile-edit-form">
-        <h1 class="profile-edit-title">Edit Your Profile</h1>
+        <h1 class="profile-edit-title">{% trans "Edit Your Profile"%}</h1>
         <form method="post" enctype="multipart/form-data" class="profile-edit-form-content">
             {% csrf_token %}
             <div class="form-group">
-                <label for="{{ form.full_name.id_for_label }}">Full Name</label>
+                <label for="{{ form.full_name.id_for_label }}">{% trans "Full Name"%}</label>
                 {{ form.full_name }}
             </div>
             <div class="form-group">
-                <label for="{{ form.email.id_for_label }}">Email</label>
+                <label for="{{ form.email.id_for_label }}">{% trans "Email"%}</label>
                 {{ form.email }}
             </div>
             <div class="form-group">
-                <label for="{{ form.date_of_birth.id_for_label }}">Date of Birth</label>
+                <label for="{{ form.date_of_birth.id_for_label }}">{% trans "Date of Birth"%}</label>
                 {{ form.date_of_birth }}
             </div>
             <div class="form-group">
-                <label for="{{ form.phone_number.id_for_label }}">Phone Number</label>
+                <label for="{{ form.phone_number.id_for_label }}">{% trans "Phone Number"%}</label>
                 {{ form.phone_number }}
             </div>
             <div class="form-group">
-                <label for="{{ form.profile_photo.id_for_label }}">Profile Photo</label>
+                <label for="{{ form.profile_photo.id_for_label }}">{% trans "Profile Photo"%}</label>
                 {{ form.profile_photo }}
             </div>
             <div class="form-group">
                 <label class="checkbox-label" for="{{ form.blur_profile_photo.id_for_label }}">
                     {{ form.blur_profile_photo }}
-                    Blur my profile photo
+                    {% trans "Blur my profile photo"%}
                 </label>
             </div>
             <div class="form-group">
-                <label for="{{ form.password.id_for_label }}">Password</label>
+                <label for="{{ form.password.id_for_label }}">{% trans "Password"%}</label>
                 {{ form.password }}
             </div>
             {% if form.errors %}
@@ -182,8 +181,8 @@
                     </ul>
                 </div>
             {% endif %}
-            <button type="submit" class="profile-edit-btn">Save Changes</button>
-            <a href="{% url 'profile' %}" class="profile-cancel-link">Cancel</a>
+            <button type="submit" class="profile-edit-btn">{% trans "Save Changes"%}</button>
+            <a href="{% url 'profile' %}" class="profile-cancel-link">{% trans "Cancel"%}</a>
         </form>
     </div>
 </div>

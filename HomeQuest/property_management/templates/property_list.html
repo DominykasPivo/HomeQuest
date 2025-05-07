@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
-{% block title %}My Properties{% endblock %}
-{% block content %}
 {% load static %}
+{% load i18n %}
+{% block content %}
 
 <style>
     /* Page Container */
@@ -284,10 +284,10 @@
 <div class="page-container">
     <div class="content-container">
         <div class="page-header">
-            <h1 class="page-title">My Properties</h1>
+            <h1 class="page-title">{% trans "My Properties" %}</h1>
             <a href="{% url 'property_create' %}" class="add-property-btn">
                 <i class="fas fa-plus"></i>
-                Add New Property
+                {% trans "Add Property" %}
             </a>
         </div>
 
@@ -354,7 +354,7 @@
                                 </div>
                                 <div class="property-card-actions">
                                     <a href="{% url 'property_detail' property.property_id %}" class="view-details-btn">
-                                        <i class="fas fa-info-circle"></i> View Details
+                                        <i class="fas fa-info-circle"></i> {% trans "View Details" %}
                                     </a>
                                     <a href="{% url 'property_edit' property.property_id %}" class="action-link edit">
                                         <i class="fas fa-edit"></i>
@@ -373,7 +373,7 @@
             </div>
         {% else %}
             <div class="empty-state">
-                <p>No properties found. Add your first property to get started!</p>
+                <p>{% trans "No properties found. Add your first property to get started!" %}</p>
             </div>
         {% endif %}
     </div>

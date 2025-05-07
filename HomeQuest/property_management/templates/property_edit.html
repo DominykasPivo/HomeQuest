@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Edit Property{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Edit Property"%}{% endblock %}
 
 {% block content %}
 <style>
@@ -134,7 +135,7 @@
 
 <div class="form-container">
     <div class="form-card">
-        <h1>Edit Property</h1>
+        <h1>{% trans "Edit Property" %}</h1>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% for field in form %}
@@ -148,33 +149,33 @@
                 {% endif %}
             {% endfor %}
 
-            <h2>Current Images</h2>
+            <h2>{% trans "Current Images" %}</h2>
             <div class="image-preview">
                 <ul>
                     {% for image_path in property.image_paths %}
                         <li>
                             <img src="{{ MEDIA_URL }}{{ image_path }}" alt="Property Image">
                             <div class="image-actions">
-                                <button type="submit" name="delete_image" value="{{ image_path }}">Delete</button>
+                                <button type="submit" name="delete_image" value="{{ image_path }}">{% trans "Delete"%}</button>
                                 <input type="file" name="replace_image_{{ forloop.counter0 }}" accept="image/*">
-                                <button type="submit" name="replace_image_btn" value="{{ image_path }}">Replace</button>
+                                <button type="submit" name="replace_image_btn" value="{{ image_path }}">{% trans "Replace" %}</button>
                             </div>
                         </li>
                     {% empty %}
-                        <li>No image available.</li>
+                        <li>{% trans "No image available"%}.</li>
                     {% endfor %}
                 </ul>
             </div>
 
-            <h2>Add New Image</h2>
+            <h2>{% trans "Add New Image" %}</h2>
             <input type="file" name="new_image" accept="image/*">
             <div class="form-actions">
-                <button type="submit" name="add_image_btn">Add Image</button>
+                <button type="submit" name="add_image_btn">{% trans "Add Image"%}</button>
             </div>
 
             <div class="form-actions">
-                <button type="submit" name="save_changes">Save Changes</button>
-                <a href="{% url 'property_list' %}" class="cancel-link">Cancel</a>
+                <button type="submit" name="save_changes">{% trans "Save Changes"%}</button>
+                <a href="{% url 'property_list' %}" class="cancel-link">{% trans "Cancel"%}</a>
             </div>
         </form>
     </div>

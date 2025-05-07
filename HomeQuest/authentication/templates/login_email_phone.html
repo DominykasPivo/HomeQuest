@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
-
-{% block title %}Login - HomeQuest{% endblock %}
-
+{% load i18n %}
+{% block title %}{% trans "Login - HomeQuest" %}{% endblock %}
 {% block content %}
 <style>
     /* Page Container */
@@ -119,26 +118,26 @@
 <div class="page-container">
     <div class="login-container">
         <div class="login-form">
-            <h1 class="login-title">Sign In to HomeQuest</h1>
-            <p class="login-subtitle">Choose your preferred login method</p>
+            <h1 class="login-title">{% trans "Sign In to HomeQuest" %}</h1>
+            <p class="login-subtitle">{% trans "Choose your preferred login method" %}</p>
 
             <div class="login-options">
                 <form method="get" action="{% url 'login_email' %}">
                     <button type="submit" class="login-option-btn">
                         <i class="fas fa-envelope"></i>
-                        Login with Email
+                        {% trans "Login with Email" %}
                     </button>
                 </form>
                 <form method="get" action="{% url 'login_phone' %}">
                     <button type="submit" class="login-option-btn">
                         <i class="fas fa-phone"></i>
-                        Login with Phone
+                        {% trans "Login with Phone" %}
                     </button>
                 </form>
             </div>
 
             <div class="register-link">
-                Don't have an account? <a href="{% url 'register' %}">Register</a>
+                {% trans "Don't have an account?" %} <a href="{% url 'register' %}">{% trans "Register" %}</a>
             </div>
         </div>
     </div>

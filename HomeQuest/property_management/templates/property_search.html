@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
-{% block title %}Search Properties{% endblock %}
-{% block content %}
+{% load i18n %}
 {% load static %}
+{% block title %}{% trans "Search Properties"%}{% endblock %}
+{% block content %}
 
 <style>
     .page-container {
@@ -320,27 +321,27 @@
 <div class="page-container">
     <div class="search-container">
         <div class="search-header">
-            <h1 class="search-title">Find Your Perfect Property</h1>
-            <p class="search-subtitle">Use the filters below to find properties that match your criteria</p>
+            <h1 class="search-title">{% trans "Find Your Perfect Property"%}</h1>
+            <p class="search-subtitle">{% trans "Use the filters below to find properties that match your criteria"%}</p>
         </div>
 
         <form method="get" action="{% url 'property_search' %}" class="search-form">
             <div class="form-group">
-                <label for="search_type">Listing Type</label>
+                <label for="search_type">{% trans "Listing Type"%}</label>
                 <select name="search_type" id="search_type" class="form-control">
-                    <option value="">All Types</option>
-        <option value="for_rent" {% if request.GET.search_type == "for_rent" %}selected{% endif %}>For Rent</option>
-        <option value="for_sale" {% if request.GET.search_type == "for_sale" %}selected{% endif %}>For Sale</option>
+                    <option value="">{% trans "All Types"%}</option>
+        <option value="for_rent" {% if request.GET.search_type == "for_rent" %}selected{% endif %}>{% trans "For Rent"%}</option>
+        <option value="for_sale" {% if request.GET.search_type == "for_sale" %}selected{% endif %}>{% trans "For Sale"%}</option>
     </select>
             </div>
 
             <div class="form-group">
-                <label for="q">Location</label>
+                <label for="q">{% trans "Location"%}</label>
                 <input type="text" name="q" id="q" class="form-control" placeholder="City, postal code..." value="{{ request.GET.q }}">
             </div>
 
             <div class="form-group">
-                <label>Price Range</label>
+                <label>{% trans "Price Range"%}</label>
                 <div class="range-inputs">
                     <input type="number" name="min_price" class="form-control" placeholder="Min" value="{{ request.GET.min_price }}">
                     <input type="number" name="max_price" class="form-control" placeholder="Max" value="{{ request.GET.max_price }}">
@@ -348,16 +349,16 @@
     </div>
 
             <div class="form-group">
-                <label for="property_type">Property Type</label>
+                <label for="property_type">{%trans "Property Type"%}</label>
                 <select name="property_type" id="property_type" class="form-control">
-                    <option value="">All Types</option>
-        <option value="residential" {% if request.GET.property_type == "residential" %}selected{% endif %}>Residential</option>
-        <option value="commercial" {% if request.GET.property_type == "commercial" %}selected{% endif %}>Commercial</option>
+                    <option value="">{% trans "All Type"%}</option>
+        <option value="residential" {% if request.GET.property_type == "residential" %}selected{% endif %}>{% trans "Residential"%}</option>
+        <option value="commercial" {% if request.GET.property_type == "commercial" %}selected{% endif %}>{% trans "Commercial" %}</option>
     </select>
             </div>
 
             <div class="form-group">
-                <label>Number of Rooms</label>
+                <label>{% trans "Number of Rooms"%}</label>
                 <div class="range-inputs">
                     <input type="number" name="min_rooms" class="form-control" placeholder="Min" value="{{ request.GET.min_rooms }}">
                     <input type="number" name="max_rooms" class="form-control" placeholder="Max" value="{{ request.GET.max_rooms }}">
@@ -365,7 +366,7 @@
             </div>
 
             <div class="form-group">
-                <label>Size (sq ft)</label>
+                <label>{% trans "Size (sq ft)"%}</label>
                 <div class="range-inputs">
                     <input type="number" name="min_size" class="form-control" placeholder="Min" value="{{ request.GET.min_size }}">
                     <input type="number" name="max_size" class="form-control" placeholder="Max" value="{{ request.GET.max_size }}">
@@ -373,7 +374,7 @@
             </div>
 
             <div id="duration-fields" class="form-group" style="display: {% if request.GET.search_type == 'for_rent' %}block{% else %}none{% endif %};">
-                <label>Duration (days)</label>
+                <label>{% trans "Duration (days)" %}</label>
                 <div class="range-inputs">
                     <input type="number" name="min_duration" class="form-control" placeholder="Min" value="{{ request.GET.min_duration }}">
                     <input type="number" name="max_duration" class="form-control" placeholder="Max" value="{{ request.GET.max_duration }}">
@@ -381,25 +382,25 @@
             </div>
 
             <div class="form-group">
-                <label for="sort_by">Sort By</label>
+                <label for="sort_by">{% trans "Sort By"%}</label>
                 <select name="sort_by" id="sort_by" class="form-control">
-                    <option value="">Default</option>
-        <option value="most_viewed" {% if request.GET.sort_by == "most_viewed" %}selected{% endif %}>Most Viewed</option>
-        <option value="most_commented" {% if request.GET.sort_by == "most_commented" %}selected{% endif %}>Most Commented</option>
-        <option value="most_liked" {% if request.GET.sort_by == "most_liked" %}selected{% endif %}>Most Liked</option>
+                    <option value="">{% trans "Default"%}</option>
+        <option value="most_viewed" {% if request.GET.sort_by == "most_viewed" %}selected{% endif %}>{% trans "Most Viewed"%}</option>
+        <option value="most_commented" {% if request.GET.sort_by == "most_commented" %}selected{% endif %}>{% trans "Most Commented"%}</option>
+        <option value="most_liked" {% if request.GET.sort_by == "most_liked" %}selected{% endif %}>{% trans "Most Liked"%}</option>
     </select>
             </div>
 
             <div class="form-group">
                 <div class="checkbox-group">
                     <input type="checkbox" name="is_verified" id="is_verified" value="1" {% if request.GET.is_verified %}checked{% endif %}>
-                    <label for="is_verified">Verified Properties Only</label>
+                    <label for="is_verified">{% trans "Verified Properties Only"%}</label>
                 </div>
             </div>
 
             <div class="form-group">
                 <button type="submit" class="search-button">
-                    <i class="fas fa-search"></i> Search Properties
+                    <i class="fas fa-search"></i> {% trans "Search Properties" %}
                 </button>
             </div>
 </form>
@@ -408,7 +409,7 @@
     <div class="results-container">
 {% if request.GET.q or request.GET.search_type or request.GET.min_price or request.GET.max_price or request.GET.property_type or request.GET.min_rooms or request.GET.max_rooms or request.GET.min_size or request.GET.max_size or request.GET.is_verified or request.GET.min_duration or request.GET.max_duration or request.GET.sort_by %}
     {% if filtered_properties %}
-                <div class="section-title">Search Results</div>
+                <div class="section-title">{% trans "Search Results"%}</div>
                 <div class="properties-grid">
                 {% for property in filtered_properties %}
                         <div class="property-card-modern" id="property-{{ property.property_id }}">
@@ -417,7 +418,7 @@
                                     {% if property.is_verified %}
                                     <div class="verification-badge-card">
                                         <i class="fas fa-check-circle"></i>
-                                        Verified
+                                        {% trans "Verified"%}
                                     </div>
                                     {% endif %}
                                     {% if property.image_paths %}
@@ -451,7 +452,7 @@
                                         <span class="stat"><i class="fas fa-comment"></i> {{ property.comment_count }}</span>
                                     </div>
                                     <a href="{% url 'property_detail_all' property.property_id %}" class="view-details-btn">
-                                        <i class="fas fa-info-circle"></i> View Details
+                                        <i class="fas fa-info-circle"></i> {% trans "View Details" %}
                                     </a>
                                 </div>
                             </div>
@@ -460,15 +461,15 @@
                 </div>
             {% else %}
                 <div class="empty-state">
-                    <p>No properties found matching your search criteria. Try adjusting your filters.</p>
+                    <p>{% trans "No properties found matching your search criteria. Try adjusting your filters."%}</p>
                 </div>
             {% endif %}
         {% endif %}
 
         <!-- Popular Sections -->
         <div class="section-title">
-            Properties For Sale
-            <a href="{% url 'properties_for_sale' %}" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+            {% trans "Properties For Sale" %}
+            <a href="{% url 'properties_for_sale' %}" class="view-all">{% trans "View All"%} <i class="fas fa-arrow-right"></i></a>
         </div>
         <div class="properties-grid">
             {% for property in for_sale_properties|slice:":3" %}
@@ -478,7 +479,7 @@
                             {% if property.is_verified %}
                             <div class="verification-badge-card">
                                 <i class="fas fa-check-circle"></i>
-                                Verified
+                                {% trans "Verified" %}
 </div>
 {% endif %}
                             {% if property.image_paths %}
@@ -505,21 +506,21 @@
                                 <span class="stat"><i class="fas fa-comment"></i> {{ property.comment_count }}</span>
                             </div>
                             <a href="{% url 'property_detail_all' property.property_id %}" class="view-details-btn">
-                                <i class="fas fa-info-circle"></i> View Details
+                                <i class="fas fa-info-circle"></i> {% trans "View Details" %}
                     </a>
                         </div>
                     </div>
                 </div>
             {% empty %}
                 <div class="empty-state">
-                    <p>No properties for sale found.</p>
+                    <p>{% trans "No properties for sale found."%}</p>
                 </div>
             {% endfor %}
     </div>
 
         <div class="section-title">
-            Properties For Rent
-            <a href="{% url 'properties_for_rent' %}" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+            {% trans "Properties For Rent" %}
+            <a href="{% url 'properties_for_rent' %}" class="view-all">{% trans "View All" %} <i class="fas fa-arrow-right"></i></a>
         </div>
         <div class="properties-grid">
             {% for property in for_rent_properties|slice:":3" %}
@@ -529,7 +530,7 @@
                             {% if property.is_verified %}
                             <div class="verification-badge-card">
                                 <i class="fas fa-check-circle"></i>
-                                Verified
+                                {% trans "Verified"%}
                             </div>
                             {% endif %}
                             {% if property.image_paths %}
@@ -557,21 +558,21 @@
                                 <span class="stat"><i class="fas fa-comment"></i> {{ property.comment_count }}</span>
                             </div>
                             <a href="{% url 'property_detail_all' property.property_id %}" class="view-details-btn">
-                                <i class="fas fa-info-circle"></i> View Details
+                                <i class="fas fa-info-circle"></i> {% trans "View Details" %}
                     </a>
                         </div>
                     </div>
                 </div>
             {% empty %}
                 <div class="empty-state">
-                    <p>No properties for rent found.</p>
+                    <p>{% trans "No properties for rent found."%}</p>
                 </div>
             {% endfor %}
     </div>
 
         <div class="section-title">
-            Recommended Properties
-            <a href="{% url 'properties_recommended' %}" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+            {% trans "Recommended Properties" %}
+            <a href="{% url 'properties_recommended' %}" class="view-all">{% trans "View All"%} <i class="fas fa-arrow-right"></i></a>
         </div>
         <div class="properties-grid">
             {% for property in recommended_properties|slice:":3" %}
@@ -581,7 +582,7 @@
                             {% if property.is_verified %}
                             <div class="verification-badge-card">
                                 <i class="fas fa-check-circle"></i>
-                                Verified
+                                {% trans "Verified"%}
                             </div>
                             {% endif %}
                             {% if property.image_paths %}
@@ -611,14 +612,14 @@
                                 <span class="stat"><i class="fas fa-comment"></i> {{ property.comment_count }}</span>
                             </div>
                             <a href="{% url 'property_detail_all' property.property_id %}" class="view-details-btn">
-                                <i class="fas fa-info-circle"></i> View Details
+                                <i class="fas fa-info-circle"></i> {% trans "View Details"%}
                     </a>
                         </div>
                     </div>
                 </div>
             {% empty %}
                 <div class="empty-state">
-                    <p>No recommended properties found.</p>
+                    <p>{% trans "No recommended properties found."%}</p>
                 </div>
             {% endfor %}
         </div>

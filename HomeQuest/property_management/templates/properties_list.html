@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load i18n %}
 {% load static %}
 
 <style>
@@ -279,7 +280,7 @@
                                     <span class="stat"><i class="fas fa-comment"></i> {{ property.comment_count }}</span>
                                 </div>
                                 <a href="{% url 'property_detail_all' property.property_id %}" class="view-details-btn">
-                                    <i class="fas fa-info-circle"></i> View Details
+                                    <i class="fas fa-info-circle"></i> {% trans "View Details"%}
                                 </a>
                             </div>
                         </div>
@@ -290,19 +291,19 @@
             <div class="pagination">
                 {% if page_obj.has_previous %}
                     <a href="?page={{ page_obj.previous_page_number }}" class="prev-page">
-                        <i class="fas fa-chevron-left"></i> Previous
+                        <i class="fas fa-chevron-left"></i> {% trans "Previous"%}
                     </a>
                 {% endif %}
-                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                <span>{% trans "Page"%} {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
                 {% if page_obj.has_next %}
                     <a href="?page={{ page_obj.next_page_number }}" class="next-page">
-                        Next <i class="fas fa-chevron-right"></i>
+                        {% trans "Next"%} <i class="fas fa-chevron-right"></i>
                     </a>
                 {% endif %}
             </div>
         {% else %}
             <div class="empty-state">
-                <p>No properties found in this category.</p>
+                <p>{% trans "No properties found in this category."%}</p>
             </div>
         {% endif %}
     </div>

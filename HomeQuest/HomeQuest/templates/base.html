@@ -145,9 +145,10 @@
         }
 
         .notification-icon {
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
             transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 4px;
         }
 
         .notification-trigger:hover .notification-icon {
@@ -156,16 +157,16 @@
 
         .notification-badge {
             position: absolute;
-            top: -2px;
-            right: -2px;
+            top: -4px;
+            right: -4px;
             background: #FF4B4B;
             color: white;
             border-radius: 30px;
             padding: 2px 6px;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 600;
-            min-width: 18px;
-            height: 18px;
+            min-width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -450,6 +451,99 @@
         .blurred {
             filter: blur(8px);
         }
+
+        /* Language Selector Styles */
+        .language-menu {
+            position: relative;
+            display: inline-block;
+            margin-right: 1.5rem;
+        }
+
+        .language-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .language-button:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .current-language {
+            font-weight: 600;
+        }
+
+        .language-menu .dropdown {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            min-width: 150px;
+            background: white;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            z-index: 1000;
+        }
+
+        .language-menu .dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .language-menu .dropdown button {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: none;
+            background: none;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .language-menu .dropdown button:hover {
+            background-color: var(--bg-light);
+            color: var(--primary-color);
+        }
+
+        .language-menu .dropdown button.active {
+            background-color: rgba(64, 112, 244, 0.1);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .lang-flag {
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .language-menu {
+                margin-right: 1rem;
+            }
+
+            .language-button {
+                padding: 0.4rem 0.8rem;
+            }
+        }
     </style>
     <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
 </head>
@@ -483,7 +577,7 @@
                         {% endif %}
                         <div class="dropdown">
                             <div class="notification-header">
-                                <h3><i class="fas fa-bell"></i> Notifications</h3>
+                                <h3><i class="fas fa-bell"></i> {% trans "Notifications" %}</h3>
                                 {% if unread_notifications_count > 0 %}
                                     <span class="notification-count">{{ unread_notifications_count }} {% trans "new" %}</span>
                                 {% endif %}
@@ -523,9 +617,9 @@
                 {% endif %}
                 
                 <div class="language-menu">
-                    <button class="language-button" onclick="toggleDropdown(event)" aria-label="Change language">
+                    <button class="language-button" onclick="toggleLanguageDropdown(event)" aria-label="Change language">
                         <span class="current-language">{% if LANGUAGE_CODE == 'de' %}DE{% else %}EN{% endif %}</span>
-                        <i class="fas fa-globe"></i>
+                        <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="dropdown">
                         <button onclick="changeLanguage('en')" {% if LANGUAGE_CODE == 'en' %}class="active"{% endif %}>
@@ -581,14 +675,16 @@
         }
 
         document.addEventListener('click', function(event) {
-            if (!event.target.closest('.notification-menu') && !event.target.closest('.profile-menu')) {
+            if (!event.target.closest('.notification-menu') && !event.target.closest('.profile-menu') && !event.target.closest('.language-menu')) {
                 closeAllDropdowns();
             }
         });
 
         function closeAllDropdowns() {
             const dropdowns = document.querySelectorAll('.dropdown');
+            const icons = document.querySelectorAll('.language-button .fas');
             dropdowns.forEach(dropdown => dropdown.classList.remove('show'));
+            icons.forEach(icon => icon.style.transform = 'rotate(0)');
         }
 
         function markNotificationAsRead(event, notificationId) {
@@ -635,18 +731,40 @@
             })
             .catch(error => console.error('Error:', error));
         }
+
+        function toggleLanguageDropdown(event) {
+            event.stopPropagation();
+            const dropdown = event.target.closest('.language-menu').querySelector('.dropdown');
+            const button = event.target.closest('.language-button');
+            const icon = button.querySelector('.fas');
+            
+            // Close other dropdowns
+            closeAllDropdowns();
+            
+            // Toggle this dropdown
+            dropdown.classList.toggle('show');
+            
+            // Rotate icon
+            if (dropdown.classList.contains('show')) {
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                icon.style.transform = 'rotate(0)';
+            }
+        }
+
         function changeLanguage(lang) {
-            // Set the language cookie
             document.cookie = "django_language=" + lang + "; path=/; max-age=31536000";
-            
-            // Update session storage (optional)
             sessionStorage.setItem('django_language', lang);
-            
-            // Refresh the page to apply the new language
             window.location.reload();
         }
 
-
+        // Add transition for icon rotation
+        document.addEventListener('DOMContentLoaded', function() {
+            const icons = document.querySelectorAll('.language-button .fas');
+            icons.forEach(icon => {
+                icon.style.transition = 'transform 0.2s ease';
+            });
+        });
     </script>
     {% csrf_token %}
 </body>

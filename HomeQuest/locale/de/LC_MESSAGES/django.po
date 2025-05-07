@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-05 13:54+0200\n"
+"POT-Creation-Date: 2025-05-06 22:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,133 +18,167 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\myapp\templates\base.html:463
+#: HomeQuest/HomeQuest/templates/base.html:557
 msgid "Home"
 msgstr "Startseite"
 
-
+#: HomeQuest/HomeQuest/templates/base.html:558
+#: HomeQuest/property_management/templates/property_search.html:4
+#: HomeQuest/property_management/templates/property_search.html:403
 msgid "Search Properties"
 msgstr "Suchen Sie nach Eigenschaften"
 
-#: .\myapp\templates\base.html:466
+#: HomeQuest/HomeQuest/templates/base.html:560
+#: HomeQuest/authentication/templates/login_email.html:198
+#: HomeQuest/authentication/templates/login_email_phone.html:140
+#: HomeQuest/authentication/templates/login_phone.html:198
 msgid "Register"
 msgstr "Registrieren"
 
-#: .\myapp\templates\base.html:467
+#: HomeQuest/HomeQuest/templates/base.html:561
 msgid "Login"
 msgstr "Anmelden"
 
-
+#: HomeQuest/HomeQuest/templates/base.html:564
 msgid "Manage Properties"
 msgstr "Eigenschaften verwalten"
 
-#: .\myapp\templates\base.html:488
+#: HomeQuest/HomeQuest/templates/base.html:580
+#: HomeQuest/notification_system/templates/notifications.html:4
+#: HomeQuest/notification_system/templates/notifications.html:115
+msgid "Notifications"
+msgstr "Benachrichtigungen"
+
+#: HomeQuest/HomeQuest/templates/base.html:582
 msgid "new"
 msgstr "neu"
 
-#: .\myapp\templates\base.html:513
+#: HomeQuest/HomeQuest/templates/base.html:607
+#: HomeQuest/notification_system/templates/notifications.html:136
 msgid "No notifications yet"
 msgstr "Noch keine Benachrichtigungen"
 
+#: HomeQuest/HomeQuest/templates/base.html:613
+#, fuzzy
+#| msgid "No notifications yet"
+msgid "See all notifications"
+msgstr "Noch keine Benachrichtigungen"
 
+#: HomeQuest/HomeQuest/templates/base.html:644
 msgid "View Profile"
 msgstr "Profil anzeigen"
 
-#: .\myapp\templates\base.html:551
+#: HomeQuest/HomeQuest/templates/base.html:645
 msgid "Edit Profile"
 msgstr "Profil bearbeiten"
 
-#: .\myapp\templates\base.html:553
+#: HomeQuest/HomeQuest/templates/base.html:647
 msgid "Manage Subscription"
 msgstr "Abonnement verwalten"
 
-#: .\myapp\templates\base.html:555
+#: HomeQuest/HomeQuest/templates/base.html:649
 msgid "Logout"
 msgstr "Abmelden"
 
-#: .\myapp\templates\base.html:560
+#: HomeQuest/HomeQuest/templates/base.html:654
+#: HomeQuest/authentication/templates/login_email.html:184
+#: HomeQuest/authentication/templates/login_phone.html:184
 msgid "Sign In"
 msgstr "Anmelden"
 
-#: .\myapp\templates\base.html:562
+#: HomeQuest/HomeQuest/templates/base.html:656
+#: HomeQuest/authentication/templates/login_email.html:198
+#: HomeQuest/authentication/templates/login_email_phone.html:140
+#: HomeQuest/authentication/templates/login_phone.html:198
 msgid "Don't have an account?"
 msgstr "Sie haben noch kein Konto?"
 
-#: .\myapp\templates\base.html:562
+#: HomeQuest/HomeQuest/templates/base.html:656
 msgid "Register now"
 msgstr "Registrieren Sie sich jetzt"
 
-#: .\myapp\templates\home.html:625
+#: HomeQuest/HomeQuest/templates/home.html:625
 msgid "Welcome to HomeQuest"
 msgstr "Willkommen bei HomeQuest"
 
-#: .\myapp\templates\home.html:626
+#: HomeQuest/HomeQuest/templates/home.html:626
 msgid "Find Your Perfect Home"
 msgstr "Finden Sie Ihr perfektes Zuhause"
 
-#: .\myapp\templates\home.html:628
+#: HomeQuest/HomeQuest/templates/home.html:628
 msgid "Explore Properties"
 msgstr "Entdecken Sie Immobilien"
 
-#: .\myapp\templates\home.html:629
+#: HomeQuest/HomeQuest/templates/home.html:629
 msgid "Join HomeQuest"
 msgstr "Treten Sie HomeQuest bei"
 
-#: .\myapp\templates\home.html:633
+#: HomeQuest/HomeQuest/templates/home.html:633
 msgid "Modern apartment building"
 msgstr "Modernes Mehrfamilienhaus"
 
-#: .\myapp\templates\home.html:643
+#: HomeQuest/HomeQuest/templates/home.html:643
 msgid "Flexible Roles"
 msgstr "Flexible Rollen"
 
-#: .\myapp\templates\home.html:644
+#: HomeQuest/HomeQuest/templates/home.html:644
 msgid "Choose your path - buy your dream home or list properties for sale."
 msgstr ""
 "Wählen Sie Ihren Weg – kaufen Sie Ihr Traumhaus oder listen Sie Immobilien "
 "zum Verkauf auf."
 
-#: .\myapp\templates\home.html:650
+#: HomeQuest/HomeQuest/templates/home.html:650
 msgid "Verified Accounts"
 msgstr "Verifizierte Konten"
 
-#: .\myapp\templates\home.html:651
+#: HomeQuest/HomeQuest/templates/home.html:651
 msgid "Secure and verified profiles for both buyers and sellers."
 msgstr "Sichere und verifizierte Profile für Käufer und Verkäufer."
 
-#: .\myapp\templates\home.html:657
+#: HomeQuest/HomeQuest/templates/home.html:657
 msgid "Powerful Tools"
 msgstr "Leistungsstarke Werkzeuge"
 
-#: .\myapp\templates\home.html:658
+#: HomeQuest/HomeQuest/templates/home.html:658
 msgid "Access specialized features based on your account type."
 msgstr "Greifen Sie basierend auf Ihrem Kontotyp auf spezielle Funktionen zu."
 
-#: .\myapp\templates\home.html:664
+#: HomeQuest/HomeQuest/templates/home.html:664
+#: HomeQuest/property_management/templates/property_search.html:574
+#: HomeQuest/property_management/views.py:283
 msgid "Recommended Properties"
 msgstr "Empfohlene Eigenschaften"
 
-#: .\myapp\templates\home.html:666
+#: HomeQuest/HomeQuest/templates/home.html:666
+#: HomeQuest/property_management/templates/property_search.html:472
+#: HomeQuest/property_management/templates/property_search.html:523
+#: HomeQuest/property_management/templates/property_search.html:575
 msgid "View All"
 msgstr "Alle anzeigen"
 
-#: .\myapp\templates\home.html:677
+#: HomeQuest/HomeQuest/templates/home.html:677
+#: HomeQuest/property_management/templates/property_detail.html:575
+#: HomeQuest/property_management/templates/property_search.html:421
+#: HomeQuest/property_management/templates/property_search.html:482
+#: HomeQuest/property_management/templates/property_search.html:533
+#: HomeQuest/property_management/templates/property_search.html:585
 msgid "Verified"
 msgstr "Verifiziert"
 
-#: .\myapp\templates\home.html:737
+#: HomeQuest/HomeQuest/templates/home.html:737
 msgid "View"
 msgstr "Sicht"
 
-#: .\myapp\templates\home.html:742
+#: HomeQuest/HomeQuest/templates/home.html:742
+#: HomeQuest/property_management/templates/property_search.html:622
 msgid "No recommended properties found."
 msgstr "Keine empfohlenen Eigenschaften gefunden."
 
-#: .\myapp\templates\home.html:749
+#: HomeQuest/HomeQuest/templates/home.html:749
 msgid "Ready to Start Your Journey?"
 msgstr "Bereit, Ihre Reise zu beginnen?"
 
-#: .\myapp\templates\home.html:750
+#: HomeQuest/HomeQuest/templates/home.html:750
 msgid ""
 "Join thousands of satisfied customers who found their dream home with "
 "HomeQuest."
@@ -152,6 +186,1939 @@ msgstr ""
 "Schließen Sie sich Tausenden zufriedenen Kunden an, die mit HomeQuest ihr "
 "Traumhaus gefunden haben."
 
-#: .\myapp\templates\home.html:751
+#: HomeQuest/HomeQuest/templates/home.html:751
 msgid "Get Started"
 msgstr "Legen Sie los"
+
+#: HomeQuest/authentication/templates/2fa.html:4
+msgid "Verification Required - HomeQuest"
+msgstr "Verifizierung erforderlich - HomeQuest"
+
+#: HomeQuest/authentication/templates/2fa.html:179
+msgid "Verification Required"
+msgstr "Verifizierung erforderlich"
+
+#: HomeQuest/authentication/templates/2fa.html:182
+msgid "We've sent a verification code to"
+msgstr "Wir haben einen Bestätigungscode gesendet an"
+
+#: HomeQuest/authentication/templates/2fa.html:182
+msgid "Please enter it below to update your email."
+msgstr "Bitte geben Sie es unten ein, um Ihre E-Mail zu aktualisieren."
+
+#: HomeQuest/authentication/templates/2fa.html:184
+msgid "We've sent a verification code to your email."
+msgstr "Wir haben einen Bestätigungscode gesendet an"
+
+#: HomeQuest/authentication/templates/2fa.html:184
+msgid "Please enter it below to complete login."
+msgstr "Bitte geben Sie es unten ein, um die Anmeldung abzuschließen."
+
+#: HomeQuest/authentication/templates/2fa.html:190
+msgid "Verification Code"
+msgstr "Bestätigungscode"
+
+#: HomeQuest/authentication/templates/2fa.html:195
+msgid "Verify Code"
+msgstr "Code überprüfen"
+
+#: HomeQuest/authentication/templates/2fa.html:200
+#: HomeQuest/property_management/templates/property_create.html:231
+#: HomeQuest/property_management/templates/property_delete.html:11
+#: HomeQuest/property_management/templates/property_edit.html:178
+#: HomeQuest/user_management/templates/edit_profile.html:185
+msgid "Cancel"
+msgstr "Stornieren"
+
+#: HomeQuest/authentication/templates/login_email.html:3
+msgid "Login with Email - HomeQuest"
+msgstr "Melden mit Email - HomeQuest"
+
+#: HomeQuest/authentication/templates/login_email.html:171
+#: HomeQuest/authentication/templates/login_email_phone.html:128
+msgid "Login with Email"
+msgstr "Melden Sie sich mit E-Mail an"
+
+#: HomeQuest/authentication/templates/login_email.html:172
+msgid "Enter your email and password to sign in"
+msgstr "Geben Sie Ihre E-Mail-Adresse und Ihr Passwort ein, um sich anzumelden"
+
+#: HomeQuest/authentication/templates/login_email.html:181
+#: HomeQuest/authentication/templates/login_phone.html:181
+#: HomeQuest/user_management/templates/edit_profile.html:167
+#: HomeQuest/user_management/templates/register.html:323
+msgid "Password"
+msgstr "Passwort"
+
+#: HomeQuest/authentication/templates/login_email.html:203
+#: HomeQuest/authentication/templates/login_phone.html:203
+msgid "Back to Login Options"
+msgstr "Zurück zur  Melden Liste"
+
+#: HomeQuest/authentication/templates/login_email_phone.html:3
+msgid "Login - HomeQuest"
+msgstr "Login - HomeQuest"
+
+#: HomeQuest/authentication/templates/login_email_phone.html:121
+msgid "Sign In to HomeQuest"
+msgstr "Melden Sie sich bei HomeQuest an"
+
+#: HomeQuest/authentication/templates/login_email_phone.html:122
+msgid "Choose your preferred login method"
+msgstr "Wählen Sie Ihre bevorzugte Anmeldemethode"
+
+#: HomeQuest/authentication/templates/login_email_phone.html:134
+#: HomeQuest/authentication/templates/login_phone.html:171
+msgid "Login with Phone"
+msgstr "Melden Sie sich mit Handy an"
+
+#: HomeQuest/authentication/templates/login_phone.html:3
+msgid "Login with Phone - HomeQuest"
+msgstr "Melden mit Handy - HomeQuest"
+
+#: HomeQuest/authentication/templates/login_phone.html:172
+msgid "Enter your phone number and password to sign in"
+msgstr "Geben Sie Ihre Telefonnummer und Ihr Passwort ein, um sich anzumelden"
+
+#: HomeQuest/authentication/templates/login_phone.html:177
+#: HomeQuest/user_management/templates/edit_profile.html:153
+#: HomeQuest/user_management/templates/profile.html:161
+#: HomeQuest/user_management/templates/register.html:343
+msgid "Phone Number"
+msgstr "Telefonnummer"
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:4
+#: HomeQuest/payment/templates/buy_gold_subscription.html:4
+msgid "Buy Gold Subscription - HomeQuest"
+msgstr "Gold-Abonnement kaufen - HomeQuest"
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:134
+#: HomeQuest/payment/templates/buy_gold_subscription.html:134
+#: HomeQuest/property_management/templates/property_create.html:209
+msgid "Upgrade to Gold"
+msgstr "Upgrade auf Gold"
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:135
+#: HomeQuest/payment/templates/buy_gold_subscription.html:135
+msgid ""
+"Choose your plan and payment method to unlock unlimited property listings "
+"and premium features"
+msgstr ""
+"Wählen Sie Ihren Tarif und Ihre Zahlungsmethode, um unbegrenzte "
+"Immobilienangebote und Premium-Funktionen freizuschalten."
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:142
+#: HomeQuest/payment/templates/buy_gold_subscription.html:142
+msgid "Select Your Plan"
+msgstr "Wählen Sie Ihren Plan aus"
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:147
+#: HomeQuest/payment/templates/buy_gold_subscription.html:147
+msgid "Payment Method"
+msgstr "Zahlungsmethode"
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:152
+#: HomeQuest/payment/templates/buy_gold_subscription.html:152
+msgid "Credit Card Details"
+msgstr "Details zur Credit Karte"
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:155
+#: HomeQuest/payment/templates/buy_gold_subscription.html:155
+msgid "Card Number"
+msgstr "Kartenummer"
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:159
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:181
+#: HomeQuest/payment/templates/buy_gold_subscription.html:159
+#: HomeQuest/payment/templates/buy_gold_subscription.html:181
+#: HomeQuest/user_management/templates/edit_profile.html:141
+#: HomeQuest/user_management/templates/profile.html:157
+#: HomeQuest/user_management/templates/register.html:335
+msgid "Full Name"
+msgstr "Vollständiger Name"
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:163
+#: HomeQuest/payment/templates/buy_gold_subscription.html:163
+msgid "Expiration Date"
+msgstr "Verfallsdatum"
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:167
+#: HomeQuest/payment/templates/buy_gold_subscription.html:167
+msgid "CVV"
+msgstr "CCV"
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:174
+#: HomeQuest/payment/templates/buy_gold_subscription.html:174
+msgid "Bank Transfer Details"
+msgstr "Banküberweisungsdetails"
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:177
+#: HomeQuest/payment/templates/buy_gold_subscription.html:177
+msgid "IBAN"
+msgstr "IBAN"
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:185
+#: HomeQuest/payment/templates/buy_gold_subscription.html:185
+msgid "Bank Name"
+msgstr "Bank Namen"
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:189
+#: HomeQuest/payment/templates/buy_gold_subscription.html:189
+msgid "BIC"
+msgstr "BIC"
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:196
+#: HomeQuest/payment/templates/buy_gold_subscription.html:196
+msgid "PayPal Details"
+msgstr "Details zur Paypal"
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:199
+#: HomeQuest/payment/templates/buy_gold_subscription.html:199
+msgid "PayPal Email"
+msgstr "Paypal Email"
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:203
+#: HomeQuest/payment/templates/buy_gold_subscription.html:203
+msgid "PayPal Password"
+msgstr "Paypal Passwort"
+
+#: HomeQuest/notification_system/templates/buy_gold_subscription.html:209
+#: HomeQuest/payment/templates/buy_gold_subscription.html:209
+msgid "Pay and Activate Subscription"
+msgstr "Bezahlen und aktivieren Sie das Abonnement"
+
+#: HomeQuest/notification_system/templates/notifications.html:129
+msgid "Mark as read"
+msgstr "Als gelesen markieren"
+
+#: HomeQuest/property_management/forms.py:19
+#: HomeQuest/property_management/templates/property_detail.html:479
+#: HomeQuest/property_management/templates/property_detail_all.html:621
+#: HomeQuest/property_management/templates/property_search.html:339
+msgid "Location"
+msgstr "Standort"
+
+#: HomeQuest/property_management/forms.py:20
+#: HomeQuest/property_management/templates/property_detail.html:483
+#: HomeQuest/property_management/templates/property_detail_all.html:625
+msgid "Map Location"
+msgstr "Kartenstandort"
+
+#: HomeQuest/property_management/forms.py:21
+#: HomeQuest/property_management/templates/property_detail.html:487
+#: HomeQuest/property_management/templates/property_detail_all.html:629
+msgid "Price"
+msgstr "Preis"
+
+#: HomeQuest/property_management/forms.py:22
+#: HomeQuest/property_management/templates/property_detail.html:491
+#: HomeQuest/property_management/templates/property_detail_all.html:633
+msgid "Size"
+msgstr "Größe"
+
+#: HomeQuest/property_management/forms.py:23
+#: HomeQuest/property_management/templates/property_search.html:361
+msgid "Number of Rooms"
+msgstr "Anzahl der Zimmer"
+
+#: HomeQuest/property_management/forms.py:24
+#: HomeQuest/property_management/templates/property_detail.html:499
+#: HomeQuest/property_management/templates/property_detail_all.html:641
+#: HomeQuest/property_management/templates/property_search.html:352
+msgid "Property Type"
+msgstr "Immobilientyp"
+
+#: HomeQuest/property_management/forms.py:25
+#: HomeQuest/property_management/templates/property_detail.html:503
+#: HomeQuest/property_management/templates/property_detail_all.html:645
+#: HomeQuest/property_management/templates/property_search.html:330
+msgid "Listing Type"
+msgstr "Auflistungstyp"
+
+#: HomeQuest/property_management/forms.py:26
+#: HomeQuest/property_management/templates/property_detail.html:508
+#: HomeQuest/property_management/templates/property_detail_all.html:650
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1868
+msgid "Duration"
+msgstr "Dauer"
+
+#: HomeQuest/property_management/templates/properties_list.html:283
+#: HomeQuest/property_management/templates/property_list.html:357
+#: HomeQuest/property_management/templates/property_search.html:455
+#: HomeQuest/property_management/templates/property_search.html:509
+#: HomeQuest/property_management/templates/property_search.html:561
+#: HomeQuest/property_management/templates/property_search.html:615
+msgid "View Details"
+msgstr "Details anzeigen"
+
+#: HomeQuest/property_management/templates/properties_list.html:294
+msgid "Previous"
+msgstr "Vorherige"
+
+#: HomeQuest/property_management/templates/properties_list.html:297
+msgid "Page"
+msgstr "Seite"
+
+#: HomeQuest/property_management/templates/properties_list.html:300
+msgid "Next"
+msgstr "Nächste"
+
+#: HomeQuest/property_management/templates/properties_list.html:306
+msgid "No properties found in this category."
+msgstr "Keine Objekte in dieser Kategorie gefunden."
+
+#: HomeQuest/property_management/templates/property_create.html:198
+msgid "Property Limit"
+msgstr "Immobilien Limit"
+
+#: HomeQuest/property_management/templates/property_create.html:199
+msgid "Basic sellers can list a maximum of 2 properties"
+msgstr "Verkäufer mit einfacher Mitgliedschaft können maximal 2 Immobilien anbieten"
+
+#: HomeQuest/property_management/templates/property_create.html:202
+msgid "properties used"
+msgstr "Eigenschaften verwendet"
+
+#: HomeQuest/property_management/templates/property_create.html:208
+msgid "You've reached your limit."
+msgstr "Sie haben Ihr Limit erreicht."
+
+#: HomeQuest/property_management/templates/property_create.html:210
+msgid "for unlimited listings."
+msgstr "für unbegrenzte Einträge."
+
+#: HomeQuest/property_management/templates/property_create.html:217
+#: HomeQuest/property_management/templates/property_create.html:230
+msgid "Create Property"
+msgstr "Immobilie erstellen"
+
+#: HomeQuest/property_management/templates/property_delete.html:6
+#: HomeQuest/property_management/templates/property_detail.html:591
+msgid "Delete Property"
+msgstr "Eigenschaft löschen"
+
+#: HomeQuest/property_management/templates/property_delete.html:7
+msgid "Are you sure you want to delete?"
+msgstr "Möchten Sie wirklich löschen?"
+
+#: HomeQuest/property_management/templates/property_delete.html:10
+msgid "Yes, delete"
+msgstr "Ja, löschen"
+
+#: HomeQuest/property_management/templates/property_detail.html:432
+#: HomeQuest/property_management/templates/property_detail_all.html:567
+msgid "Property Details"
+msgstr "Details zur Immobilie"
+
+#: HomeQuest/property_management/templates/property_detail.html:466
+#: HomeQuest/property_management/templates/property_detail_all.html:608
+msgid "No additional images"
+msgstr "Keine zusätzlichen Bilder"
+
+#: HomeQuest/property_management/templates/property_detail.html:472
+#: HomeQuest/property_management/templates/property_detail_all.html:614
+msgid "No images available"
+msgstr "Keine Bilder verfügbar"
+
+#: HomeQuest/property_management/templates/property_detail.html:492
+#: HomeQuest/property_management/templates/property_detail_all.html:634
+msgid "sq ft"
+msgstr "qd"
+
+#: HomeQuest/property_management/templates/property_detail.html:495
+#: HomeQuest/property_management/templates/property_detail_all.html:637
+msgid "Rooms"
+msgstr "Zimmer"
+
+#: HomeQuest/property_management/templates/property_detail.html:504
+#: HomeQuest/property_management/templates/property_detail_all.html:646
+#: HomeQuest/property_management/templates/property_search.html:334
+msgid "For Sale"
+msgstr "Zu verkaufen"
+
+#: HomeQuest/property_management/templates/property_detail.html:504
+#: HomeQuest/property_management/templates/property_detail_all.html:646
+#: HomeQuest/property_management/templates/property_search.html:333
+msgid "For Rent"
+msgstr "Zu vermieten"
+
+#: HomeQuest/property_management/templates/property_detail.html:509
+#: HomeQuest/property_management/templates/property_detail_all.html:651
+msgid "days"
+msgstr "Tage"
+
+#: HomeQuest/property_management/templates/property_detail.html:516
+msgid "Comment"
+msgstr "Kommentar"
+
+#: HomeQuest/property_management/templates/property_detail.html:548
+#: HomeQuest/property_management/templates/property_detail_all.html:704
+msgid "No comments yet"
+msgstr "Noch keine Kommentare"
+
+#: HomeQuest/property_management/templates/property_detail.html:558
+#: HomeQuest/property_management/templates/property_detail_all.html:714
+msgid "Views"
+msgstr "Ansichten"
+
+#: HomeQuest/property_management/templates/property_detail.html:562
+#: HomeQuest/property_management/templates/property_detail_all.html:718
+msgid "Likes"
+msgstr "Gefällt"
+
+#: HomeQuest/property_management/templates/property_detail.html:566
+#: HomeQuest/property_management/templates/property_detail_all.html:658
+#: HomeQuest/property_management/templates/property_detail_all.html:722
+msgid "Comments"
+msgstr "Kommentare"
+
+#: HomeQuest/property_management/templates/property_detail.html:572
+msgid "Verification Status"
+msgstr "Verifizierte Status"
+
+#: HomeQuest/property_management/templates/property_detail.html:577
+msgid "Not Verified"
+msgstr "Nicht Verifiziert"
+
+#: HomeQuest/property_management/templates/property_detail.html:585
+#: HomeQuest/property_management/templates/property_edit.html:4
+#: HomeQuest/property_management/templates/property_edit.html:138
+msgid "Edit Property"
+msgstr "Eigenschaft bearbeiten"
+
+#: HomeQuest/property_management/templates/property_detail.html:588
+msgid "Verify Property"
+msgstr "Eigenschaft überprüfen"
+
+#: HomeQuest/property_management/templates/property_detail.html:594
+msgid "Back to List"
+msgstr "Zurück zur Liste"
+
+#: HomeQuest/property_management/templates/property_detail_all.html:571
+msgid "Verified Property"
+msgstr "Verifiziertes Eigentum"
+
+#: HomeQuest/property_management/templates/property_detail_all.html:666
+msgid "Post Comment"
+msgstr "Kommentar posten"
+
+#: HomeQuest/property_management/templates/property_detail_all.html:670
+msgid "Please"
+msgstr "Bitte"
+
+#: HomeQuest/property_management/templates/property_detail_all.html:670
+msgid "Log in"
+msgstr "Log in"
+
+#: HomeQuest/property_management/templates/property_detail_all.html:670
+msgid "to leave a comment."
+msgstr "um einen Kommentar zu hinterlassen."
+
+#: HomeQuest/property_management/templates/property_detail_all.html:732
+msgid "Unlike"
+msgstr "Im Gegensatz zu"
+
+#: HomeQuest/property_management/templates/property_detail_all.html:732
+#, fuzzy
+#| msgid "Likes"
+msgid "Like"
+msgstr "Gefällt"
+
+#: HomeQuest/property_management/templates/property_detail_all.html:739
+msgid "Back to Search"
+msgstr "Zurück zur Suche"
+
+#: HomeQuest/property_management/templates/property_edit.html:152
+msgid "Current Images"
+msgstr "Aktuelle Bilder"
+
+#: HomeQuest/property_management/templates/property_edit.html:159
+#: venv/lib/python3.13/site-packages/django/forms/formsets.py:499
+msgid "Delete"
+msgstr "Löschen"
+
+#: HomeQuest/property_management/templates/property_edit.html:161
+msgid "Replace"
+msgstr "Ersetzen"
+
+#: HomeQuest/property_management/templates/property_edit.html:165
+msgid "No image available"
+msgstr "Keine Bilder verfügbar"
+
+#: HomeQuest/property_management/templates/property_edit.html:170
+msgid "Add New Image"
+msgstr "Neues Bild hinzufügen"
+
+#: HomeQuest/property_management/templates/property_edit.html:173
+msgid "Add Image"
+msgstr "Bild hinzufügen"
+
+#: HomeQuest/property_management/templates/property_edit.html:177
+#: HomeQuest/user_management/templates/edit_profile.html:184
+msgid "Save Changes"
+msgstr "Änderungen speichern"
+
+#: HomeQuest/property_management/templates/property_list.html:287
+msgid "My Properties"
+msgstr "Eigenschaften verwalten"
+
+#: HomeQuest/property_management/templates/property_list.html:290
+msgid "Add Property"
+msgstr "Eigenschaft hinzufügen"
+
+#: HomeQuest/property_management/templates/property_list.html:376
+msgid "No properties found. Add your first property to get started!"
+msgstr ""
+"Keine Objekte gefunden. Fügen Sie Ihr erstes Objekt hinzu, um zu beginnen!"
+
+#: HomeQuest/property_management/templates/property_search.html:324
+msgid "Find Your Perfect Property"
+msgstr "Finden Sie Ihr perfektes Zuhause"
+
+#: HomeQuest/property_management/templates/property_search.html:325
+msgid "Use the filters below to find properties that match your criteria"
+msgstr ""
+"Verwenden Sie die Filter unten, um Immobilien zu finden, die Ihren Kriterien "
+"entsprechen"
+
+#: HomeQuest/property_management/templates/property_search.html:332
+msgid "All Types"
+msgstr "Alle Typen"
+
+#: HomeQuest/property_management/templates/property_search.html:344
+msgid "Price Range"
+msgstr "Preisklasse"
+
+#: HomeQuest/property_management/templates/property_search.html:354
+msgid "All Type"
+msgstr "Alle Typen"
+
+#: HomeQuest/property_management/templates/property_search.html:355
+msgid "Residential"
+msgstr "Wohnen"
+
+#: HomeQuest/property_management/templates/property_search.html:356
+msgid "Commercial"
+msgstr "Kommerziell"
+
+#: HomeQuest/property_management/templates/property_search.html:369
+msgid "Size (sq ft)"
+msgstr "Größe (qd)"
+
+#: HomeQuest/property_management/templates/property_search.html:377
+msgid "Duration (days)"
+msgstr "Dauer (tage)"
+
+#: HomeQuest/property_management/templates/property_search.html:385
+msgid "Sort By"
+msgstr "Sortieren nach"
+
+#: HomeQuest/property_management/templates/property_search.html:387
+msgid "Default"
+msgstr "Standard"
+
+#: HomeQuest/property_management/templates/property_search.html:388
+msgid "Most Viewed"
+msgstr "Meist gesehen"
+
+#: HomeQuest/property_management/templates/property_search.html:389
+msgid "Most Commented"
+msgstr "Am häufigsten kommentiert"
+
+#: HomeQuest/property_management/templates/property_search.html:390
+msgid "Most Liked"
+msgstr "Am meisten gefallen"
+
+#: HomeQuest/property_management/templates/property_search.html:397
+msgid "Verified Properties Only"
+msgstr "Nur verifizierte Eigenschaften"
+
+#: HomeQuest/property_management/templates/property_search.html:412
+msgid "Search Results"
+msgstr "Suchergebnisse"
+
+#: HomeQuest/property_management/templates/property_search.html:464
+msgid ""
+"No properties found matching your search criteria. Try adjusting your "
+"filters."
+msgstr ""
+"Es wurden keine Objekte gefunden, die Ihren Suchkriterien entsprechen. "
+"Versuchen Sie, Ihre Filter anzupassen."
+
+#: HomeQuest/property_management/templates/property_search.html:471
+#: HomeQuest/property_management/views.py:263
+msgid "Properties For Sale"
+msgstr "Immobilien zum Verkauf"
+
+#: HomeQuest/property_management/templates/property_search.html:516
+msgid "No properties for sale found."
+msgstr "Keine Immobilien zum Verkauf gefunden."
+
+#: HomeQuest/property_management/templates/property_search.html:522
+#: HomeQuest/property_management/views.py:273
+msgid "Properties For Rent"
+msgstr "Immobilien zur Miete"
+
+#: HomeQuest/property_management/templates/property_search.html:568
+msgid "No properties for rent found."
+msgstr "Keine Mietobjekte gefunden."
+
+#: HomeQuest/property_management/templates/property_verify.html:5
+msgid "Verify Property - HomeQuest"
+msgstr "Eigenschaft überprüfen - HomeQuest"
+
+#: HomeQuest/property_management/templates/property_verify.html:207
+msgid "Verify Your Property"
+msgstr "Überprüfen Sie Ihr Eigentum"
+
+#: HomeQuest/property_management/templates/property_verify.html:208
+msgid "Upload verification documents for"
+msgstr "Laden Sie Verifizierungsdokumente hoch für"
+
+#: HomeQuest/property_management/templates/property_verify.html:217
+msgid "Click to upload or drag and drop"
+msgstr "Zum Hochladen klicken oder per Drag & Drop verschieben"
+
+#: HomeQuest/property_management/templates/property_verify.html:219
+msgid "Supported formats: PDF, JPG, PNG"
+msgstr "Unterstützte Formate: PDF, JPG, PNG"
+
+#: HomeQuest/property_management/templates/property_verify.html:224
+msgid "Upload Document"
+msgstr "Dokument hochladen"
+
+#: HomeQuest/property_management/templates/property_verify.html:247
+msgid "No verification files uploaded yet."
+msgstr "Es wurden noch keine Verifizierungsdateien hochgeladen."
+
+#: HomeQuest/property_management/templates/property_verify.html:254
+msgid "Back to Properties"
+msgstr "Zurück zu Eigenschaften"
+
+#: HomeQuest/user_management/templates/edit_profile.html:137
+msgid "Edit Your Profile"
+msgstr "Deine Profil bearbeiten"
+
+#: HomeQuest/user_management/templates/edit_profile.html:145
+#: HomeQuest/user_management/templates/register.html:319
+msgid "Email"
+msgstr "Email"
+
+#: HomeQuest/user_management/templates/edit_profile.html:149
+#: HomeQuest/user_management/templates/profile.html:165
+#: HomeQuest/user_management/templates/register.html:339
+msgid "Date of Birth"
+msgstr "Geburtsdatum"
+
+#: HomeQuest/user_management/templates/edit_profile.html:157
+#: HomeQuest/user_management/templates/register.html:348
+msgid "Profile Photo"
+msgstr "Profilfoto"
+
+#: HomeQuest/user_management/templates/edit_profile.html:163
+#: HomeQuest/user_management/templates/register.html:356
+msgid "Blur my profile photo"
+msgstr "Mein Profilfoto verwischen"
+
+#: HomeQuest/user_management/templates/profile.html:136
+msgid "Profile Information"
+msgstr "Profil Informatzion"
+
+#: HomeQuest/user_management/templates/profile.html:138
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: HomeQuest/user_management/templates/register.html:310
+msgid "Create Your Account"
+msgstr "Erstellen Sie Ihr Konto"
+
+#: HomeQuest/user_management/templates/register.html:311
+msgid "Join HomeQuest to find your perfect home"
+msgstr "Werden Sie Mitglied bei HomeQuest und finden Sie Ihr perfektes Zuhause"
+
+#: HomeQuest/user_management/templates/register.html:317
+msgid "Account Information"
+msgstr "Kontoinformationen"
+
+#: HomeQuest/user_management/templates/register.html:327
+msgid "Confirm Password"
+msgstr "Passwort bestätigen"
+
+#: HomeQuest/user_management/templates/register.html:333
+msgid "Personal Information"
+msgstr "Persönliche Informationen"
+
+#: HomeQuest/user_management/templates/register.html:350
+msgid "Upload a custom profile picture! Supported formats: JPG, PNG"
+msgstr ""
+"Laden Sie ein individuelles Profilbild hoch! Unterstützte Formate: JPG, PNG"
+
+#: HomeQuest/user_management/templates/register.html:358
+msgid ""
+"Enable this option if you want to maintain privacy while still having a "
+"profile photo."
+msgstr ""
+"Aktivieren Sie diese Option, wenn Sie Ihre Privatsphäre wahren und dennoch "
+"ein Profilbild haben möchten."
+
+#: HomeQuest/user_management/templates/register.html:363
+msgid "Account Type"
+msgstr "Konto Typen"
+
+#: HomeQuest/user_management/templates/register.html:383
+msgid "I consent to share my location for better property recommendations"
+msgstr ""
+"Ich bin damit einverstanden, meinen Standort für bessere "
+"Immobilienempfehlungen freizugeben"
+
+#: HomeQuest/user_management/templates/register.html:402
+msgid "Create Account"
+msgstr "Benutzerkonto erstellen"
+
+#: HomeQuest/user_management/templates/register.html:406
+msgid "Already have an account?"
+msgstr "Sie haben noch ein Konto?"
+
+#: HomeQuest/user_management/templates/register.html:406
+msgid "Sign in"
+msgstr "Anmelden"
+
+#: venv/lib/python3.13/site-packages/django/contrib/messages/apps.py:16
+msgid "Messages"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/contrib/sitemaps/apps.py:8
+msgid "Site Maps"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/contrib/staticfiles/apps.py:9
+msgid "Static Files"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/contrib/syndication/apps.py:7
+#, fuzzy
+#| msgid "Location"
+msgid "Syndication"
+msgstr "Standort"
+
+#. Translators: String used to replace omitted page numbers in elided page
+#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
+#: venv/lib/python3.13/site-packages/django/core/paginator.py:30
+msgid "…"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/paginator.py:32
+msgid "That page number is not an integer"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/paginator.py:33
+msgid "That page number is less than 1"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/paginator.py:34
+msgid "That page contains no results"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:22
+msgid "Enter a valid value."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:70
+msgid "Enter a valid domain name."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:153
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:775
+msgid "Enter a valid URL."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:200
+msgid "Enter a valid integer."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:211
+msgid "Enter a valid email address."
+msgstr ""
+
+#. Translators: "letters" means latin letters: a-z and A-Z.
+#: venv/lib/python3.13/site-packages/django/core/validators.py:289
+msgid ""
+"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:297
+msgid ""
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
+"hyphens."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:309
+#: venv/lib/python3.13/site-packages/django/core/validators.py:318
+#: venv/lib/python3.13/site-packages/django/core/validators.py:332
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2220
+#, python-format
+msgid "Enter a valid %(protocol)s address."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:311
+msgid "IPv4"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:320
+#: venv/lib/python3.13/site-packages/django/utils/ipv6.py:43
+msgid "IPv6"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:334
+msgid "IPv4 or IPv6"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:375
+msgid "Enter only digits separated by commas."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:381
+#, python-format
+msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:416
+#, python-format
+msgid "Ensure this value is less than or equal to %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:425
+#, python-format
+msgid "Ensure this value is greater than or equal to %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:434
+#, python-format
+msgid "Ensure this value is a multiple of step size %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:441
+#, python-format
+msgid ""
+"Ensure this value is a multiple of step size %(limit_value)s, starting from "
+"%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:473
+#, python-format
+msgid ""
+"Ensure this value has at least %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at least %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:491
+#, python-format
+msgid ""
+"Ensure this value has at most %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at most %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:514
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:366
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:405
+msgid "Enter a number."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:516
+#, python-format
+msgid "Ensure that there are no more than %(max)s digit in total."
+msgid_plural "Ensure that there are no more than %(max)s digits in total."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:521
+#, python-format
+msgid "Ensure that there are no more than %(max)s decimal place."
+msgid_plural "Ensure that there are no more than %(max)s decimal places."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:526
+#, python-format
+msgid ""
+"Ensure that there are no more than %(max)s digit before the decimal point."
+msgid_plural ""
+"Ensure that there are no more than %(max)s digits before the decimal point."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:597
+#, python-format
+msgid ""
+"File extension “%(extension)s” is not allowed. Allowed extensions are: "
+"%(allowed_extensions)s."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/core/validators.py:659
+msgid "Null characters are not allowed."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/base.py:1600
+#: venv/lib/python3.13/site-packages/django/forms/models.py:908
+msgid "and"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/base.py:1602
+#, python-format
+msgid "%(model_name)s with this %(field_labels)s already exists."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/constraints.py:22
+#, python-format
+msgid "Constraint “%(name)s” is violated."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:134
+#, python-format
+msgid "Value %(value)r is not a valid choice."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:135
+msgid "This field cannot be null."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:136
+msgid "This field cannot be blank."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:137
+#, python-format
+msgid "%(model_name)s with this %(field_label)s already exists."
+msgstr ""
+
+#. Translators: The 'lookup_type' is one of 'date', 'year' or
+#. 'month'. Eg: "Title must be unique for pub_date year"
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:141
+#, python-format
+msgid ""
+"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:180
+#, python-format
+msgid "Field of type: %(field_type)s"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1162
+#, python-format
+msgid "“%(value)s” value must be either True or False."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1163
+#, python-format
+msgid "“%(value)s” value must be either True, False, or None."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1165
+msgid "Boolean (Either True or False)"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1215
+#, python-format
+msgid "String (up to %(max_length)s)"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1217
+msgid "String (unlimited)"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1326
+msgid "Comma-separated integers"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1427
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+"format."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1431
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1566
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
+"date."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1435
+msgid "Date (without time)"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1562
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD "
+"HH:MM[:ss[.uuuuuu]][TZ] format."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1570
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+"[TZ]) but it is an invalid date/time."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1575
+msgid "Date (with time)"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1702
+#, python-format
+msgid "“%(value)s” value must be a decimal number."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1704
+msgid "Decimal number"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1864
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in [DD] "
+"[[HH:]MM:]ss[.uuuuuu] format."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1920
+msgid "Email address"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:1945
+msgid "File path"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2023
+#, python-format
+msgid "“%(value)s” value must be a float."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2025
+msgid "Floating point number"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2065
+#, python-format
+msgid "“%(value)s” value must be an integer."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2067
+msgid "Integer"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2163
+msgid "Big (8 byte) integer"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2180
+msgid "Small integer"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2188
+msgid "IPv4 address"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2219
+msgid "IP address"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2310
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2311
+#, python-format
+msgid "“%(value)s” value must be either None, True or False."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2313
+msgid "Boolean (Either True, False or None)"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2364
+msgid "Positive big integer"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2379
+msgid "Positive integer"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2394
+msgid "Positive small integer"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2410
+#, python-format
+msgid "Slug (up to %(max_length)s)"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2446
+msgid "Text"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2526
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
+"format."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2530
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
+"invalid time."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2534
+msgid "Time"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2642
+msgid "URL"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2666
+msgid "Raw binary data"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2731
+#, python-format
+msgid "“%(value)s” is not a valid UUID."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/__init__.py:2733
+msgid "Universally unique identifier"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/files.py:244
+msgid "File"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/files.py:420
+#, fuzzy
+#| msgid "Add Image"
+msgid "Image"
+msgstr "Bild hinzufügen"
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/json.py:24
+msgid "A JSON object"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/json.py:26
+msgid "Value must be valid JSON."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/related.py:978
+#, python-format
+msgid "%(model)s instance with %(field)s %(value)r is not a valid choice."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/related.py:981
+msgid "Foreign Key (type determined by related field)"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/related.py:1275
+msgid "One-to-one relationship"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/related.py:1332
+#, python-format
+msgid "%(from)s-%(to)s relationship"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/related.py:1334
+#, python-format
+msgid "%(from)s-%(to)s relationships"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/db/models/fields/related.py:1382
+msgid "Many-to-many relationship"
+msgstr ""
+
+#. Translators: If found as last label character, these punctuation
+#. characters will prevent the default label_suffix to be appended to the label
+#: venv/lib/python3.13/site-packages/django/forms/boundfield.py:185
+msgid ":?.!"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:95
+msgid "This field is required."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:315
+msgid "Enter a whole number."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:486
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:1267
+msgid "Enter a valid date."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:509
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:1268
+msgid "Enter a valid time."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:536
+msgid "Enter a valid date/time."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:570
+msgid "Enter a valid duration."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:571
+#, python-brace-format
+msgid "The number of days must be between {min_days} and {max_days}."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:640
+msgid "No file was submitted. Check the encoding type on the form."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:641
+msgid "No file was submitted."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:642
+msgid "The submitted file is empty."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:644
+#, python-format
+msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid_plural ""
+"Ensure this filename has at most %(max)d characters (it has %(length)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:649
+msgid "Please either submit a file or check the clear checkbox, not both."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:717
+msgid ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:889
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:975
+#: venv/lib/python3.13/site-packages/django/forms/models.py:1592
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:977
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:1096
+#: venv/lib/python3.13/site-packages/django/forms/models.py:1590
+msgid "Enter a list of values."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:1097
+msgid "Enter a complete value."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:1339
+msgid "Enter a valid UUID."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/fields.py:1369
+msgid "Enter a valid JSON."
+msgstr ""
+
+#. Translators: This is the default suffix added to form field labels
+#: venv/lib/python3.13/site-packages/django/forms/forms.py:97
+msgid ":"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/forms.py:239
+#, python-format
+msgid "(Hidden field %(name)s) %(error)s"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/formsets.py:61
+#, python-format
+msgid ""
+"ManagementForm data is missing or has been tampered with. Missing fields: "
+"%(field_names)s. You may need to file a bug report if the issue persists."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/formsets.py:65
+#, python-format
+msgid "Please submit at most %(num)d form."
+msgid_plural "Please submit at most %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.13/site-packages/django/forms/formsets.py:70
+#, python-format
+msgid "Please submit at least %(num)d form."
+msgid_plural "Please submit at least %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.13/site-packages/django/forms/formsets.py:484
+#: venv/lib/python3.13/site-packages/django/forms/formsets.py:491
+msgid "Order"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/models.py:901
+#, python-format
+msgid "Please correct the duplicate data for %(field)s."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/models.py:906
+#, python-format
+msgid "Please correct the duplicate data for %(field)s, which must be unique."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/models.py:913
+#, python-format
+msgid ""
+"Please correct the duplicate data for %(field_name)s which must be unique "
+"for the %(lookup)s in %(date_field)s."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/models.py:922
+msgid "Please correct the duplicate values below."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/models.py:1359
+msgid "The inline value did not match the parent instance."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/models.py:1450
+msgid "Select a valid choice. That choice is not one of the available choices."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/models.py:1594
+#, python-format
+msgid "“%(pk)s” is not a valid value."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/utils.py:229
+#, python-format
+msgid ""
+"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
+"may be ambiguous or it may not exist."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/widgets.py:527
+msgid "Clear"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/widgets.py:528
+#, fuzzy
+#| msgid "Current Images"
+msgid "Currently"
+msgstr "Aktuelle Bilder"
+
+#: venv/lib/python3.13/site-packages/django/forms/widgets.py:529
+#, fuzzy
+#| msgid "Save Changes"
+msgid "Change"
+msgstr "Änderungen speichern"
+
+#: venv/lib/python3.13/site-packages/django/forms/widgets.py:866
+msgid "Unknown"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/widgets.py:867
+msgid "Yes"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/forms/widgets.py:868
+msgid "No"
+msgstr ""
+
+#. Translators: Please do not add spaces around commas.
+#: venv/lib/python3.13/site-packages/django/template/defaultfilters.py:873
+msgid "yes,no,maybe"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/template/defaultfilters.py:903
+#: venv/lib/python3.13/site-packages/django/template/defaultfilters.py:920
+#, python-format
+msgid "%(size)d byte"
+msgid_plural "%(size)d bytes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.13/site-packages/django/template/defaultfilters.py:922
+#, python-format
+msgid "%s KB"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/template/defaultfilters.py:924
+#, python-format
+msgid "%s MB"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/template/defaultfilters.py:926
+#, python-format
+msgid "%s GB"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/template/defaultfilters.py:928
+#, python-format
+msgid "%s TB"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/template/defaultfilters.py:930
+#, python-format
+msgid "%s PB"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dateformat.py:74
+msgid "p.m."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dateformat.py:75
+msgid "a.m."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dateformat.py:80
+msgid "PM"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dateformat.py:81
+msgid "AM"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dateformat.py:153
+msgid "midnight"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dateformat.py:155
+msgid "noon"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:7
+msgid "Monday"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:8
+msgid "Tuesday"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:9
+msgid "Wednesday"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:10
+msgid "Thursday"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:11
+msgid "Friday"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:12
+msgid "Saturday"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:13
+msgid "Sunday"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:16
+msgid "Mon"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:17
+msgid "Tue"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:18
+msgid "Wed"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:19
+msgid "Thu"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:20
+msgid "Fri"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:21
+msgid "Sat"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:22
+msgid "Sun"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:25
+msgid "January"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:26
+msgid "February"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:27
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:28
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:29
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:30
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:31
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:32
+msgid "August"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:33
+msgid "September"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:34
+msgid "October"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:35
+#, fuzzy
+#| msgid "Phone Number"
+msgid "November"
+msgstr "Telefonnummer"
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:36
+msgid "December"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:39
+msgid "jan"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:40
+msgid "feb"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:41
+msgid "mar"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:42
+msgid "apr"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:43
+msgid "may"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:44
+msgid "jun"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:45
+msgid "jul"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:46
+msgid "aug"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:47
+msgid "sep"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:48
+msgid "oct"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:49
+msgid "nov"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:50
+msgid "dec"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:53
+msgctxt "abbrev. month"
+msgid "Jan."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:54
+msgctxt "abbrev. month"
+msgid "Feb."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:55
+msgctxt "abbrev. month"
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:56
+msgctxt "abbrev. month"
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:57
+msgctxt "abbrev. month"
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:58
+msgctxt "abbrev. month"
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:59
+msgctxt "abbrev. month"
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:60
+msgctxt "abbrev. month"
+msgid "Aug."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:61
+msgctxt "abbrev. month"
+msgid "Sept."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:62
+msgctxt "abbrev. month"
+msgid "Oct."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:63
+msgctxt "abbrev. month"
+msgid "Nov."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:64
+msgctxt "abbrev. month"
+msgid "Dec."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:67
+msgctxt "alt. month"
+msgid "January"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:68
+msgctxt "alt. month"
+msgid "February"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:69
+msgctxt "alt. month"
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:70
+msgctxt "alt. month"
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:71
+msgctxt "alt. month"
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:72
+msgctxt "alt. month"
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:73
+msgctxt "alt. month"
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:74
+msgctxt "alt. month"
+msgid "August"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:75
+msgctxt "alt. month"
+msgid "September"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:76
+msgctxt "alt. month"
+msgid "October"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:77
+#, fuzzy
+#| msgid "Phone Number"
+msgctxt "alt. month"
+msgid "November"
+msgstr "Telefonnummer"
+
+#: venv/lib/python3.13/site-packages/django/utils/dates.py:78
+msgctxt "alt. month"
+msgid "December"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/ipv6.py:20
+msgid "This is not a valid IPv6 address."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/text.py:67
+#, python-format
+msgctxt "String to return when truncating text"
+msgid "%(truncated_text)s…"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/text.py:278
+msgid "or"
+msgstr ""
+
+#. Translators: This string is used as a separator between list elements
+#: venv/lib/python3.13/site-packages/django/utils/text.py:297
+#: venv/lib/python3.13/site-packages/django/utils/timesince.py:135
+msgid ", "
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/utils/timesince.py:8
+#, python-format
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.13/site-packages/django/utils/timesince.py:9
+#, python-format
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.13/site-packages/django/utils/timesince.py:10
+#, python-format
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.13/site-packages/django/utils/timesince.py:11
+#, python-format
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.13/site-packages/django/utils/timesince.py:12
+#, python-format
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.13/site-packages/django/utils/timesince.py:13
+#, python-format
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.13/site-packages/django/views/csrf.py:29
+msgid "Forbidden"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/csrf.py:30
+#, fuzzy
+#| msgid "No verification files uploaded yet."
+msgid "CSRF verification failed. Request aborted."
+msgstr "Es wurden noch keine Verifizierungsdateien hochgeladen."
+
+#: venv/lib/python3.13/site-packages/django/views/csrf.py:34
+msgid ""
+"You are seeing this message because this HTTPS site requires a “Referer "
+"header” to be sent by your web browser, but none was sent. This header is "
+"required for security reasons, to ensure that your browser is not being "
+"hijacked by third parties."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/csrf.py:40
+msgid ""
+"If you have configured your browser to disable “Referer” headers, please re-"
+"enable them, at least for this site, or for HTTPS connections, or for “same-"
+"origin” requests."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/csrf.py:45
+msgid ""
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
+"including the “Referrer-Policy: no-referrer” header, please remove them. The "
+"CSRF protection requires the “Referer” header to do strict referer checking. "
+"If you’re concerned about privacy, use alternatives like <a "
+"rel=\"noreferrer\" …> for links to third-party sites."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/csrf.py:54
+msgid ""
+"You are seeing this message because this site requires a CSRF cookie when "
+"submitting forms. This cookie is required for security reasons, to ensure "
+"that your browser is not being hijacked by third parties."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/csrf.py:60
+msgid ""
+"If you have configured your browser to disable cookies, please re-enable "
+"them, at least for this site, or for “same-origin” requests."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/csrf.py:66
+msgid "More information is available with DEBUG=True."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/generic/dates.py:44
+#, fuzzy
+#| msgid "Not Verified"
+msgid "No year specified"
+msgstr "Nicht Verifiziert"
+
+#: venv/lib/python3.13/site-packages/django/views/generic/dates.py:64
+#: venv/lib/python3.13/site-packages/django/views/generic/dates.py:115
+#: venv/lib/python3.13/site-packages/django/views/generic/dates.py:214
+#, fuzzy
+#| msgid "Date of Birth"
+msgid "Date out of range"
+msgstr "Geburtsdatum"
+
+#: venv/lib/python3.13/site-packages/django/views/generic/dates.py:94
+#, fuzzy
+#| msgid "Not Verified"
+msgid "No month specified"
+msgstr "Nicht Verifiziert"
+
+#: venv/lib/python3.13/site-packages/django/views/generic/dates.py:147
+#, fuzzy
+#| msgid "Not Verified"
+msgid "No day specified"
+msgstr "Nicht Verifiziert"
+
+#: venv/lib/python3.13/site-packages/django/views/generic/dates.py:194
+#, fuzzy
+#| msgid "Not Verified"
+msgid "No week specified"
+msgstr "Nicht Verifiziert"
+
+#: venv/lib/python3.13/site-packages/django/views/generic/dates.py:353
+#: venv/lib/python3.13/site-packages/django/views/generic/dates.py:384
+#, python-format
+msgid "No %(verbose_name_plural)s available"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/generic/dates.py:680
+#, python-format
+msgid ""
+"Future %(verbose_name_plural)s not available because "
+"%(class_name)s.allow_future is False."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/generic/dates.py:720
+#, python-format
+msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/generic/detail.py:56
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/generic/list.py:70
+msgid "Page is not “last”, nor can it be converted to an int."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/generic/list.py:77
+#, python-format
+msgid "Invalid page (%(page_number)s): %(message)s"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/generic/list.py:173
+#, python-format
+msgid "Empty list and “%(class_name)s.allow_empty” is False."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/static.py:49
+msgid "Directory indexes are not allowed here."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/static.py:51
+#, python-format
+msgid "“%(path)s” does not exist"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/static.py:68
+#: venv/lib/python3.13/site-packages/django/views/templates/directory_index.html:8
+#: venv/lib/python3.13/site-packages/django/views/templates/directory_index.html:11
+#, python-format
+msgid "Index of %(directory)s"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/templates/default_urlconf.html:7
+#: venv/lib/python3.13/site-packages/django/views/templates/default_urlconf.html:204
+msgid "The install worked successfully! Congratulations!"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/templates/default_urlconf.html:206
+#, python-format
+msgid ""
+"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/templates/default_urlconf.html:208
+#, python-format
+msgid ""
+"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/ref/settings/#debug\" target=\"_blank\" "
+"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
+"configured any URLs."
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/templates/default_urlconf.html:217
+msgid "Django Documentation"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/templates/default_urlconf.html:218
+msgid "Topics, references, &amp; how-to’s"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/templates/default_urlconf.html:226
+msgid "Tutorial: A Polling App"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/templates/default_urlconf.html:227
+msgid "Get started with Django"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/templates/default_urlconf.html:235
+msgid "Django Community"
+msgstr ""
+
+#: venv/lib/python3.13/site-packages/django/views/templates/default_urlconf.html:236
+msgid "Connect, get help, or contribute"
+msgstr ""

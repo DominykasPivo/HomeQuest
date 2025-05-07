@@ -1,16 +1,209 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage Subscription - HomeQuest{% endblock %}
+
 {% block content %}
-<h1>Manage Subscription</h1>
-<form method="post">
-    {% csrf_token %}
-    {% if gold_seller and gold_seller.is_subscription_active %}
-        <p>Subscription: {{ gold_seller.get_subscription_type_display }}</p>
-        <p>Current Plan: {{ gold_seller.get_subscription_plan_display }}</p>
-        <p>Subscription End Date: {{ gold_seller.subscription_end_date }}</p>
-        <button type="submit" name="action" value="cancel" onclick="return confirm('Are you sure you want to cancel your subscription?');">Cancel Subscription</button>
-    {% else %}
-        <p>Subscription: Basic</p>
-        <button type="submit" name="action" value="buy">Buy Gold Subscription</button>
-    {% endif %}
-</form>
+<style>
+    /* Page Container */
+    .page-container {
+        max-width: 98%;
+        width: 98%;
+        margin: 0 auto;
+        padding: 2rem 3rem;
+        background: linear-gradient(135deg, #f5f5f0, #e0e8f7);
+        border-radius: 0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 1rem;
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Subscription Container */
+    .subscription-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem 0;
+        min-height: calc(100vh - 300px);
+        background: transparent;
+    }
+
+    .subscription-card {
+        background: white;
+        padding: 3rem;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-md);
+        width: 100%;
+        max-width: 600px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .subscription-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .subscription-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        letter-spacing: -0.5px;
+    }
+
+    .subscription-content {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .subscription-section {
+        background: var(--bg-light);
+        border-radius: var(--radius-md);
+        padding: 2rem;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+    }
+
+    .section-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .upgrade-message {
+        background: rgba(64, 112, 244, 0.1);
+        border-radius: var(--radius-sm);
+        padding: 1.5rem;
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+
+    .upgrade-message p {
+        margin: 0;
+        color: var(--primary-color);
+        font-weight: 500;
+        font-size: 1.1rem;
+    }
+
+    .btn-upgrade, .btn-cancel {
+        width: 100%;
+        padding: 1.25rem;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+    .btn-upgrade {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .btn-upgrade:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .btn-cancel {
+        background: #ff4b4b;
+        color: white;
+    }
+
+    .btn-cancel:hover {
+        background: #e63e3e;
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    @media (max-width: 768px) {
+        .page-container {
+            padding: 1rem;
+        }
+
+        .subscription-container {
+            padding: 1rem;
+        }
+
+        .subscription-card {
+            padding: 1.5rem;
+        }
+
+        .subscription-title {
+            font-size: 2rem;
+        }
+
+        .subscription-section {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+<div class="page-container">
+    <div class="subscription-container">
+        <div class="subscription-card">
+            <div class="subscription-header">
+                <h1 class="subscription-title">Manage Subscription</h1>
+            </div>
+            
+            <div class="subscription-content">
+                <form method="post">
+                    {% csrf_token %}
+                    {% if gold_seller and gold_seller.is_subscription_active %}
+                        <div class="subscription-section">
+                            <div class="section-header">
+                                <span class="section-title">Current Subscription</span>
+                                <span class="section-value">{{ gold_seller.get_subscription_type_display }}</span>
+                            </div>
+                            <div class="section-header">
+                                <span class="section-title">Plan</span>
+                                <span class="section-value">{{ gold_seller.get_subscription_plan_display }}</span>
+                            </div>
+                            <div class="section-header" style="border-bottom: none;">
+                                <span class="section-title">Valid Until</span>
+                                <span class="section-value">{{ gold_seller.subscription_end_date }}</span>
+                            </div>
+                        </div>
+                        <button type="submit" name="action" value="cancel" class="btn-cancel" 
+                                onclick="return confirm('Are you sure you want to cancel your subscription?');">
+                            Cancel Subscription
+                        </button>
+                    {% else %}
+                        <div class="subscription-section">
+                            <div class="section-header" style="border-bottom: none;">
+                                <span class="section-title">Current Subscription</span>
+                                <span class="section-value">Basic</span>
+                            </div>
+                            <div class="upgrade-message">
+                                <p>Upgrade to Gold for premium features!</p>
+                            </div>
+                        </div>
+                        <button type="submit" name="action" value="buy" class="btn-upgrade">
+                            Upgrade to Gold
+                        </button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
