@@ -32,7 +32,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     date_of_birth = models.DateField()
     consent_to_share_location = models.BooleanField(default=False)
-    
+   
     
     profile_photo = models.ImageField(
         upload_to='profile_photos/',

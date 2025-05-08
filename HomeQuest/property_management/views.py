@@ -256,7 +256,7 @@ def property_detail_all(request, property_id):
 
 def properties_for_sale(request):
     properties = filter_properties(search_type='for_sale')
-    paginator = Paginator(properties, 10)  
+    paginator = Paginator(properties, 9)  
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'properties_list.html', {
@@ -266,7 +266,7 @@ def properties_for_sale(request):
 
 def properties_for_rent(request):
     properties = filter_properties(search_type='for_rent')
-    paginator = Paginator(properties, 10)  
+    paginator = Paginator(properties, 9)  
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'properties_list.html', {
@@ -276,7 +276,7 @@ def properties_for_rent(request):
 
 def properties_recommended(request):
     properties = filter_properties(search_type='recommended')
-    paginator = Paginator(properties, 10)  
+    paginator = Paginator(properties, 9)  
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'properties_list.html', {

@@ -618,14 +618,15 @@
                 
                 <div class="language-menu">
                     <button class="language-button" onclick="toggleLanguageDropdown(event)" aria-label="Change language">
-                        <span class="current-language">{% if LANGUAGE_CODE == 'de' %}DE{% else %}EN{% endif %}</span>
+                        {% get_current_language as CURRENT_LANGUAGE %}
+                        <span class="current-language">{{ CURRENT_LANGUAGE|upper }}</span>
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="dropdown">
-                        <button onclick="changeLanguage('en')" {% if LANGUAGE_CODE == 'en' %}class="active"{% endif %}>
+                        <button onclick="changeLanguage('en')" {% if CURRENT_LANGUAGE == 'en' %}class="active"{% endif %}>
                             <span class="lang-flag">🇬🇧</span> English
                         </button>
-                        <button onclick="changeLanguage('de')" {% if LANGUAGE_CODE == 'de' %}class="active"{% endif %}>
+                        <button onclick="changeLanguage('de')" {% if CURRENT_LANGUAGE == 'de' %}class="active"{% endif %}>
                             <span class="lang-flag">🇩🇪</span> Deutsch
                         </button>
                     </div>
