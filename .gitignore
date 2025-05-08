@@ -31,6 +31,8 @@ env/
 local_settings.py
 media/
 staticfiles/
+*/migrations/*.py
+!*/migrations/__init__.py
 
 # IDE
 .idea/
